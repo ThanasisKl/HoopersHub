@@ -1,16 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react';
-// import Stars from 'react-native-stars';
 import {
     StyleSheet,
     Text,
     View,
-    Image,
-    TextInput,
-    Pressable,
     TouchableOpacity,
-    KeyboardAvoidingView,
+    ScrollView,
 } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
@@ -19,36 +15,80 @@ import {doc, getDoc} from 'firebase/firestore';
 import { db } from '../Config'
 import {colors} from "./colors";
 import RateSkill from "../components/RateSkill";
+import RateFriend from "../components/RateFriend";
 
 
 export default function RatingScreen() {
     const route = useRoute();
     const username = route.params.username;
-    // const [showStarFilled, setShowStarFilled] = useState([false,false,false,false,false]);
-    console.log(username)
+    const friends = route.params.friends_list;
 
-    // function handleStar(numberOfStar){
-    //     console.log(numberOfStar);
-    //     let newStarState = [false,false,false,false,false];
-    //     for(let i=0;i<numberOfStar;i++){
-    //         newStarState[i] = true;
-    //     }
-    //     setShowStarFilled(newStarState);
-    // }
+    function extendRating(uname){
+        const index = getIndex(uname);
+        hideRating[index] = ! hideRating[index];
+        setHideRating([...hideRating])
+    }
+
+    function getIndex(uname){
+        return friends.indexOf(uname);
+    }
+
+    let initialState = [];
+    for (let i=1; i<= friends.length;i++){
+        initialState.push(false);
+    }
+    let [hideRating,setHideRating] = useState(initialState);
+    
+    let friendsList = friends.map(uname =>{
+        return (
+            <View key={uname}>
+                <View style={styles.friendsListStyle}>
+                    <Text style={styles.friendText}>{uname}</Text>
+                    <TouchableOpacity style={styles.btnStyle} onPress={()=>extendRating(uname)}>
+                        <Text style={styles.btnText}>+</Text>
+                    </TouchableOpacity>
+                </View>
+                {hideRating[getIndex(uname)] && <RateFriend friendUname={uname}/>}
+            </View>
+        );
+     }); 
 
     return (
         <View style={styles.container}>
             <View style={styles.container2}>
-                <RateSkill skill="3 shot"/>
-                <RateSkill skill="2 shot"/>
-                <RateSkill skill="team player"/>
-                <RateSkill skill="other stuff"/>
+                <View style={styles.pageTitleView}>
+                    <Text style={styles.pageTitle}>Rate your Friend</Text>
+                </View>
+                <ScrollView>
+                    {friendsList}
+                </ScrollView>
+                       
             </View>
         </View>  
     );
 }
 
 const styles = StyleSheet.create({
+    btnContainer:{
+        alignItems: "center",
+        justifyContent: "center",
+        marginLeft:40,
+    },
+
+    btnStyle:{
+        borderRadius: 5,
+        paddingHorizontal:10,
+        backgroundColor: "white",
+        marginTop:8,
+        marginLeft:7,
+
+    },
+
+    btnText:{
+        color: colors.textColor,
+        fontSize:18,
+    },
+
     container:{
         backgroundColor: colors.bgColor,
         flex: 1,
@@ -60,4 +100,28 @@ const styles = StyleSheet.create({
         marginTop:50,
         marginLeft:10,
     },
+
+    friendsListStyle:{
+        alignItems: "flex-start",
+        justifyContent: "flex-start",
+        flexDirection:'row',
+        justifyContent: "space-around",
+        marginBottom: 10,
+    },
+
+    friendText:{
+        fontSize:25,
+    },
+
+    pageTitle:{
+        fontSize:30,
+    },
+
+    pageTitleView:{
+        borderColor:colors.bgColor,
+        borderBottomColor:colors.textColor,
+        borderWidth: 2,
+        marginBottom:20,
+        alignItems:'baseline',
+    }
 });

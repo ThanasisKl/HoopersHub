@@ -9,21 +9,27 @@ import { AntDesign } from '@expo/vector-icons';
 
 import { colors } from '../screens/colors';
 
-export default function RateSkill({skill}){
+export default function RateSkill({skill,getSkill}){
     const [showStarFilled, setShowStarFilled] = useState([false,false,false,false,false]);
 
+    function getStarsState(){
+        return showStarFilled;
+    }
+    
     function handleStar(numberOfStar){
-        console.log(numberOfStar);
         let newStarState = [false,false,false,false,false];
         for(let i=0;i<numberOfStar;i++){
             newStarState[i] = true;
         }
         setShowStarFilled(newStarState);
+        getSkill(newStarState);
     }
     
     return (
         <View style={styles.rateSkillContainer}>
+
             <Text style={styles.usernameStyle}>{skill}</Text>
+
             <View style={styles.starsView}>
                 <AntDesign style={styles.starStyle} name={showStarFilled[0] ? "star": "staro"} size={26} color="black" onPress={()=>handleStar(1)}/>
                 <AntDesign style={styles.starStyle} name={showStarFilled[1] ? "star": "staro"} size={26} color="black" onPress={()=>handleStar(2)}/>
@@ -31,6 +37,7 @@ export default function RateSkill({skill}){
                 <AntDesign style={styles.starStyle} name={showStarFilled[3] ? "star": "staro"} size={26} color="black" onPress={()=>handleStar(4)}/>
                 <AntDesign style={styles.starStyle} name={showStarFilled[4] ? "star": "staro"} size={26} color="black" onPress={()=>handleStar(5)}/>
             </View>
+
         </View>
     );
  }
@@ -40,6 +47,7 @@ export default function RateSkill({skill}){
     rateSkillContainer:{
         flexDirection:"row",
         marginBottom:10,
+        justifyContent:'flex-end',
     },
 
     usernameStyle:{
@@ -52,7 +60,7 @@ export default function RateSkill({skill}){
     },
 
     starsView:{
-        justifyContent:'flex-end',
+        display:'flex',
         flexDirection:'row',
     },
  });

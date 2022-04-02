@@ -9,3 +9,4 @@ npm i @react-native-community/async-storage
 - remove @react-native-community/async-storage from package.json
 - run "expo install @react-native-async-storage/async-storage"
 - update your imports manually, or run "npx expo-codemod sdk41-async-storage './**/*'".
+npm install react-native-stars --save

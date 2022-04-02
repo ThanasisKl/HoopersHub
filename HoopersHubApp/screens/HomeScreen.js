@@ -47,6 +47,18 @@ export default function HomeScreen({route}) {
         });
     }
 
+    function gotoRatingScreen(){
+        const myDoc = doc(db, "HHcollection", username);
+        getDoc(myDoc)
+        .then((user)=>{
+            let user_data = user.data();
+            let friends_list = user_data.friends;
+            navigation.navigate("Rating",{username,friends_list});
+        }).catch((error)=>{
+            Alert.alert("","An Error has occured please try again later (error code: 3)");
+        });
+    }
+
     async function sendFriendRequest(){
         toggleModalVisibility();
         let input = inputValue;
@@ -145,7 +157,7 @@ export default function HomeScreen({route}) {
                 <Text style={styles.btnsText}>Create Tournament</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttons}>
+            <TouchableOpacity style={styles.buttons} onPress={gotoRatingScreen}>
                 <Text style={styles.btnsText}>Rate Friend</Text>
             </TouchableOpacity>
         </View>

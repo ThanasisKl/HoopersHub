@@ -8,6 +8,7 @@ import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import FriendRequestsScreen from './screens/FriendRequestsScreen';
+import RatingScreen from './screens/RatingScreen';
 import TestingScreen from './screens/TestingScreen';
 
 
@@ -22,6 +23,7 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="Register" component={RegisterScreen} />
         <Stack.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
         <Stack.Screen options={{ headerShown: false }} name="FriendRequests" component={FriendRequestsScreen} />
+        <Stack.Screen options={{ headerShown: false }} name="Rating" component={RatingScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
