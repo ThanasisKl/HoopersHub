@@ -22,6 +22,8 @@ export default function RatingScreen() { //FIXME myRatings
     const route = useRoute();
     const username = route.params.username;
     const friends = route.params.friends_list;
+    const my_ratings = route.params.myRatings;
+    // console.log(my_ratings);
 
     function extendRating(uname){
         const index = getIndex(uname);
@@ -33,10 +35,24 @@ export default function RatingScreen() { //FIXME myRatings
         return friends.indexOf(uname);
     }
 
+    let alreadyRated =[];
     let initialState = [];
-    for (let i=1; i<= friends.length;i++){
+    for (let i=0; i< friends.length;i++){
         initialState.push(false);
+        let flag = false;
+        for(let j=0;j<my_ratings.length;j++){
+            console.log(my_ratings[j].to, friends[i])
+            if(my_ratings[j].to===friends[i]){
+                flag = true;
+                break;
+            }
+        }
+
+        if(flag)alreadyRated.push(true)
+        else alreadyRated.push(false)
     }
+    console.log(alreadyRated)
+    let [ratedBefore,setRatedBefore] = useState(alreadyRated);
     let [hideRating,setHideRating] = useState(initialState);
     
     let friendsList = friends.map(uname =>{
@@ -48,7 +64,7 @@ export default function RatingScreen() { //FIXME myRatings
                         <Text style={styles.btnText}>+</Text>
                     </TouchableOpacity>
                 </View>
-                {hideRating[getIndex(uname)] && <RateFriend friendUname={uname} username={username}/>}
+                {hideRating[getIndex(uname)] && <RateFriend friendUname={uname} username={username} ratings={my_ratings} message={ratedBefore[getIndex(uname)]}/>}
             </View>
         );
      }); 
@@ -69,12 +85,7 @@ export default function RatingScreen() { //FIXME myRatings
 }
 
 const styles = StyleSheet.create({
-    btnContainer:{
-        alignItems: "center",
-        justifyContent: "center",
-        marginLeft:40,
-    },
-
+    
     btnStyle:{
         borderRadius: 5,
         paddingHorizontal:10,
@@ -111,6 +122,8 @@ const styles = StyleSheet.create({
 
     friendText:{
         fontSize:25,
+        fontFamily:'monospace',
+        color:'white',
     },
 
     pageTitle:{

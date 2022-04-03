@@ -12,7 +12,7 @@ import { db } from '../Config'
 import RateSkill from "./RateSkill";
 import { colors } from '../screens/colors';
 
-export default function RateFriend({friendUname,username}){
+export default function RateFriend({friendUname,username,message}){
 
     const [skill1State,setskill1State] = useState([false,false,false,false,false]);
     const [skill2State,setskill2State] = useState([false,false,false,false,false]);
@@ -20,7 +20,9 @@ export default function RateFriend({friendUname,username}){
     const [skill4State,setskill4State] = useState([false,false,false,false,false]);
     const [skill5State,setskill5State] = useState([false,false,false,false,false]);
     const [skill6State,setskill6State] = useState([false,false,false,false,false]);
+
     const myDoc = doc(db, "HHcollection", friendUname);
+    const myDoc2 = doc(db, "HHcollection", username);
 
     function countStars(starsArray){
         if (starsArray[4]=== true){
@@ -61,7 +63,37 @@ export default function RateFriend({friendUname,username}){
 
             setDoc(myDoc, ratingsObject, { merge: true })
             .then(() => {
-                Alert.alert("","Rating added successfully");
+                getDoc(myDoc2)
+                .then((user)=>{
+                    let my_ratings = user.data().myRatings;
+                    my_ratings = my_ratings.filter(rating => rating.to !== friendUname);
+        
+                    let friendratings = { 
+                        "to":friendUname,
+                        "blocks":countStars(skill1State),
+                        "3points":countStars(skill2State),
+                        "2points":countStars(skill3State),
+                        "rebounds":countStars(skill4State),
+                        "team_player":countStars(skill5State),
+                        "overall_score":countStars(skill6State), 
+                    }
+                    my_ratings.push(friendratings);
+        
+                    let ratingsObject = {
+                        myRatings : my_ratings
+                    }
+        
+                    setDoc(myDoc2, ratingsObject, { merge: true })
+                    .then(() => {
+                        Alert.alert("","Rating added successfully");
+                    })
+                    .catch((error) => {
+                        Alert.alert("","An Error has occured please try again later (error code: 15)");
+                    });
+                })
+                .catch((error)=>{
+                    Alert.alert("","An Error has occured please try again later (error code: 16)");
+                });
             })
             .catch((error) => {
                 Alert.alert("","An Error has occured please try again later (error code: 13)");
@@ -93,6 +125,7 @@ export default function RateFriend({friendUname,username}){
     }
 
     function setSkill6(state){
+        console.log(skill1State);
         setskill6State(state);
     }
 
@@ -105,7 +138,7 @@ export default function RateFriend({friendUname,username}){
             <RateSkill skill="Rebounds" getSkill={setSkill4}/>
             <RateSkill skill="Team Player" getSkill={setSkill5}/>
             <RateSkill skill="Overall Score" getSkill={setSkill6}/>
-
+            {message && <Text style={styles.messageStyle}>You already have rated this friend. If you rate him again the new rating will replace the old one</Text>}
             <View style={styles.btnContainer}>
                 <TouchableOpacity style={styles.btnStyle} onPress={submitRate}>
                     <Text style={styles.btnText}>Sumbit Rating</Text>
@@ -141,6 +174,10 @@ export default function RateFriend({friendUname,username}){
         flex: 1,
         alignItems: "flex-start",
         justifyContent: "flex-start",
+    },
+
+    messageStyle:{
+        color:"red"
     },
 
  });

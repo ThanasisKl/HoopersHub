@@ -12,10 +12,6 @@ import { colors } from '../screens/colors';
 export default function RateSkill({skill,getSkill}){
     const [showStarFilled, setShowStarFilled] = useState([false,false,false,false,false]);
 
-    function getStarsState(){
-        return showStarFilled;
-    }
-    
     function handleStar(numberOfStar){
         let newStarState = [false,false,false,false,false];
         for(let i=0;i<numberOfStar;i++){

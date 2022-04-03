@@ -51,9 +51,10 @@ export default function HomeScreen({route}) {
         const myDoc = doc(db, "HHcollection", username);
         getDoc(myDoc)
         .then((user)=>{
-            let user_data = user.data();
-            let friends_list = user_data.friends;
-            navigation.navigate("Rating",{username,friends_list}); //FIXME myRatings
+            const user_data = user.data();
+            const friends_list = user_data.friends;
+            const myRatings = user_data.myRatings;
+            navigation.navigate("Rating",{username,friends_list,myRatings}); //FIXME myRatings
         }).catch((error)=>{
             Alert.alert("","An Error has occured please try again later (error code: 12)");
         });
@@ -61,7 +62,7 @@ export default function HomeScreen({route}) {
 
     async function sendFriendRequest(){
         toggleModalVisibility();
-        let input = inputValue;
+        const input = inputValue;
         setInputValue("");
         if(input === username){
             Alert.alert("","You can't make your self a friend");  
