@@ -4,20 +4,24 @@ import {
     Text,
     View,
     TouchableOpacity,
+    Alert,
 } from "react-native";
-import { AntDesign } from '@expo/vector-icons';
-import RateSkill from "./RateSkill";
+import {doc, getDoc,setDoc} from 'firebase/firestore';
 
+import { db } from '../Config'
+import RateSkill from "./RateSkill";
 import { colors } from '../screens/colors';
 
-export default function RateFriend(){
+export default function RateFriend({friendUname,username}){
+
     const [skill1State,setskill1State] = useState([false,false,false,false,false]);
     const [skill2State,setskill2State] = useState([false,false,false,false,false]);
     const [skill3State,setskill3State] = useState([false,false,false,false,false]);
     const [skill4State,setskill4State] = useState([false,false,false,false,false]);
     const [skill5State,setskill5State] = useState([false,false,false,false,false]);
     const [skill6State,setskill6State] = useState([false,false,false,false,false]);
-    
+    const myDoc = doc(db, "HHcollection", friendUname);
+
     function countStars(starsArray){
         if (starsArray[4]=== true){
             return 5;
@@ -35,7 +39,37 @@ export default function RateFriend(){
     }
 
     function submitRate(){
-        console.log(countStars(skill1State),countStars(skill2State),countStars(skill3State),countStars(skill4State),countStars(skill5State),countStars(skill6State));
+        getDoc(myDoc)
+        .then((user)=>{
+            let user_ratings = user.data().ratings;
+            user_ratings = user_ratings.filter(rating => rating.from !== username);
+
+            let friendratings = { 
+                "from":username,
+                "blocks":countStars(skill1State),
+                "3points":countStars(skill2State),
+                "2points":countStars(skill3State),
+                "rebounds":countStars(skill4State),
+                "team_player":countStars(skill5State),
+                "overall_score":countStars(skill6State), 
+            }
+            user_ratings.push(friendratings);
+
+            let ratingsObject = {
+                ratings : user_ratings
+            }
+
+            setDoc(myDoc, ratingsObject, { merge: true })
+            .then(() => {
+                Alert.alert("","Rating added successfully");
+            })
+            .catch((error) => {
+                Alert.alert("","An Error has occured please try again later (error code: 13)");
+            });
+        })
+        .catch((error)=>{
+            Alert.alert("","An Error has occured please try again later (error code: 14)");
+        })
     }
 
     function setSkill1(state){

@@ -53,9 +53,9 @@ export default function HomeScreen({route}) {
         .then((user)=>{
             let user_data = user.data();
             let friends_list = user_data.friends;
-            navigation.navigate("Rating",{username,friends_list});
+            navigation.navigate("Rating",{username,friends_list}); //FIXME myRatings
         }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code: 3)");
+            Alert.alert("","An Error has occured please try again later (error code: 12)");
         });
     }
 

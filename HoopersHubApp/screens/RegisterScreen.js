@@ -121,6 +121,7 @@ export default function Register(props) {
             "yearOfBirth":yearOfBirth,
             "friendRequests": [],
             "friends":[],
+            "ratings":[],
           }
           
           setDoc(myDoc2, docData)

@@ -18,7 +18,7 @@ import RateSkill from "../components/RateSkill";
 import RateFriend from "../components/RateFriend";
 
 
-export default function RatingScreen() {
+export default function RatingScreen() { //FIXME myRatings
     const route = useRoute();
     const username = route.params.username;
     const friends = route.params.friends_list;
@@ -48,7 +48,7 @@ export default function RatingScreen() {
                         <Text style={styles.btnText}>+</Text>
                     </TouchableOpacity>
                 </View>
-                {hideRating[getIndex(uname)] && <RateFriend friendUname={uname}/>}
+                {hideRating[getIndex(uname)] && <RateFriend friendUname={uname} username={username}/>}
             </View>
         );
      }); 
