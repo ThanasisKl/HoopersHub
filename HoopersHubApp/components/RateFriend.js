@@ -24,7 +24,9 @@ export default function RateFriend({friendUname,username,message}){
     const myDoc = doc(db, "HHcollection", friendUname);
     const myDoc2 = doc(db, "HHcollection", username);
 
-    function countStars(starsArray){
+    function countStars(starsArray){ 
+        /*takes an array with boolean values and converts it to stars that represents. 
+        For example [true,true,false,false,false] is 2 stars*/
         if (starsArray[4]=== true){
             return 5;
         }else if (starsArray[3]=== true){
@@ -40,7 +42,9 @@ export default function RateFriend({friendUname,username,message}){
         }
     }
 
-    function submitRate(){
+    function submitRate(){ 
+        /*when you submit the rate of a friend first checks if you already have 
+        rated this friend before and it's true then replace the new rating with the old one.*/
         getDoc(myDoc)
         .then((user)=>{
             let user_ratings = user.data().ratings;
@@ -125,20 +129,19 @@ export default function RateFriend({friendUname,username,message}){
     }
 
     function setSkill6(state){
-        console.log(skill1State);
         setskill6State(state);
     }
 
     
     return (
-        <View>
+        <View style={styles.viewContainer}>
             <RateSkill skill="Blocks" getSkill={setSkill1}/>
             <RateSkill skill="3 Points" getSkill={setSkill2}/>
             <RateSkill skill="2 Points" getSkill={setSkill3}/>
             <RateSkill skill="Rebounds" getSkill={setSkill4}/>
             <RateSkill skill="Team Player" getSkill={setSkill5}/>
             <RateSkill skill="Overall Score" getSkill={setSkill6}/>
-            {message && <Text style={styles.messageStyle}>You already have rated this friend. If you rate him again the new rating will replace the old one</Text>}
+            {message && <Text style={styles.messageStyle}>You already have rated this friend. If you rate him again the new rating will replace the old one.</Text>}
             <View style={styles.btnContainer}>
                 <TouchableOpacity style={styles.btnStyle} onPress={submitRate}>
                     <Text style={styles.btnText}>Sumbit Rating</Text>
@@ -167,13 +170,6 @@ export default function RateFriend({friendUname,username,message}){
     btnText:{
         color: colors.textColor,
         fontSize:18,
-    },
-
-    container:{
-        backgroundColor: colors.bgColor,
-        flex: 1,
-        alignItems: "flex-start",
-        justifyContent: "flex-start",
     },
 
     messageStyle:{

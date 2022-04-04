@@ -3,16 +3,13 @@ import {
     StyleSheet,
     Text,
     View,
-    TouchableOpacity,
 } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
-
-import { colors } from '../screens/colors';
 
 export default function RateSkill({skill,getSkill}){
     const [showStarFilled, setShowStarFilled] = useState([false,false,false,false,false]);
 
-    function handleStar(numberOfStar){
+    function handleStar(numberOfStar){  //when you press a star it becomes black and all the previous stars become black too
         let newStarState = [false,false,false,false,false];
         for(let i=0;i<numberOfStar;i++){
             newStarState[i] = true;

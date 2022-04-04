@@ -10,6 +10,7 @@ import {
     Pressable,
     TouchableOpacity,
     KeyboardAvoidingView,
+    Alert,
 } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {doc, getDoc} from 'firebase/firestore';
@@ -58,8 +59,9 @@ export default function LoginScreen(props) {
         setCredentialsWarning("");
         setUsername("");
         setPassword("");
+        if(!response)setCredentialsWarning("Incorrect Password or Username");
       })
-      .catch(()=>{
+      .catch((error)=>{
         setCredentialsWarning("Incorrect Password or Username");
       })
     }
