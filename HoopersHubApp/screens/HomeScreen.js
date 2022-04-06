@@ -26,6 +26,21 @@ export default function HomeScreen({route}) {
 
     const [isModalVisible, setModalVisible] = useState(false);
     const [inputValue, setInputValue] = useState("");
+    const [messageIcon, setMessageIcon] = useState(require('../assets/message-icon.png'));
+
+    const myDoc2 = doc(db, "HHcollection", username);
+    getDoc(myDoc2)
+    .then((user)=>{
+        let user_data = user.data();
+        let requests_list = user_data.friendRequests;
+        if (requests_list.length > 0){
+            console.log('In')
+            setMessageIcon(require('../assets/message-icon2.png'));
+        }else{
+            setMessageIcon(require('../assets/message-icon.png'));
+        }
+    });
+
   
     function toggleModalVisibility(){
         setModalVisible(!isModalVisible);
@@ -54,7 +69,7 @@ export default function HomeScreen({route}) {
             const user_data = user.data();
             const friends_list = user_data.friends;
             const myRatings = user_data.myRatings;
-            navigation.navigate("Rating",{username,friends_list,myRatings}); //FIXME myRatings
+            navigation.navigate("Rating",{username,friends_list,myRatings});
         }).catch((error)=>{
             Alert.alert("","An Error has occured please try again later (error code: 12)");
         });
@@ -106,8 +121,17 @@ export default function HomeScreen({route}) {
                    presentationStyle="overFullScreen" 
                    onDismiss={toggleModalVisibility}
             >
+                
                 <View style={styles.viewWrapper}>
                     <View style={styles.modalView}>
+                        <View style={styles.xView}>
+                            <TouchableOpacity onPress={toggleModalVisibility}>
+                                <Image 
+                                    style={styles.icons2} 
+                                    source={require('../assets/x.png')}
+                                />
+                            </TouchableOpacity>
+                        </View>
                         <TextInput placeholder="Enter the username of your friend" 
                             value={inputValue} style={styles.textInput} 
                             onChangeText={(value) => setInputValue(value)} 
@@ -123,7 +147,7 @@ export default function HomeScreen({route}) {
                 <TouchableOpacity onPress={gotoMessageScreen}>
                     <Image 
                         style={styles.icons} 
-                        source={require('../assets/message-icon.png')}
+                        source={messageIcon}
                     />
                 </TouchableOpacity>
 
@@ -201,6 +225,17 @@ const styles = StyleSheet.create({
         width:30,
         height:30, 
         marginRight:20,
+    },
+
+    icons2:{
+        width:20,
+        height:20, 
+        marginBottom:20,
+    },
+
+    xView:{
+        alignSelf:"flex-end",
+        marginRight:10,
     },
 
     viewWrapper: {

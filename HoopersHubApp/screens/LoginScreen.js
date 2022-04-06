@@ -68,7 +68,7 @@ export default function LoginScreen(props) {
 
     return (
         <KeyboardAvoidingView style={styles.container}>
-            <Image style={styles.image} source={require("../assets/icon3.jpg")} />
+            <Image style={styles.image} source={require("../assets/icon4.png")} />
             <StatusBar style="auto" />
             <View style={styles.inputView}>
                 <TextInput
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
       marginTop:-25,
       marginBottom: 60,
       width: 150,
-      height:120
+      height:180
     },
    
     inputView: {
