@@ -167,7 +167,7 @@ export default function HomeScreen({route}) {
             </View>
 
             <TouchableOpacity style={styles.buttons}>
-                <Text style={styles.btnsText}>Training</Text>
+                <Text style={styles.btnsText}>Training</Text>   
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.buttons}>
@@ -200,16 +200,18 @@ const styles = StyleSheet.create({
     
     buttons: {
         width: "70%",
-        borderRadius: 25,
+        borderRadius: 7,
         height: 50,
         alignItems: "center",
         justifyContent: "center",
         marginTop: 30,
         backgroundColor: "white",
+        
     },
 
     btnsText:{
         fontSize:20,
+        fontWeight: 'bold',
     },
 
     upperContainer:{
@@ -236,6 +238,7 @@ const styles = StyleSheet.create({
     xView:{
         alignSelf:"flex-end",
         marginRight:10,
+        marginBottom:13,
     },
 
     viewWrapper: {
