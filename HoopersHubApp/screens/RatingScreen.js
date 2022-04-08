@@ -62,7 +62,7 @@ export default function RatingScreen() {
                     <Text style={styles.friendText}>{uname}</Text>
                     <TouchableOpacity style={styles.btnStyle} onPress={()=>extendRating(uname)}>
                         <Text style={styles.btnText}>+</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> 
                 </View>
                 {hideRating[getIndex(uname)] && <RateFriend friendUname={uname} username={username} message={ratedBefore[getIndex(uname)]}/>}
             </View>
@@ -98,7 +98,6 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         marginTop:8,
         marginLeft:7,
-
     },
 
     btnText:{
@@ -120,9 +119,8 @@ const styles = StyleSheet.create({
 
     friendsListStyle:{
         alignItems: "flex-start",
-        justifyContent: "flex-start",
         flexDirection:'row',
-        justifyContent: "space-around",
+        justifyContent:'space-between',
         marginBottom: 10,
     },
 

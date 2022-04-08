@@ -144,7 +144,7 @@ export default function RateFriend({friendUname,username,message}){
             {message && <Text style={styles.messageStyle}>You already have rated this friend. If you rate him again the new rating will replace the old one.</Text>}
             <View style={styles.btnContainer}>
                 <TouchableOpacity style={styles.btnStyle} onPress={submitRate}>
-                    <Text style={styles.btnText}>Sumbit Rating</Text>
+                    <Text style={styles.btnText}>Submit Rating</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -159,7 +159,7 @@ export default function RateFriend({friendUname,username,message}){
     },
 
     btnStyle:{
-        borderRadius: 25,
+        borderRadius: 10,
         paddingHorizontal:30,
         paddingVertical:15,
         marginTop: 30,
@@ -173,7 +173,8 @@ export default function RateFriend({friendUname,username,message}){
     },
 
     messageStyle:{
-        color:"red"
+        color:"red",
+        textAlign:'center'
     },
 
  });

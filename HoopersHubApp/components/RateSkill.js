@@ -40,7 +40,7 @@ export default function RateSkill({skill,getSkill}){
     rateSkillContainer:{
         flexDirection:"row",
         marginBottom:10,
-        justifyContent:'flex-end',
+        justifyContent:'space-between',
     },
 
     usernameStyle:{
