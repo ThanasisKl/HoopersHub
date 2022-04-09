@@ -75,6 +75,10 @@ export default function HomeScreen({route}) {
         });
     }
 
+    function gotoGroupScreen(){
+        navigation.navigate("GroupMain",{username});
+    }
+
     async function sendFriendRequest(){
         toggleModalVisibility();
         const input = inputValue;
@@ -170,8 +174,8 @@ export default function HomeScreen({route}) {
                 <Text style={styles.btnsText}>Training</Text>   
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttons}>
-                <Text style={styles.btnsText}>Create Group</Text>
+            <TouchableOpacity style={styles.buttons} onPress={gotoGroupScreen}>
+                <Text style={styles.btnsText}>Groups</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.buttons}>
