@@ -54,7 +54,7 @@ export default function Register(props) {
     function handleMessage(problem){
       switch (problem){      
         case "name_problem":
-          setWarning("Name must contain from 4 to 20 characters.");
+          setWarning("Name must contain from 4 to 15 characters.");
           break; 
         case "heigth_problem":
           setWarning("Heigth must be a number that make sense");
@@ -76,7 +76,7 @@ export default function Register(props) {
     }
 
     function checkInputs(){
-      if (name.length > 20 || name.length < 4){
+      if (name.length > 15 || name.length < 4){
         return "name_problem"
       }
 
