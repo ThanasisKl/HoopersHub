@@ -8,7 +8,7 @@ import {
     TouchableOpacity,
     Alert,
 } from "react-native";
-import {doc, getDoc,setDoc} from 'firebase/firestore';
+import {doc, getDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
 import { db } from '../Config'
@@ -25,7 +25,15 @@ export default function GroupMainScreen() {
     }
 
     function gotoCreateGroupScreen(){
-        navigation.navigate("CreateGroup",{"username":username}); 
+        const myDoc = doc(db, "HHcollection", username);
+        getDoc(myDoc)
+        .then((user)=>{
+            const user_data = user.data();
+            const friends_list = user_data.friends;
+            navigation.navigate("CreateGroup",{username,friends_list});
+        }).catch((error)=>{
+            Alert.alert("","An Error has occured please try again later (error code:)");
+        }); 
     }
     
     return (
