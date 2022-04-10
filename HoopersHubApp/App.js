@@ -9,6 +9,7 @@ import FriendRequestsScreen from './screens/FriendRequestsScreen';
 import RatingScreen from './screens/RatingScreen';
 import GroupMainScreen from './screens/GroupMainScreen';
 import CreateGroupScreen from './screens/CreateGroupScreen';
+import CreateTeamsScreen from './screens/CreateTeamsScreen';
 import TestingScreen from './screens/TestingScreen';
 
 
@@ -25,6 +26,7 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="Rating" component={RatingScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="GroupMain" component={GroupMainScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="CreateGroup" component={CreateGroupScreen}/>
+        <Stack.Screen options={{ headerShown: false }} name="CreateTeams" component={CreateTeamsScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
