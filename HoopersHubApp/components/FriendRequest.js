@@ -50,6 +50,7 @@ export default function FriendRequest({userRequest,username,handleReguest}){
     btnContainer:{
         flexDirection:"row",
         marginBottom:10,
+        justifyContent:'space-between',
     },
 
     btnStyle:{
@@ -57,7 +58,7 @@ export default function FriendRequest({userRequest,username,handleReguest}){
         paddingRight:10,
         flexDirection:'row',
         backgroundColor: "white",
-        borderRadius: 10,
+        borderRadius: 6,
         height: 40,
         alignItems: "center",
         justifyContent: "center",
@@ -68,10 +69,11 @@ export default function FriendRequest({userRequest,username,handleReguest}){
     },
 
     namesText:{
-        fontSize:23,
         marginTop:20,
         marginBottom: 5,
-        flexDirection:"row",
+        fontSize:25,
+        fontFamily:'monospace',
+        color:'white',
     },
 
     rejectBtn:{

@@ -183,8 +183,8 @@ const styles = StyleSheet.create({
     },
 
     requestContainer:{
-        alignItems: "flex-start",
-        justifyContent: 'flex-start',
+        // alignItems: "flex-start",
+        // justifyContent: 'center',
     },
 
     text:{
