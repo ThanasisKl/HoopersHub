@@ -45,7 +45,7 @@ export default function GroupMainScreen() {
         }else{
             setShowWarningName(false);
             setShowWarningList(false);
-            navigation.navigate("CreateTeams",{username,groupList,groupName});
+            navigation.navigate("CreateTeams",{username,groupList,groupName,friends});
         }
     }
 
