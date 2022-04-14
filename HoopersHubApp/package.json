@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-firebase/firestore": "^14.7.0",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.2",
     "expo": "~44.0.0",
@@ -19,11 +20,12 @@
     "firebase": "^9.6.10",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "react-native": "0.64.3",
+    "react-native": "^0.68.1",
     "react-native-gesture-handler": "^2.3.2",
     "react-native-reanimated": "^2.5.0",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.10.2",
+    "react-native-uuid": "^2.0.1",
     "react-native-web": "0.17.1"
   },
   "devDependencies": {

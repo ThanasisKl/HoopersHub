@@ -10,8 +10,9 @@ import {
     ScrollView,
     TextInput,
 } from "react-native";
-import {doc, getDoc,setDoc} from 'firebase/firestore';
+import {doc, getDoc,setDoc,addDoc,firestore} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
+import uuid from 'react-native-uuid';
 
 import { db } from '../Config'
 import { colors } from './colors';
@@ -29,6 +30,7 @@ export default function CreateTeamsScreen() {
     const [btnBorder1,setBtnBorder1] = useState([]);
     const [btnBorder2,setBtnBorder2] = useState([]);
     const [flag,setFlag] = useState(true);
+    const [showWarning,setShowWarning] = useState(false);
     
 
     let newBtnBorderState = [];
@@ -45,9 +47,58 @@ export default function CreateTeamsScreen() {
         navigation.navigate("CreateGroup",{username,friends_list});
     }
 
-    function createGroup(){ //FIXME
-        console.log(team1); //check that all the members have a team 
-        console.log(team2); //db calls
+    function gotoGroupScreen(){
+        navigation.navigate("GroupMain",{username});
+    }
+
+    function createGroup(){ 
+        if(team1.length+team2.length === groupList.length){
+            setShowWarning(false);
+            const docName = uuid.v4();
+            const myDoc = doc(db,"Groups",docName);
+            
+            const docData = {
+                "group": [...team1,...team2],
+                "team1": [...team1],
+                "team2": [...team2],
+                "name": groupName,
+                "leader":username,
+            }
+            
+            setDoc(myDoc, docData)
+            .then(() => {
+                for(let i=0;i<groupList.length;i++){
+                    const myDoc2 = doc(db, "HHcollection", groupList[i]);
+                    getDoc(myDoc2)
+                    .then((user)=>{
+                        let user_groups = user.data().groups;
+                        let newGroupsArray = [...user_groups,docName]
+                        console.log(newGroupsArray);
+
+                        let GroupObject = {
+                            groups: newGroupsArray
+                        }
+                
+                        setDoc(myDoc2, GroupObject, { merge: true })
+                        .then(() => {
+                            console.log(`Group Updated for ${groupList[i]}`)
+                        })
+                        .catch((error) => {
+                            Alert.alert("","An Error has occured please try again later");
+                        });
+                    }).catch((error) => {
+                            Alert.alert("","An Error has occured please try again later");
+                    });    
+                }
+                Alert.alert("","Group Created Successfully");
+                gotoGroupScreen();
+            })
+            .catch((error) => {
+            Alert.alert("","An Error has occured please try again later");
+            });
+        }else{
+            setShowWarning(true);
+        }
     }
 
     function changeBtnBorder(uname,team){
@@ -138,6 +189,7 @@ export default function CreateTeamsScreen() {
                     <TouchableOpacity style={styles.createGroupBtn} onPress={createGroup}>  
                         <Text style={styles.createGroupText}>Create Group</Text>
                     </TouchableOpacity> 
+                    {showWarning && <Text style={styles.warningText}>Each member must have a team</Text>}
                 </ScrollView>
             </View>
         </View>
@@ -227,5 +279,11 @@ const styles = StyleSheet.create({
         fontSize:25,
         fontFamily:'monospace',
         color:'white',
+    },
+    
+    warningText:{
+        color:'red',
+        marginLeft:'auto',
+        marginRight:'auto',
     },
 });
