@@ -35,6 +35,32 @@ export default function GroupMainScreen() {
             Alert.alert("","An Error has occured please try again later (error code:)");
         }); 
     }
+
+    function gotoViewGroupsScreen(){ //FIXME
+        const myDoc = doc(db, "HHcollection", username);
+        getDoc(myDoc)
+        .then((user)=>{
+            const user_data = user.data();
+            const groupsIDs = user_data.groups;
+            const myDoc = doc(db, "HHcollection", username);
+
+            let groupsNames = [];
+            for(let i=0;i<groupsIDs.length;i++){
+                const myDoc2 = doc(db, "Groups", groupsIDs[i]);
+                getDoc(myDoc2)
+                .then((group)=>{
+                    groupsNames.push(group.data().name);
+                    if (i === groupsIDs.length-1){
+                        navigation.navigate("ViewGroups",{username,groupsNames,groupsIDs});
+                    }
+                }).catch((error)=>{
+                    Alert.alert("","An Error has occured please try again later (error code:)");
+                });
+            }
+        }).catch((error)=>{
+            Alert.alert("","An Error has occured please try again later (error code:)");
+        }); 
+    }
     
     return (
         <View style={styles.container}>
@@ -51,7 +77,7 @@ export default function GroupMainScreen() {
                 <Text style={styles.btnsText}>Create New Group</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttons}>
+            <TouchableOpacity style={styles.buttons} onPress={gotoViewGroupsScreen}>
                 <Text style={styles.btnsText}>View Your Groups</Text>
             </TouchableOpacity>
             

@@ -54,15 +54,18 @@ export default function CreateTeamsScreen() {
     function createGroup(){ 
         if(team1.length+team2.length === groupList.length){
             setShowWarning(false);
-            const docName = uuid.v4();
-            const myDoc = doc(db,"Groups",docName);
+            const docID = uuid.v4();
+            const myDoc = doc(db,"Groups",docID);
+            let leadersArray = [];
+            leadersArray.push(username)
             
             const docData = {
                 "group": [...team1,...team2],
                 "team1": [...team1],
                 "team2": [...team2],
                 "name": groupName,
-                "leader":username,
+                "leader":leadersArray,
+                "scores": []
             }
             
             setDoc(myDoc, docData)
@@ -72,7 +75,7 @@ export default function CreateTeamsScreen() {
                     getDoc(myDoc2)
                     .then((user)=>{
                         let user_groups = user.data().groups;
-                        let newGroupsArray = [...user_groups,docName]
+                        let newGroupsArray = [...user_groups,docID]
                         console.log(newGroupsArray);
 
                         let GroupObject = {
