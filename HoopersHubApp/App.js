@@ -10,6 +10,8 @@ import RatingScreen from './screens/RatingScreen';
 import GroupMainScreen from './screens/GroupMainScreen';
 import CreateGroupScreen from './screens/CreateGroupScreen';
 import CreateTeamsScreen from './screens/CreateTeamsScreen';
+import ViewGroupsScreen from './screens/ViewGroupsScreen';
+import ViewChosenGroupScreen from './screens/ViewChosenGroupScreen'
 import TestingScreen from './screens/TestingScreen';
 
 
@@ -27,6 +29,8 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="GroupMain" component={GroupMainScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="CreateGroup" component={CreateGroupScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="CreateTeams" component={CreateTeamsScreen}/>
+        <Stack.Screen options={{ headerShown: false }} name="ViewGroups" component={ViewGroupsScreen}/>
+        <Stack.Screen options={{ headerShown: false }} name="ViewChosenGroup" component={ViewChosenGroupScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
