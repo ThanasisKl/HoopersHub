@@ -44,7 +44,7 @@ export default function HomeScreen({route}) {
   
     function toggleModalVisibility(){
         setModalVisible(!isModalVisible);
-    };
+    }
 
     function logout(){
         navigation.navigate('Login')
