@@ -33,7 +33,7 @@ export default function ViewGroupsScreen() {
         getDoc(myDoc)
         .then((group)=>{
             const groupInfo = group.data();
-            navigation.navigate("ViewChosenGroup",{username,groupInfo,groupID});
+            navigation.navigate("ViewChosenGroup",{username,groupInfo,groupID,groupList,groupsIDS});
         }).catch((error)=>{
             Alert.alert("","An Error has occured please try again later (error code:)");
         });
