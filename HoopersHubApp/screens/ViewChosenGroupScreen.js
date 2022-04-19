@@ -30,6 +30,7 @@ export default function ViewChosenGroupScreen() {
     const groupID = route.params.groupID;
     const allScores = groupInfo.scores
     const groupName = groupInfo.name;
+    const groupMembers = groupInfo.group;
     const groupLeaders = groupInfo.leader;
     const team1 = groupInfo.team1;
     const team2 = groupInfo.team2;
@@ -48,12 +49,21 @@ export default function ViewChosenGroupScreen() {
         setModalVisible(!isModalVisible);
     }
 
+    function gotoGroupSettings(){
+        navigation.navigate("GroupSettings",{username,groupLeaders,team1,team2,groupID,groupMembers,groupsNames,groupsIDs,groupInfo});
+    }
+
     function gotoViewGroupsScreen(){
         navigation.navigate("ViewGroups",{username,groupsNames,groupsIDs});
     }
 
     function toggleScoreModalVisibility(){
         setScoreModalVisible(!isScoreModalVisible);
+    }
+
+    function handleAddScore(){
+        if(groupLeaders.includes(username))toggleScoreModalVisibility();
+        else Alert.alert("You can't add a score","Only team leaders can add a score!");
     }
    
     function addScore(score1,score2){
@@ -116,14 +126,14 @@ export default function ViewChosenGroupScreen() {
                     </TouchableOpacity>
 
                     <View style={styles.rigthIconsView}>
-                        <TouchableOpacity onPress={toggleScoreModalVisibility}>
+                        <TouchableOpacity onPress={handleAddScore}>
                             <Image 
                                 style={styles.icons2} 
                                 source={require('../assets/add_icon.png')}
                             />
                         </TouchableOpacity>
 
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={gotoGroupSettings}>
                             <Image 
                                 style={styles.icons2} 
                                 source={require('../assets/settings-icon.png')}
@@ -138,8 +148,9 @@ export default function ViewChosenGroupScreen() {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View>
+                <View style={styles.mainViewStyle}>
                     <ScrollView>
+                        <Text style={styles.groupNameStyle}>{groupName}</Text>
                         {groupScores}
                     </ScrollView>
                 </View>
@@ -196,6 +207,22 @@ const styles = StyleSheet.create({
         fontFamily:'monospace',
         color:'white',
         marginRight:30,
+    },
+
+    groupNameStyle:{
+        fontSize:28,
+        fontFamily:'monospace',
+        color:'black',
+        fontWeight:'bold',
+        textAlign:'center',
+        borderColor:colors.bgColor,
+        borderBottomColor:colors.textColor,
+        borderWidth: 2,
+        marginBottom:20,
+    },
+
+    mainViewStyle:{
+        alignItems: "center",
     },
 
     rigthIconsView:{
