@@ -28,7 +28,7 @@ export default function GroupSettingsScreen() {
     const groupList = route.params.groupsNames;
     const groupsIDS = route.params.groupsIDs;
     const groupInfo = route.params.groupInfo;
-    const friends = ['thanasis2','thanasis3'];
+    const friends = ['thanasis2','thanasis3']; ///fixmeeeee
 
     const myDoc = doc(db, "Groups", groupID);
     const myDoc2 = doc(db, "HHcollection", username);
@@ -36,6 +36,7 @@ export default function GroupSettingsScreen() {
     const [showMembers,setShowMembers] = useState(false);
     const [showFriends,setShowFriends] = useState(false);
     const [showModal,setShowModal] = useState(false);
+    const [showTeams,setShowTeams] = useState(false);
     const [member,setMember] = useState("");
 
     function gotoViewChosenGroupScreen(){
@@ -49,6 +50,52 @@ export default function GroupSettingsScreen() {
     function updateMember(member){
         setMember(member)
         setShowModal(!showModal);
+    }
+
+    function addMember(){
+        setShowTeams(!showTeams);
+        flag = true;
+        for(let i=0;i<friends.length;i++){
+            if(!groupMembers.includes(friends[i])){
+                flag = false;
+            }
+        }
+        if(flag){
+            Alert.alert("","All your Friends are in the group so you can't add someone")
+        }
+    }
+
+    function addLeader(){
+        setShowMembers(!showMembers)
+        if(groupLeaders.length === groupMembers.length){
+            Alert.alert("","All members are leaders so you can't make a new leader");
+        }
+    }
+
+    function handleSwitchTeams(member){
+        let newTeam1 = [...team1];
+        let newTeam2 = [...team2];
+        if(team1.includes(member)){
+            newTeam2.push(member)
+            newTeam1 = newTeam1.filter(uname => uname !== member)
+        }else{
+            newTeam1.push(member)
+            newTeam2 = newTeam2.filter(uname => uname !== member)
+        }
+        const teamObject = {
+            team1:newTeam1,
+            team2:newTeam2
+        };
+
+        setDoc(myDoc, teamObject, { merge: true })
+        .then(() => {
+            Alert.alert("","Member Switch Team Successfully");
+            groupInfo.team1 = newTeam1;
+            groupInfo.team2 = newTeam2;
+            navigation.navigate("ViewChosenGroup",{username,groupList,groupsIDS,groupInfo,groupID});
+        }).catch((error)=>{
+            Alert.alert("","An Error has occured please try again later");
+        });
     }
 
 
@@ -203,6 +250,17 @@ export default function GroupSettingsScreen() {
             </View>
         );
     });
+
+    const groupUsernames = groupMembers.map(member=>{
+        return (
+            <View key={member} style={styles.notLeadersView}>
+                <Text style={styles.notLeaderText}>{member}<Text style={{fontSize:17}}>{team1.includes(member) ? " (team1)" : " (team2)"}</Text></Text>
+                <TouchableOpacity style={styles.addBtn} onPress={() => handleSwitchTeams(member)}>
+                    <Text style={styles.btnText}>Switch</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    });
     
     return (
         <View style={styles.container}>
@@ -230,7 +288,7 @@ export default function GroupSettingsScreen() {
                 </TouchableOpacity>
                 {groupLeaders.includes(username) &&
                 <View>
-                    <TouchableOpacity style={styles.leaveBtn} onPress={() => setShowFriends(!showFriends)}>
+                    <TouchableOpacity style={styles.leaveBtn} onPress={addMember}>
                         <Text style={styles.addText}>Add New Member</Text>
                         <Image 
                             style={styles.crownStyle} 
@@ -242,7 +300,20 @@ export default function GroupSettingsScreen() {
                             <ScrollView>{userFriends}</ScrollView>
                         </View>
                     }
-                    <TouchableOpacity style={styles.leaveBtn} onPress={()=>setShowMembers(!showMembers)}>
+                    <TouchableOpacity style={styles.leaveBtn} onPress={() => setShowTeams(!showTeams)}>
+                        <Text style={styles.addText}>Change Member's Team</Text>
+                        <Image 
+                            style={styles.switchStyle} 
+                            source={require('../assets/switch-icon.png')}
+                        />
+                    </TouchableOpacity>
+                   
+                    {showTeams && 
+                        <View style={styles.notLeadersStyles}>
+                            <ScrollView>{groupUsernames}</ScrollView>
+                        </View>
+                    }
+                    <TouchableOpacity style={styles.leaveBtn} onPress={addLeader}>
                         <Text style={styles.addText}>Add Leader</Text>
                         <Image 
                             style={styles.crownStyle} 
@@ -349,6 +420,13 @@ const styles = StyleSheet.create({
     crownStyle:{
         width:30,
         height:30  , 
+        marginLeft:20,
+        marginTop:20,
+    },
+
+    switchStyle:{
+        width:35,
+        height:29 , 
         marginLeft:20,
         marginTop:20,
     },

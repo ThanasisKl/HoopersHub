@@ -47,7 +47,6 @@ export default function ViewChosenGroupScreen() {
         if(allScores[i].team1Score > allScores[i].team2Score)team1wins++;
         else if(allScores[i].team1Score < allScores[i].team2Score) team2wins++;
     }
-    console.log(team1wins);
  
     const reverseAllScores = [...allScores].reverse();
     let loops = reverseAllScores.length > 15 ? 15 : reverseAllScores.length;
