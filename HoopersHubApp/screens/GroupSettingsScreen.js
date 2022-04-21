@@ -12,6 +12,7 @@ import {
 import {doc, getDoc,setDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
+import SelectTeamModal from "../components/SelectTeamModal";
 import { db } from '../Config'
 import { colors } from './colors';
 
@@ -34,13 +35,66 @@ export default function GroupSettingsScreen() {
 
     const [showMembers,setShowMembers] = useState(false);
     const [showFriends,setShowFriends] = useState(false);
+    const [showModal,setShowModal] = useState(false);
+    const [member,setMember] = useState("");
 
     function gotoViewChosenGroupScreen(){
         navigation.navigate("ViewChosenGroup",{username,groupList,groupsIDS,groupInfo,groupID});
     }
 
-    function handleAddMember(){
+    function toggleModalVisibility(){
+        setShowModal(!showModal);
+    }
 
+    function updateMember(member){
+        setMember(member)
+        setShowModal(!showModal);
+    }
+
+
+    function handleAddMember(team){
+        const newMember = member;
+        const myDoc3 = doc(db, "HHcollection", newMember);
+        let groupObject;
+        if(team === "team1"){
+            groupObject = {
+                group:[...groupMembers,newMember],
+                team1:[...team1,newMember],
+            };
+        }else{
+            groupObject = {
+                group:[...groupMembers,newMember],
+                team2:[...team2,newMember],
+            };
+        }
+
+        setDoc(myDoc, groupObject, { merge: true })
+        .then(() => {
+            getDoc(myDoc3)
+            .then((user)=>{
+                let user_groups = user.data().groups;
+                let newUserGroups = [...user_groups,groupID]
+                
+                const groupsObject = {
+                    groups:newUserGroups,
+                }
+
+                setDoc(myDoc3, groupsObject, { merge: true })
+                .then(() => {
+                    Alert.alert("","You added a new group member successfully");
+                    groupInfo.group =  [...groupMembers,newMember];
+                    if(team === "team1")groupInfo.team1 =  [...team1,newMember];
+                    else groupInfo.team2 =  [...team2,newMember];
+                    navigation.navigate("ViewChosenGroup",{username,groupList,groupsIDS,groupInfo,groupID});
+                }).catch((error)=>{
+                    Alert.alert("","An Error has occured please try again later");
+                });
+            }).catch((error)=>{
+                Alert.alert("","An Error has occured please try again later");
+            });
+        }).catch((error)=>{
+            Alert.alert("","An Error has occured please try again later");
+        });
     }
 
     function handleAddNewLeader(newLeader){
@@ -143,7 +197,7 @@ export default function GroupSettingsScreen() {
         return (
             <View key={member} style={styles.notLeadersView}>
                 <Text style={styles.notLeaderText}>{member}</Text>
-                <TouchableOpacity style={styles.addBtn}>
+                <TouchableOpacity style={styles.addBtn} onPress={()=>updateMember(member)}>
                     <Text  style={styles.btnText}>ADD</Text>
                 </TouchableOpacity>
             </View>
@@ -153,6 +207,11 @@ export default function GroupSettingsScreen() {
     return (
         <View style={styles.container}>
             <View style={styles.container2}>
+            <SelectTeamModal
+                    toggleModalVisibility={toggleModalVisibility} 
+                    isModalVisible={showModal} 
+                    handleAddMember={handleAddMember}
+            />
             <View style={styles.headerView}>
                 <TouchableOpacity onPress={gotoViewChosenGroupScreen}>
                     <Image 

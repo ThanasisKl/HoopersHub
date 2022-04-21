@@ -19,6 +19,7 @@ import { db } from '../Config'
 import { colors } from './colors';
 import TeamsModal from "../components/TeamsModal";
 import ScoreModal from "../components/ScoreModal";
+import ShowGroupStatisticsModal from "../components/ShowGroupStatisticsModal";
 
 export default function ViewChosenGroupScreen() {
     const route = useRoute();
@@ -36,17 +37,31 @@ export default function ViewChosenGroupScreen() {
     const team2 = groupInfo.team2;
     const [isModalVisible, setModalVisible] = useState(false);
     const [isScoreModalVisible, setScoreModalVisible] = useState(false);
-    
-    const reverseAllScores = allScores.reverse();
+    const [isStatisticsModalVisible, setStatisticsModalVisible] = useState(false);
+
+    let team1wins = 0;
+    let team2wins = 0;
+    let numberOfgames = 0;
+    for(let i=0;i<allScores.length;i++){
+        numberOfgames += 1;
+        if(allScores[i].team1Score > allScores[i].team2Score)team1wins++;
+        else if(allScores[i].team1Score < allScores[i].team2Score) team2wins++;
+    }
+    console.log(team1wins);
+ 
+    const reverseAllScores = [...allScores].reverse();
     let loops = reverseAllScores.length > 15 ? 15 : reverseAllScores.length;
     let screenScores = [];
     for(let i=0;i<loops;i++){
         screenScores.push(reverseAllScores[i])
     }
 
-
     function toggleModalVisibility(){
         setModalVisible(!isModalVisible);
+    }
+
+    function toggleStatisticsModalVisibility(){
+        setStatisticsModalVisible(!isStatisticsModalVisible)
     }
 
     function gotoGroupSettings(){
@@ -116,6 +131,14 @@ export default function ViewChosenGroupScreen() {
                     isScoreModalVisible={isScoreModalVisible}
                     addScore={addScore}
                 />
+
+                <ShowGroupStatisticsModal
+                    toggleModalVisibility={toggleStatisticsModalVisibility} 
+                    isModalVisible={isStatisticsModalVisible}
+                    team1wins={team1wins}
+                    team2wins={team2wins}
+                    numberOfgames={numberOfgames}
+                />
                 
                 <View style={styles.headerView}>
                     <TouchableOpacity onPress={gotoViewGroupsScreen}>
@@ -133,10 +156,10 @@ export default function ViewChosenGroupScreen() {
                             />
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={gotoGroupSettings}>
+                        <TouchableOpacity onPress={toggleStatisticsModalVisibility}>
                             <Image 
                                 style={styles.icons2} 
-                                source={require('../assets/settings-icon.png')}
+                                source={require('../assets/statistics-icon.png')}
                             />
                         </TouchableOpacity>
 
@@ -144,6 +167,13 @@ export default function ViewChosenGroupScreen() {
                             <Image 
                                 style={styles.icons2} 
                                 source={require('../assets/team-icon.png')}
+                            />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={gotoGroupSettings}>
+                            <Image 
+                                style={styles.icons2} 
+                                source={require('../assets/settings-icon.png')}
                             />
                         </TouchableOpacity>
                     </View>

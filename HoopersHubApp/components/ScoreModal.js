@@ -22,7 +22,7 @@ export default function ScoreModal({isScoreModalVisible,toggleScoreModalVisibili
     const [showWarning,setShowWarning] = useState(false);
 
     function checkInputScore(){
-        if(!isNaN(inputScore1) && !isNaN(inputScore2)){
+        if(!isNaN(inputScore1) && !isNaN(inputScore2) && parseInt(inputScore1) >= 0 && parseInt(inputScore2) >= 0){
             addScore(parseInt(inputScore1),parseInt(inputScore2));
         }else if(inputScore1 !== -1 && inputScore2 !== -1){
             setShowWarning(true);
