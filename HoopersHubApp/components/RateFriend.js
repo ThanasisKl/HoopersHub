@@ -53,8 +53,8 @@ export default function RateFriend({friendUname,username,message}){
             let friendratings = { 
                 "from":username,
                 "blocks":countStars(skill1State),
-                "3points":countStars(skill2State),
-                "2points":countStars(skill3State),
+                "threepoints":countStars(skill2State),
+                "twopoints":countStars(skill3State),
                 "rebounds":countStars(skill4State),
                 "team_player":countStars(skill5State),
                 "overall_score":countStars(skill6State), 
@@ -75,8 +75,8 @@ export default function RateFriend({friendUname,username,message}){
                     let friendratings = { 
                         "to":friendUname,
                         "blocks":countStars(skill1State),
-                        "3points":countStars(skill2State),
-                        "2points":countStars(skill3State),
+                        "threepoints":countStars(skill2State),
+                        "twopoints":countStars(skill3State),
                         "rebounds":countStars(skill4State),
                         "team_player":countStars(skill5State),
                         "overall_score":countStars(skill6State), 

@@ -64,7 +64,14 @@ export default function ViewChosenGroupScreen() {
     }
 
     function gotoGroupSettings(){
-        navigation.navigate("GroupSettings",{username,groupLeaders,team1,team2,groupID,groupMembers,groupsNames,groupsIDs,groupInfo});
+        const myDoc = doc(db, "HHcollection", username);
+        getDoc(myDoc)
+        .then((user)=>{
+            let userFriends = user.data().friends;
+            navigation.navigate("GroupSettings",{username,groupLeaders,team1,team2,groupID,groupMembers,groupsNames,groupsIDs,groupInfo,userFriends});navigation.navigate("GroupSettings",{username,groupLeaders,team1,team2,groupID,groupMembers,groupsNames,groupsIDs,groupInfo,userFriends});
+        }).catch((error)=>{
+            Alert.alert("","An Error has occured please try again later (error code: 2)");
+        });
     }
 
     function gotoViewGroupsScreen(){

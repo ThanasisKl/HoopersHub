@@ -28,7 +28,7 @@ export default function GroupSettingsScreen() {
     const groupList = route.params.groupsNames;
     const groupsIDS = route.params.groupsIDs;
     const groupInfo = route.params.groupInfo;
-    const friends = ['thanasis2','thanasis3']; ///fixmeeeee
+    const friends = route.params.userFriends;
 
     const myDoc = doc(db, "Groups", groupID);
     const myDoc2 = doc(db, "HHcollection", username);
@@ -53,8 +53,8 @@ export default function GroupSettingsScreen() {
     }
 
     function addMember(){
-        setShowTeams(!showTeams);
-        flag = true;
+        setShowFriends(!showFriends);
+        let flag = true;
         for(let i=0;i<friends.length;i++){
             if(!groupMembers.includes(friends[i])){
                 flag = false;
@@ -70,6 +70,10 @@ export default function GroupSettingsScreen() {
         if(groupLeaders.length === groupMembers.length){
             Alert.alert("","All members are leaders so you can't make a new leader");
         }
+    }
+
+    function handleDeleteScore(){
+        ///////////////////////////
     }
 
     function handleSwitchTeams(member){
@@ -288,6 +292,13 @@ export default function GroupSettingsScreen() {
                 </TouchableOpacity>
                 {groupLeaders.includes(username) &&
                 <View>
+                    <TouchableOpacity style={styles.leaveBtn} onPress={handleDeleteScore}>
+                        <Text style={styles.addText}>Delete a Score</Text>
+                        <Image 
+                            style={styles.deleteStyle} 
+                            source={require('../assets/delete-icon.png')}
+                        />
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.leaveBtn} onPress={addMember}>
                         <Text style={styles.addText}>Add New Member</Text>
                         <Image 
@@ -420,6 +431,13 @@ const styles = StyleSheet.create({
     crownStyle:{
         width:30,
         height:30  , 
+        marginLeft:20,
+        marginTop:20,
+    },
+
+    deleteStyle:{
+        width:25,
+        height:31, 
         marginLeft:20,
         marginTop:20,
     },

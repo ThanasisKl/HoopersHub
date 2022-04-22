@@ -36,7 +36,7 @@ export default function GroupMainScreen() {
         }); 
     }
 
-    function gotoViewGroupsScreen(){ //FIXME
+    function gotoViewGroupsScreen(){
         const myDoc = doc(db, "HHcollection", username);
         getDoc(myDoc)
         .then((user)=>{
@@ -44,18 +44,22 @@ export default function GroupMainScreen() {
             const groupsIDs = user_data.groups;
             const myDoc = doc(db, "HHcollection", username);
 
-            let groupsNames = [];
-            for(let i=0;i<groupsIDs.length;i++){
-                const myDoc2 = doc(db, "Groups", groupsIDs[i]);
-                getDoc(myDoc2)
-                .then((group)=>{
-                    groupsNames.push(group.data().name);
-                    if (i === groupsIDs.length-1){
-                        navigation.navigate("ViewGroups",{username,groupsNames,groupsIDs});
-                    }
-                }).catch((error)=>{
-                    Alert.alert("","An Error has occured please try again later (error code:)");
-                });
+            if (groupsIDs.length === 0){
+                Alert.alert("No Groups Found","You have no groups. You can create one or a friend of yours can add you to a group")
+            }else{
+                let groupsNames = [];
+                for(let i=0;i<groupsIDs.length;i++){
+                    const myDoc2 = doc(db, "Groups", groupsIDs[i]);
+                    getDoc(myDoc2)
+                    .then((group)=>{
+                        groupsNames.push(group.data().name);
+                        if (i === groupsIDs.length-1){
+                            navigation.navigate("ViewGroups",{username,groupsNames,groupsIDs});
+                        }
+                    }).catch((error)=>{
+                        Alert.alert("","An Error has occured please try again later (error code:)");
+                    });
+                }
             }
         }).catch((error)=>{
             Alert.alert("","An Error has occured please try again later (error code:)");
