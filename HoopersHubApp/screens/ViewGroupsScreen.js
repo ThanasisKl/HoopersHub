@@ -27,8 +27,7 @@ export default function ViewGroupsScreen() {
         navigation.navigate("GroupMain",{username});
     }
 
-    function handleViewGroup(groupID){//FIXME
-        // console.log(groupList[getIndex(groupID)]);
+    function handleViewGroup(groupID){
         const myDoc = doc(db, "Groups", groupID);
         getDoc(myDoc)
         .then((group)=>{

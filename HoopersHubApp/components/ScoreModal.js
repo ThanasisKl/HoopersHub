@@ -15,7 +15,7 @@ import { colors } from '../screens/colors';
 
 const { width,height } = Dimensions.get("window");
 
-export default function ScoreModal({isScoreModalVisible,toggleScoreModalVisibility,addScore}){
+export default function ScoreModal({isScoreModalVisible,toggleScoreModalVisibility,addScore,flag,deleteLatestScore}){
 
     const [inputScore1,setInputScore1] = useState(-1);
     const [inputScore2,setInputScore2] = useState(-1);
@@ -23,7 +23,13 @@ export default function ScoreModal({isScoreModalVisible,toggleScoreModalVisibili
 
     function checkInputScore(){
         if(!isNaN(inputScore1) && !isNaN(inputScore2) && parseInt(inputScore1) >= 0 && parseInt(inputScore2) >= 0){
-            addScore(parseInt(inputScore1),parseInt(inputScore2));
+            if (flag){
+                deleteLatestScore(parseInt(inputScore1),parseInt(inputScore2));
+            }else{
+                addScore(parseInt(inputScore1),parseInt(inputScore2));
+            }
+            setInputScore1(-1);
+            setInputScore2(-1);    
         }else if(inputScore1 !== -1 && inputScore2 !== -1){
             setShowWarning(true);
         }
@@ -68,9 +74,9 @@ export default function ScoreModal({isScoreModalVisible,toggleScoreModalVisibili
                         <Text style={styles.textScore}>Team2</Text>
                     </View>
                     <TouchableOpacity style={styles.buttons} onPress={checkInputScore}>
-                        <Text style={styles.btnsText}>Add Score</Text>   
+                        <Text style={styles.btnsText}>{flag ? "Update " : "Add "}Score</Text>   
                     </TouchableOpacity>
-                    {showWarning && <Text style={styles.warningStyle}>Please give numbers as input for score</Text>}
+                    {showWarning && <Text style={styles.warningStyle}>Please give numbers greater than zero as inputs for score</Text>}
                 </View>
             </View>
         </Modal>

@@ -13,10 +13,11 @@ import {doc, getDoc,setDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
 import SelectTeamModal from "../components/SelectTeamModal";
+import ScoreModal from "../components/ScoreModal";
 import { db } from '../Config'
 import { colors } from './colors';
 
-export default function GroupSettingsScreen() {
+export default function GroupSettingsScreen() { //simazema kai inputs scores state
     const route = useRoute();
     const navigation = useNavigation();
     const username = route.params.username;
@@ -38,6 +39,7 @@ export default function GroupSettingsScreen() {
     const [showModal,setShowModal] = useState(false);
     const [showTeams,setShowTeams] = useState(false);
     const [member,setMember] = useState("");
+    const [isScoreModalVisible, setScoreModalVisible] = useState(false);
 
     function gotoViewChosenGroupScreen(){
         navigation.navigate("ViewChosenGroup",{username,groupList,groupsIDS,groupInfo,groupID});
@@ -46,6 +48,11 @@ export default function GroupSettingsScreen() {
     function toggleModalVisibility(){
         setShowModal(!showModal);
     }
+
+    function toggleScoreModalVisibility(){
+        setScoreModalVisible(!isScoreModalVisible);
+    }
+
 
     function updateMember(member){
         setMember(member)
@@ -65,6 +72,7 @@ export default function GroupSettingsScreen() {
         }
     }
 
+
     function addLeader(){
         setShowMembers(!showMembers)
         if(groupLeaders.length === groupMembers.length){
@@ -72,8 +80,49 @@ export default function GroupSettingsScreen() {
         }
     }
 
-    function handleDeleteScore(){
-        ///////////////////////////
+    function addScore(score1,score2){
+        console.log(score1,score2)
+        const newScore = {
+            'team1Score':score1,
+            'team2Score':score2,
+        }
+
+        const scoreObject = {
+            scores: [...groupInfo.scores,newScore]
+        };
+
+        setDoc(myDoc, scoreObject, { merge: true })
+        .then(() => {
+            toggleScoreModalVisibility();
+            let groupsIDs = groupsIDS;
+            let groupsNames = groupList;
+            navigation.navigate("ViewGroups",{username,groupsNames,groupsIDs});
+            Alert.alert("","Latest Score Updated Successfully!");
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+
+    function deleteLatestScore(score1,score2){
+        let newScores = [];
+        for(let i=0;i<groupInfo.scores.length-1;i++){
+            newScores.push(groupInfo.scores[i]);
+        }
+
+        const scoreObject = {
+            scores: [...newScores]
+        };
+
+        setDoc(myDoc, scoreObject, { merge: true })
+        .then(() => {
+            console.log("Latest Score Deleted");
+            groupInfo.scores = newScores;
+            addScore(score1,score2);
+        })
+        .catch((error) => {
+            console.log(error)
+        })
     }
 
     function handleSwitchTeams(member){
@@ -274,6 +323,15 @@ export default function GroupSettingsScreen() {
                     isModalVisible={showModal} 
                     handleAddMember={handleAddMember}
             />
+
+            <ScoreModal 
+                toggleScoreModalVisibility={toggleScoreModalVisibility} 
+                isScoreModalVisible={isScoreModalVisible}
+                addScore={addScore}
+                flag={true}
+                deleteLatestScore={deleteLatestScore}
+            />
+
             <View style={styles.headerView}>
                 <TouchableOpacity onPress={gotoViewChosenGroupScreen}>
                     <Image 
@@ -292,11 +350,11 @@ export default function GroupSettingsScreen() {
                 </TouchableOpacity>
                 {groupLeaders.includes(username) &&
                 <View>
-                    <TouchableOpacity style={styles.leaveBtn} onPress={handleDeleteScore}>
-                        <Text style={styles.addText}>Delete a Score</Text>
+                    <TouchableOpacity style={styles.leaveBtn} onPress={toggleScoreModalVisibility}>
+                        <Text style={styles.addText}>Update Latest Score</Text>
                         <Image 
                             style={styles.deleteStyle} 
-                            source={require('../assets/delete-icon.png')}
+                            source={require('../assets/update-icon.png')}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.leaveBtn} onPress={addMember}>
@@ -436,8 +494,8 @@ const styles = StyleSheet.create({
     },
 
     deleteStyle:{
-        width:25,
-        height:31, 
+        width:30,
+        height:32, 
         marginLeft:20,
         marginTop:20,
     },

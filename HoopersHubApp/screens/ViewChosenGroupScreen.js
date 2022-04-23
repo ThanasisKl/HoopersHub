@@ -39,6 +39,8 @@ export default function ViewChosenGroupScreen() {
     const [isScoreModalVisible, setScoreModalVisible] = useState(false);
     const [isStatisticsModalVisible, setStatisticsModalVisible] = useState(false);
 
+    const scoresInScreen = 20;
+
     let team1wins = 0;
     let team2wins = 0;
     let numberOfgames = 0;
@@ -49,7 +51,7 @@ export default function ViewChosenGroupScreen() {
     }
  
     const reverseAllScores = [...allScores].reverse();
-    let loops = reverseAllScores.length > 15 ? 15 : reverseAllScores.length;
+    let loops = reverseAllScores.length > scoresInScreen ? scoresInScreen : reverseAllScores.length;
     let screenScores = [];
     for(let i=0;i<loops;i++){
         screenScores.push(reverseAllScores[i])
@@ -136,6 +138,7 @@ export default function ViewChosenGroupScreen() {
                     toggleScoreModalVisibility={toggleScoreModalVisibility} 
                     isScoreModalVisible={isScoreModalVisible}
                     addScore={addScore}
+                    flag={false}
                 />
 
                 <ShowGroupStatisticsModal
