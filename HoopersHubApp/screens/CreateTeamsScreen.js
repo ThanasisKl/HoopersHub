@@ -76,7 +76,6 @@ export default function CreateTeamsScreen() {
                     .then((user)=>{
                         let user_groups = user.data().groups;
                         let newGroupsArray = [...user_groups,docID]
-                        console.log(newGroupsArray);
 
                         let GroupObject = {
                             groups: newGroupsArray
