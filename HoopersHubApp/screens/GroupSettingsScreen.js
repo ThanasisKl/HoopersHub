@@ -81,7 +81,6 @@ export default function GroupSettingsScreen() { //simazema kai inputs scores sta
     }
 
     function addScore(score1,score2){
-        console.log(score1,score2)
         const newScore = {
             'team1Score':score1,
             'team2Score':score2,
@@ -100,7 +99,7 @@ export default function GroupSettingsScreen() { //simazema kai inputs scores sta
             Alert.alert("","Latest Score Updated Successfully!");
         })
         .catch((error) => {
-            console.log(error)
+            Alert.alert("","An Error has occured please try again later");
         })
     }
 
@@ -121,7 +120,7 @@ export default function GroupSettingsScreen() { //simazema kai inputs scores sta
             addScore(score1,score2);
         })
         .catch((error) => {
-            console.log(error)
+            Alert.alert("","An Error has occured please try again later");
         })
     }
 

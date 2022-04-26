@@ -34,7 +34,6 @@ export default function HomeScreen({route}) {
         let user_data = user.data();
         let requests_list = user_data.friendRequests;
         if (requests_list.length > 0){
-            console.log('In')
             setMessageIcon(require('../assets/message-icon2.png'));
         }else{
             setMessageIcon(require('../assets/message-icon.png'));
