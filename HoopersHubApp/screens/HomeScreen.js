@@ -61,6 +61,10 @@ export default function HomeScreen({route}) {
         });
     }
 
+    function gotoTrainingMainScreen(){
+        navigation.navigate("TrainingMain",{username});
+    }
+
     function gotoRatingScreen(){
         const myDoc = doc(db, "HHcollection", username);
         getDoc(myDoc)
@@ -169,7 +173,7 @@ export default function HomeScreen({route}) {
                 </TouchableOpacity>
             </View>
 
-            <TouchableOpacity style={styles.buttons}>
+            <TouchableOpacity style={styles.buttons} onPress={gotoTrainingMainScreen}>
                 <Text style={styles.btnsText}>Training</Text>   
             </TouchableOpacity>
 
