@@ -6,7 +6,6 @@ import {
     View,
     Image,
     TextInput,
-    Button,
     TouchableOpacity,
     Modal,
     Dimensions,
@@ -131,20 +130,23 @@ export default function HomeScreen({route}) {
                 <View style={styles.viewWrapper}>
                     <View style={styles.modalView}>
                         <View style={styles.xView}>
-                            <TouchableOpacity onPress={toggleModalVisibility}>
+                            <TouchableOpacity onPress={toggleModalVisibility} style={styles.xicon}>
                                 <Image 
                                     style={styles.icons2} 
                                     source={require('../assets/x.png')}
                                 />
                             </TouchableOpacity>
                         </View>
+
+                        <Text style={styles.modalTitle}>Send a Friend Request</Text>
                         <TextInput placeholder="Enter the username of your friend" 
                             value={inputValue} style={styles.textInput} 
                             onChangeText={(value) => setInputValue(value)} 
                         />
-                        <Button title="Send" style={styles.btnStyle}
-                            onPress={sendFriendRequest}
-                            color={colors.bgColor} />
+                        <TouchableOpacity style={styles.sendBtn} onPress={sendFriendRequest}>
+                            <Text style={styles.btnsText2}>Send</Text>   
+                        </TouchableOpacity>
+
                     </View>
                 </View>
             </Modal>
@@ -218,6 +220,7 @@ const styles = StyleSheet.create({
     btnsText:{
         fontSize:20,
         fontWeight: 'bold',
+        color:"black",
     },
 
     upperContainer:{
@@ -244,7 +247,21 @@ const styles = StyleSheet.create({
     xView:{
         alignSelf:"flex-end",
         marginRight:10,
-        marginBottom:13,
+    },
+
+    sendBtn:{
+        width: "30%",
+        borderRadius: 7,
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: colors.bgColor,
+    },
+
+    btnsText2:{
+        fontSize:18,
+        fontWeight: 'bold',
+        color:'white',
     },
 
     viewWrapper: {
@@ -252,7 +269,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "rgba(0, 0, 0, 0.2)",
+        flexDirection:"row",
     },
+
     modalView: {
         alignItems: "center",
         justifyContent: "center",
@@ -262,10 +281,19 @@ const styles = StyleSheet.create({
         elevation: 5,
         transform: [{ translateX: -(width * 0.4) }, 
                     { translateY: -90 }],
-        height: 180,
+        height: 220,
         width: width * 0.8,
         backgroundColor: "#fff",
         borderRadius: 7,
+    },
+    
+    modalTitle:{
+        fontSize:20,
+        fontWeight:"bold",
+        color:colors.textColor,
+        alignSelf:"center",
+        marginLeft:15,
+        marginBottom:15,
     },
     
     textInput: {
@@ -275,7 +303,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         borderColor: "rgba(0, 0, 0, 0.2)",
         borderWidth: 1,
-        marginBottom: 8,
+        marginBottom: 25,
     },
 });
 
