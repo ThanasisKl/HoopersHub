@@ -44,7 +44,6 @@ export default function ScoreModal({isScoreModalVisible,toggleScoreModalVisibili
         <Modal animationType="slide" 
             transparent visible={isScoreModalVisible} 
             presentationStyle="overFullScreen" 
-            onDismiss={toggleScoreModalVisibility}
         >
             <View style={styles.viewWrapper}>
                 <View style={styles.modalView}>

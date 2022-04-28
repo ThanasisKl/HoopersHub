@@ -124,9 +124,8 @@ export default function HomeScreen({route}) {
     return (
         <View style={styles.container}>
             <Modal animationType="slide" 
-                   transparent visible={isModalVisible} 
-                   presentationStyle="overFullScreen" 
-                   onDismiss={toggleModalVisibility}
+                transparent visible={isModalVisible} 
+                presentationStyle="overFullScreen" 
             >
                 
                 <View style={styles.viewWrapper}>

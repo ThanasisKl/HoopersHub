@@ -37,6 +37,14 @@ export default function GroupMainScreen() {
 
     function handleFinish(){
         console.log(results);//fixme
+        /*
+            beginner
+            regular
+            great
+            rising star
+            professional
+            legend
+        */ 
     }
 
     return (

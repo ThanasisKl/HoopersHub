@@ -49,8 +49,7 @@ export default function SelectTeamModal({isModalVisible,toggleModalVisibility,ha
     return (
         <Modal animationType="slide" 
             transparent visible={isModalVisible} 
-            presentationStyle="overFullScreen" 
-            onDismiss={toggleModalVisibility}
+            presentationStyle="overFullScreen"
         >
             <View style={styles.viewWrapper}>
                 <View style={styles.modalView}>

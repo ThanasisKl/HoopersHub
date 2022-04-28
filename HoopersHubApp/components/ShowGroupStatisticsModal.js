@@ -27,7 +27,6 @@ export default function ShowGroupStatisticsModal({isModalVisible,toggleModalVisi
         <Modal animationType="slide" 
             transparent visible={isModalVisible} 
             presentationStyle="overFullScreen" 
-            onDismiss={toggleModalVisibility}
         >
             <View style={styles.viewWrapper}>
                 <View style={styles.modalView}>

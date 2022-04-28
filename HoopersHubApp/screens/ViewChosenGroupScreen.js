@@ -243,14 +243,14 @@ const styles = StyleSheet.create({
 
     groupText:{
         fontSize:25,
-        fontFamily:'monospace',
+        // fontFamily:'monospace',
         color:'white',
         marginRight:30,
     },
 
     groupNameStyle:{
         fontSize:28,
-        fontFamily:'monospace',
+        // fontFamily:'monospace',
         color:'black',
         fontWeight:'bold',
         textAlign:'center',
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
 
     scoresText:{
         fontSize:25,
-        fontFamily:'monospace',
+        // fontFamily:'monospace',
         color:'white',  
     },
 

@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
 
     groupText:{
         fontSize:25,
-        fontFamily:'monospace',
+        // fontFamily:'monospace',
         color:'white',
         marginRight:30,
     },

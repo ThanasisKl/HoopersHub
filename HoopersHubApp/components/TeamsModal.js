@@ -45,8 +45,7 @@ export default function TeamsModal({team1,team2,groupLeaders,toggleModalVisibili
     return (
         <Modal animationType="slide" 
             transparent visible={isModalVisible} 
-            presentationStyle="overFullScreen" 
-            onDismiss={toggleModalVisibility}
+            presentationStyle="overFullScreen"
         >
             <View style={styles.viewWrapper}>
                 <View style={styles.modalView}>

@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
 
     friendText:{
         fontSize:25,
-        fontFamily:'monospace',
+        // fontFamily:'monospace',
         color:'white',
     },
 

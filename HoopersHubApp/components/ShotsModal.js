@@ -45,7 +45,6 @@ export default function ShotsModal({isShotsModalVisible,toggleShotsModalVisibili
         <Modal animationType="slide" 
             transparent visible={isShotsModalVisible} 
             presentationStyle="overFullScreen" 
-            onDismiss={toggleShotsModalVisibility}
         >
             <View style={styles.viewWrapper}>
                 <View style={styles.modalView}>
