@@ -20,6 +20,7 @@ export default function RateFriend({friendUname,username,message}){
     const [skill4State,setskill4State] = useState([false,false,false,false,false]);
     const [skill5State,setskill5State] = useState([false,false,false,false,false]);
     const [skill6State,setskill6State] = useState([false,false,false,false,false]);
+    const [skill7State,setskill7State] = useState([false,false,false,false,false]);
 
     const myDoc = doc(db, "HHcollection", friendUname);
     const myDoc2 = doc(db, "HHcollection", username);
@@ -53,6 +54,7 @@ export default function RateFriend({friendUname,username,message}){
             let friendratings = { 
                 "from":username,
                 "blocks":countStars(skill1State),
+                "defense":countStars(skill7State),
                 "threepoints":countStars(skill2State),
                 "twopoints":countStars(skill3State),
                 "rebounds":countStars(skill4State),
@@ -75,6 +77,7 @@ export default function RateFriend({friendUname,username,message}){
                     let friendratings = { 
                         "to":friendUname,
                         "blocks":countStars(skill1State),
+                        "defense":countStars(skill7State),
                         "threepoints":countStars(skill2State),
                         "twopoints":countStars(skill3State),
                         "rebounds":countStars(skill4State),
@@ -132,10 +135,15 @@ export default function RateFriend({friendUname,username,message}){
         setskill6State(state);
     }
 
+    function setSkill7(state){
+        setskill7State(state);
+    }
+
     
     return (
         <View style={styles.viewContainer}>
             <RateSkill skill="Blocks" getSkill={setSkill1}/>
+            <RateSkill skill="Defense" getSkill={setSkill7}/>
             <RateSkill skill="3 Points" getSkill={setSkill2}/>
             <RateSkill skill="2 Points" getSkill={setSkill3}/>
             <RateSkill skill="Rebounds" getSkill={setSkill4}/>
