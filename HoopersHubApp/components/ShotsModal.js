@@ -16,7 +16,7 @@ import { colors } from '../screens/colors';
 
 const { width,height } = Dimensions.get("window");
 
-export default function ShotsModal({isShotsModalVisible,toggleShotsModalVisibility,btnNumber,results,setResults}){
+export default function ShotsModal({isShotsModalVisible,toggleShotsModalVisibility,btnNumber,results,setResults,btnColor,setBtnColor}){
 
     const [shotsInTarget,setShotsInTarget] = useState(null);
     const [showWarning,setShowWarning] = useState(false);
@@ -25,10 +25,12 @@ export default function ShotsModal({isShotsModalVisible,toggleShotsModalVisibili
         if(!isNaN(shotsInTarget) && parseInt(shotsInTarget) >= 0 && parseInt(shotsInTarget) <= 3){
             setShowWarning(false);
             toggleShotsModalVisibility(0);
-            // console.log(results);
-            // let newResults = results;
-            // newResults[btnNumber-1] = shotsInTarget;
-            // setResults([...newResults])
+            let newResults = results;
+            newResults[btnNumber-1] = parseInt(shotsInTarget);
+            setResults([...newResults])
+            let newColors = btnColor;
+            newColors[btnNumber-1] = !newColors[btnNumber-1];
+            setBtnColor([...newColors]);
         }else{
             setShowWarning(true);
         }
@@ -61,7 +63,8 @@ export default function ShotsModal({isShotsModalVisible,toggleShotsModalVisibili
                             style={styles.textInput} 
                             onChangeText={(shots) => setShotsInTarget(shots)}
                             keyboardType='numeric'
-                            maxLength={1}  
+                            maxLength={1}
+                            placeholder={'/3'}  
                         />
                     </View>
                     <TouchableOpacity style={styles.buttons} onPress={checkInput}>
@@ -117,7 +120,7 @@ export default function ShotsModal({isShotsModalVisible,toggleShotsModalVisibili
         fontWeight:'bold',
         marginBottom:10,
         marginHorizontal:5,
-        backgroundColor:"#962020",
+        backgroundColor:colors.darkRed,
         color:"white",
         width:40,
         height:40,
@@ -147,7 +150,7 @@ export default function ShotsModal({isShotsModalVisible,toggleShotsModalVisibili
         justifyContent: "center",
         marginTop: 20,
         marginBottom:10,
-        backgroundColor: '#962020',
+        backgroundColor: colors.darkRed,
     },
 
     btnsText:{
