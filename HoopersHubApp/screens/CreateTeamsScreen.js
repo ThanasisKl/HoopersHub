@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
 
     unameText:{
         fontSize:25,
-        fontFamily:'monospace',
+        // fontFamily:'monospace',
         color:'white',
     },
     
