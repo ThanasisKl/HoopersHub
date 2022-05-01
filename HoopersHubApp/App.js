@@ -18,8 +18,7 @@ import TournamentMainScreen from './screens/Tournament/TournamentMainScreen';
 import FriendlyTournamentMainScreen from './screens/Tournament/FriendlyTournamentMainScreen';
 import AddTournamentMembersScreen from './screens/Tournament/AddTournamentMembersScreen';
 import TournamentTeamsMainScreen from './screens/Tournament/TournamentTeamsMainScreen'
-import TestingScreen from './screens/TestingScreen';
-
+import SelectTeamsManuallyScreen from './screens/Tournament/SelectTeamsManuallyScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +42,7 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="FriendlyTournamentMain" component={FriendlyTournamentMainScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="AddTournamentMembers" component={AddTournamentMembersScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="TournamentTeamsMain" component={TournamentTeamsMainScreen}/>
+        <Stack.Screen options={{ headerShown: false }} name="SelectTeamsManually" component={SelectTeamsManuallyScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

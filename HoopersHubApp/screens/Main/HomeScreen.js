@@ -137,7 +137,7 @@ export default function HomeScreen({route}) {
                             <TouchableOpacity onPress={toggleModalVisibility} style={styles.xicon}>
                                 <Image 
                                     style={styles.icons2} 
-                                    source={require('../assets/x.png')}
+                                    source={require('../../assets/x.png')}
                                 />
                             </TouchableOpacity>
                         </View>

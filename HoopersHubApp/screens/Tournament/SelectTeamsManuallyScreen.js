@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     Alert,
 } from "react-native";
+import {Picker} from '@react-native-picker/picker';
 import {doc, getDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
@@ -15,37 +16,31 @@ import { db } from '../../Config'
 import { colors } from '../colors';
 
 
-export default function TournamentTeamsMainScreen() {
+export default function SelectTeamsManuallyScreen() {
     const route = useRoute();
     const navigation = useNavigation();
     const username = route.params.username;
-    const groupList = route.params.groupList;
     const friends_list = route.params.friends_list;
-    const tournamentName = route.params.tournamentName;
+    const [selectedValue, setSelectedValue] = useState("java");
     
-    function gotoSelectTeams(){
-        navigation.navigate("SelectTeamsManually",{username,friends_list});
-    }
-
     return (
         <View style={styles.container}>
             <View style={styles.iconView}>
-                <TouchableOpacity onPress={()=>navigation.navigate("AddTournamentMembers",{username,friends_list})}>
+                <TouchableOpacity>
                     <Image 
                         style={styles.icons} 
                         source={require('../../assets/back-icon.png')}
                     />
                 </TouchableOpacity>
             </View>
-           
-            <TouchableOpacity style={styles.buttons} onPress={gotoSelectTeams}>
-                <Text style={styles.btnsText}>Select Teams Manually</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.buttons}>
-                <Text style={styles.btnsText}>Create Teams Automatically</Text>
-            </TouchableOpacity>
-            
+            <Picker
+                selectedValue={selectedValue}
+                style={{ height: 50, width: 150 }}
+                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+            >
+                <Picker.Item label="Java" value="java" />
+                <Picker.Item label="JavaScript" value="js" />
+            </Picker>
         </View>
     );
 }
@@ -88,6 +83,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top:0,
         alignSelf: "flex-start",
-        flexDirection:"row"
-    },   
+    },
+
+   
 });
