@@ -12,8 +12,8 @@ import {
 import {doc, getDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
-import { db } from '../Config'
-import { colors } from './colors';
+import { db } from '../../Config'
+import { colors } from '../colors';
 
 
 export default function ViewGroupsScreen() {
@@ -64,7 +64,7 @@ export default function ViewGroupsScreen() {
                     <TouchableOpacity onPress={gotoGroupScreen}>
                         <Image 
                             style={styles.icons} 
-                            source={require('../assets/back-icon.png')}
+                            source={require('../../assets/back-icon.png')}
                         />
                     </TouchableOpacity>
                     <Text style={styles.pageTitle}>Your Groups</Text>

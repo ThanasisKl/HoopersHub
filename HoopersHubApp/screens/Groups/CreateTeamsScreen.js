@@ -14,8 +14,8 @@ import {doc, getDoc,setDoc,addDoc,firestore} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
 
-import { db } from '../Config'
-import { colors } from './colors';
+import { db } from '../../Config'
+import { colors } from '../colors';
 
 
 export default function CreateTeamsScreen() {
@@ -181,7 +181,7 @@ export default function CreateTeamsScreen() {
                     <TouchableOpacity onPress={gotoCreateGroupScreen}>
                         <Image 
                             style={styles.icons} 
-                            source={require('../assets/back-icon.png')}
+                            source={require('../../assets/back-icon.png')}
                         />
                     </TouchableOpacity>
                     <Text style={styles.pageTitle}>Create the Teams</Text>

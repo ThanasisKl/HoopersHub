@@ -12,9 +12,9 @@ import {
 import { useRoute } from '@react-navigation/native';
 import {doc, getDoc,setDoc} from 'firebase/firestore';
 
-import { db } from '../Config'
-import { colors } from './colors';
-import FriendRequest from '../components/FriendRequest'
+import { db } from '../../Config'
+import { colors } from './../colors';
+import FriendRequest from '../../components/FriendRequest'
 
 export default function FriendRequestsScreen() {
     
@@ -140,7 +140,7 @@ export default function FriendRequestsScreen() {
                     <TouchableOpacity onPress={gotoHomeScreen}>
                         <Image 
                             style={styles.icons} 
-                            source={require('../assets/back-icon.png')}
+                            source={require('../../assets/back-icon.png')}
                         />
                     </TouchableOpacity>
                     <Text style={styles.pageTitle}>Friend Requests</Text>

@@ -12,9 +12,9 @@ import {
 import {doc, getDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
-import { db } from '../Config'
-import { colors } from './colors';
-import ShotsModal from "../components/ShotsModal";
+import { db } from '../../Config'
+import { colors } from './../colors';
+import ShotsModal from "../../components/ShotsModal";
 
 
 export default function GroupMainScreen() {
@@ -49,7 +49,7 @@ export default function GroupMainScreen() {
 
     return (
         <View style={styles.container}>
-            <ImageBackground source={require('../assets/basket-court4.jpg')} resizeMode="stretch" style={styles.image}>
+            <ImageBackground source={require('../../assets/basket-court4.jpg')} resizeMode="stretch" style={styles.image}>
                 <ShotsModal
                     isShotsModalVisible={showShotsModal}
                     toggleShotsModalVisibility={toggleModalVisibility}
@@ -63,7 +63,7 @@ export default function GroupMainScreen() {
                     <TouchableOpacity onPress={gotoHomeScreen}>
                         <Image 
                             style={styles.icons} 
-                            source={require('../assets/back-icon.png')}
+                            source={require('../../assets/back-icon.png')}
                         />
                     </TouchableOpacity>
                     

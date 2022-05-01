@@ -15,11 +15,11 @@ import {
 import {doc, getDoc,setDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
-import { db } from '../Config'
-import { colors } from './colors';
-import TeamsModal from "../components/TeamsModal";
-import ScoreModal from "../components/ScoreModal";
-import ShowGroupStatisticsModal from "../components/ShowGroupStatisticsModal";
+import { db } from '../../Config'
+import { colors } from '../colors';
+import TeamsModal from "../../components/TeamsModal";
+import ScoreModal from "../../components/ScoreModal";
+import ShowGroupStatisticsModal from "../../components/ShowGroupStatisticsModal";
 
 export default function ViewChosenGroupScreen() {
     const route = useRoute();
@@ -153,7 +153,7 @@ export default function ViewChosenGroupScreen() {
                     <TouchableOpacity onPress={gotoViewGroupsScreen}>
                         <Image 
                             style={styles.icons} 
-                            source={require('../assets/back-icon.png')}
+                            source={require('../../assets/back-icon.png')}
                         />
                     </TouchableOpacity>
 
@@ -161,28 +161,28 @@ export default function ViewChosenGroupScreen() {
                         <TouchableOpacity onPress={handleAddScore}>
                             <Image 
                                 style={styles.icons2} 
-                                source={require('../assets/add_icon.png')}
+                                source={require('../../assets/add_icon.png')}
                             />
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={toggleStatisticsModalVisibility}>
                             <Image 
                                 style={styles.icons2} 
-                                source={require('../assets/statistics-icon.png')}
+                                source={require('../../assets/statistics-icon.png')}
                             />
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={toggleModalVisibility}>
                             <Image 
                                 style={styles.icons2} 
-                                source={require('../assets/team-icon.png')}
+                                source={require('../../assets/team-icon.png')}
                             />
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={gotoGroupSettings}>
                             <Image 
                                 style={styles.icons2} 
-                                source={require('../assets/settings-icon.png')}
+                                source={require('../../assets/settings-icon.png')}
                             />
                         </TouchableOpacity>
                     </View>

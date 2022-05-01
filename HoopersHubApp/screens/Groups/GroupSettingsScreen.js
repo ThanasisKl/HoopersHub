@@ -12,10 +12,10 @@ import {
 import {doc, getDoc,setDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
-import SelectTeamModal from "../components/SelectTeamModal";
-import ScoreModal from "../components/ScoreModal";
-import { db } from '../Config'
-import { colors } from './colors';
+import SelectTeamModal from "../../components/SelectTeamModal";
+import ScoreModal from "../../components/ScoreModal";
+import { db } from '../../Config'
+import { colors } from '../colors';
 
 export default function GroupSettingsScreen() { //simazema kai inputs scores state
     const route = useRoute();
@@ -335,7 +335,7 @@ export default function GroupSettingsScreen() { //simazema kai inputs scores sta
                 <TouchableOpacity onPress={gotoViewChosenGroupScreen}>
                     <Image 
                         style={styles.icons} 
-                        source={require('../assets/back-icon.png')}
+                        source={require('../../assets/back-icon.png')}
                     />
                 </TouchableOpacity>
                 <Text style={styles.pageTitle}>Settings</Text>
@@ -344,7 +344,7 @@ export default function GroupSettingsScreen() { //simazema kai inputs scores sta
                     <Text style={styles.leaveText}>Leave Group</Text>
                     <Image 
                         style={styles.icons2} 
-                        source={require('../assets/logout-icon.png')}
+                        source={require('../../assets/logout-icon.png')}
                     />
                 </TouchableOpacity>
                 {groupLeaders.includes(username) &&
@@ -353,14 +353,14 @@ export default function GroupSettingsScreen() { //simazema kai inputs scores sta
                         <Text style={styles.addText}>Update Latest Score</Text>
                         <Image 
                             style={styles.deleteStyle} 
-                            source={require('../assets/update-icon.png')}
+                            source={require('../../assets/update-icon.png')}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.leaveBtn} onPress={addMember}>
                         <Text style={styles.addText}>Add New Member</Text>
                         <Image 
                             style={styles.crownStyle} 
-                            source={require('../assets/friend_requests-icon.png')}
+                            source={require('../../assets/friend_requests-icon.png')}
                         />
                     </TouchableOpacity>
                     {showFriends&& 
@@ -372,7 +372,7 @@ export default function GroupSettingsScreen() { //simazema kai inputs scores sta
                         <Text style={styles.addText}>Change Member's Team</Text>
                         <Image 
                             style={styles.switchStyle} 
-                            source={require('../assets/switch-icon.png')}
+                            source={require('../../assets/switch-icon.png')}
                         />
                     </TouchableOpacity>
                    
@@ -385,7 +385,7 @@ export default function GroupSettingsScreen() { //simazema kai inputs scores sta
                         <Text style={styles.addText}>Add Leader</Text>
                         <Image 
                             style={styles.crownStyle} 
-                            source={require('../assets/crown-icon.png')}
+                            source={require('../../assets/crown-icon.png')}
                         />
                     </TouchableOpacity>
                     {showMembers && 

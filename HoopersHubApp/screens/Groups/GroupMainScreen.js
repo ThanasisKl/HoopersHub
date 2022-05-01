@@ -11,8 +11,8 @@ import {
 import {doc, getDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
-import { db } from '../Config'
-import { colors } from './colors';
+import { db } from '../../Config'
+import { colors } from '../colors';
 
 
 export default function GroupMainScreen() {
@@ -72,7 +72,7 @@ export default function GroupMainScreen() {
                 <TouchableOpacity onPress={gotoHomeScreen}>
                     <Image 
                         style={styles.icons} 
-                        source={require('../assets/back-icon.png')}
+                        source={require('../../assets/back-icon.png')}
                     />
                 </TouchableOpacity>
             </View>

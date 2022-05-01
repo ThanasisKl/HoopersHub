@@ -13,19 +13,22 @@ import {
 import {doc, getDoc,setDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
-import { db } from '../Config'
-import { colors } from './colors';
+import AddOutsiderModal from "../../components/AddOutsiderModal";
+import { db } from '../../Config'
+import { colors } from '../colors';
 
 
-export default function GroupMainScreen() {
+export default function AddTournamentMembersScreen() {
     const route = useRoute();
     const navigation = useNavigation();
     const username = route.params.username;
-    const friends = route.params.friends_list;
+    const [friends,setFriends] = useState(route.params.friends_list);
     const [groupList,setGroupList] = useState([]);
-    const [groupName,setGroupName] = useState("");
+    const [tournamentName,setTournamentName] = useState("");
     const [showWarningName, setShowWarningName] = useState(false);
     const [showWarningList, setShowWarningList] = useState(false);
+    const [isOutsiderModalVisible, setOutsiderModalVisible] = useState(false);
+
 
     let initialIconState = [];
     for (let i = 0; i < friends.length ; i++){
@@ -33,19 +36,18 @@ export default function GroupMainScreen() {
     }
     const [btnIcon,setBtnIcon] = useState([...initialIconState]);
 
-    function gotoGroupScreen(){
-        navigation.navigate("GroupMain",{username});
+    function toggleOutsiderModalVisibility(){
+        setOutsiderModalVisible(!isOutsiderModalVisible);
     }
 
-    function gotoCreateTeams(){
-        if(groupName === ""){
+    function gotoTournamentTeamMain(){
+        console.log(tournamentName.length)
+        if(tournamentName === "" || tournamentName.length === 0 || tournamentName.length > 15){
             setShowWarningName(true);
         }else if(groupList.length === 0){
             setShowWarningList(true);
         }else{
-            setShowWarningName(false);
-            setShowWarningList(false);
-            navigation.navigate("CreateTeams",{username,groupList,groupName,friends});
+            navigation.navigate("TournamentTeamsMain",{username,groupList,tournamentName,"friends_list":friends});
         }
     }
 
@@ -83,11 +85,20 @@ export default function GroupMainScreen() {
     return (
         <View style={styles.container}>
             <View style={styles.container2}>
+                <AddOutsiderModal
+                    isModalVisible={isOutsiderModalVisible}
+                    toggleModalVisibility={toggleOutsiderModalVisibility}
+                    friends={friends}
+                    setFriends={setFriends}
+                    btnIcon={btnIcon}
+                    setBtnIcon={setBtnIcon}
+                    username={username}
+                />
                 <View style={styles.pageTitleView}>
-                    <TouchableOpacity onPress={gotoGroupScreen}>
+                    <TouchableOpacity onPress={()=>navigation.navigate("FriendlyTournamentMain",{"username":username})}>
                         <Image 
                             style={styles.icons} 
-                            source={require('../assets/back-icon.png')}
+                            source={require('../../assets/back-icon.png')}
                         />
                     </TouchableOpacity>
                     <Text style={styles.pageTitle}>Add your Friends</Text>
@@ -95,18 +106,24 @@ export default function GroupMainScreen() {
                 <View style={styles.inputView}>
                     <TextInput
                         style={styles.TextInput}
-                        placeholder="Group Name"
+                        placeholder="Tournament Name"
                         placeholderTextColor = {colors.textColor}
-                        onChangeText={(newName) => setGroupName(newName)}
+                        onChangeText={(newName) => setTournamentName(newName)}
                     />
                 </View>
-                {showWarningName && <Text style={styles.warningText}>You need to name your group first</Text>}
+                {showWarningName && <Text style={styles.warningText}>Please put a valid tournament name</Text>}
                 <ScrollView>
                     {friendsList}
                     {showWarningList && <Text style={styles.warningText}>You need to add some friends first</Text>}
-                    <TouchableOpacity style={styles.nextBtn} onPress={gotoCreateTeams}>
-                        <Text style={styles.nextText}>NEXT</Text>
-                    </TouchableOpacity>
+                    <View style={styles.btnView}>
+                        <TouchableOpacity style={styles.nextBtn} onPress={gotoTournamentTeamMain}>
+                            <Text style={styles.nextText}>NEXT</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.nextBtn} onPress={toggleOutsiderModalVisibility}>
+                            <Text style={styles.outsiderText}>Add an Outsider</Text>
+                        </TouchableOpacity>
+                    </View>
                 </ScrollView>
             </View>
         </View>
@@ -127,6 +144,10 @@ const styles = StyleSheet.create({
         color: colors.textColor,
         fontSize:18,
         fontWeight :'bold',
+    },
+
+    btnView:{
+        flexDirection:"row-reverse",
     },
 
     container: {
@@ -185,7 +206,13 @@ const styles = StyleSheet.create({
     },
 
     nextText:{
-        color: "black",
+        color:colors.textColor,
+        fontSize:18,
+        fontWeight :'bold',
+    },
+
+    outsiderText:{
+        color:"red",
         fontSize:18,
         fontWeight :'bold',
     },

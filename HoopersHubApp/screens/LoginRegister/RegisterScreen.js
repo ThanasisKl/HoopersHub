@@ -14,8 +14,8 @@ import { useNavigation } from '@react-navigation/core';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {doc, getDoc, setDoc } from 'firebase/firestore';
 
-import { db } from '../Config'
-import {colors} from "./colors";
+import { db } from '../../Config'
+import {colors} from "./../colors";
 
 
 export default function Register(props) {
@@ -147,7 +147,7 @@ export default function Register(props) {
 
     return (
         <View style={styles.container}>
-            <Image style={styles.image} source={require("../assets/icon3.jpg")} />
+            <Image style={styles.image} source={require("../../assets/icon3.jpg")} />
             <StatusBar style="auto" />
 
             <View style={styles.inputView}>

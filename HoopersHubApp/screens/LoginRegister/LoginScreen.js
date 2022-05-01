@@ -15,8 +15,8 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {doc, getDoc} from 'firebase/firestore';
 
-import { db } from '../Config'
-import {colors} from "./colors";
+import { db } from '../../Config'
+import {colors} from "./../colors";
 
 
 export default function LoginScreen(props) {
@@ -68,7 +68,7 @@ export default function LoginScreen(props) {
 
     return (
         <KeyboardAvoidingView style={styles.container}>
-            <Image style={styles.image} source={require("../assets/icon4.png")} />
+            <Image style={styles.image} source={require("../../assets/icon4.png")} />
             <StatusBar style="auto" />
             <View style={styles.inputView}>
                 <TextInput

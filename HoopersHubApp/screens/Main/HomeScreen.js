@@ -13,8 +13,8 @@ import {
 } from "react-native";
 import {doc, getDoc,setDoc} from 'firebase/firestore';
 
-import { db } from '../Config'
-import { colors } from './colors';
+import { db } from '../../Config'
+import { colors } from './../colors';
 
 const { width } = Dimensions.get("window");
 
@@ -25,7 +25,7 @@ export default function HomeScreen({route}) {
 
     const [isModalVisible, setModalVisible] = useState(false);
     const [inputValue, setInputValue] = useState("");
-    const [messageIcon, setMessageIcon] = useState(require('../assets/message-icon.png'));
+    const [messageIcon, setMessageIcon] = useState(require('../../assets/message-icon.png'));
 
     const myDoc2 = doc(db, "HHcollection", username);
     getDoc(myDoc2)
@@ -33,9 +33,9 @@ export default function HomeScreen({route}) {
         let user_data = user.data();
         let requests_list = user_data.friendRequests;
         if (requests_list.length > 0){
-            setMessageIcon(require('../assets/message-icon2.png'));
+            setMessageIcon(require('../../assets/message-icon2.png'));
         }else{
-            setMessageIcon(require('../assets/message-icon.png'));
+            setMessageIcon(require('../../assets/message-icon.png'));
         }
     });
 
@@ -79,6 +79,10 @@ export default function HomeScreen({route}) {
 
     function gotoGroupScreen(){
         navigation.navigate("GroupMain",{username});
+    }
+
+    function gotoTournamentMainScreen(){
+        navigation.navigate("TournamentMain",{username});
     }
 
     async function sendFriendRequest(){
@@ -162,14 +166,14 @@ export default function HomeScreen({route}) {
                 <TouchableOpacity  onPress={toggleModalVisibility}>
                     <Image 
                         style={styles.icons} 
-                        source={require('../assets/friend_requests-icon.png')}
+                        source={require('../../assets/friend_requests-icon.png')}
                     />
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={logout}>
                     <Image 
                         style={styles.icons} 
-                        source={require('../assets/logout-icon.png')}
+                        source={require('../../assets/logout-icon.png')}
                     />
                 </TouchableOpacity>
             </View>
@@ -186,7 +190,7 @@ export default function HomeScreen({route}) {
                 <Text style={styles.btnsText}>Search Team Nearby</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttons}>
+            <TouchableOpacity style={styles.buttons} onPress={gotoTournamentMainScreen}>
                 <Text style={styles.btnsText}>Create Tournament</Text>
             </TouchableOpacity>
 

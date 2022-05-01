@@ -11,8 +11,8 @@ import {
 } from "react-native";
 import { useRoute } from '@react-navigation/native';
 
-import {colors} from "./colors";
-import RateFriend from "../components/RateFriend";
+import {colors} from "./../colors";
+import RateFriend from "../../components/RateFriend";
 
 
 export default function RatingScreen() { 
@@ -76,7 +76,7 @@ export default function RatingScreen() {
                     <TouchableOpacity onPress={gotoHomeScreen}>
                         <Image 
                             style={styles.icons} 
-                            source={require('../assets/back-icon.png')}
+                            source={require('../../assets/back-icon.png')}
                         />
                     </TouchableOpacity>
                     <Text style={styles.pageTitle}>Rate your Friend</Text>
