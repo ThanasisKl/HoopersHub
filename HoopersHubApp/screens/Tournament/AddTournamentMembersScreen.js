@@ -22,6 +22,7 @@ export default function AddTournamentMembersScreen() {
     const route = useRoute();
     const navigation = useNavigation();
     const username = route.params.username;
+    const manually = route.params.manually;
     const [friends,setFriends] = useState(route.params.friends_list);
     const [groupList,setGroupList] = useState([]);
     const [tournamentName,setTournamentName] = useState("");
@@ -40,14 +41,15 @@ export default function AddTournamentMembersScreen() {
         setOutsiderModalVisible(!isOutsiderModalVisible);
     }
 
-    function gotoTournamentTeamMain(){
+    function gotoSelectTeamsManuallyScreen(){
         console.log(tournamentName.length)
         if(tournamentName === "" || tournamentName.length === 0 || tournamentName.length > 15){
             setShowWarningName(true);
         }else if(groupList.length === 0){
             setShowWarningList(true);
         }else{
-            navigation.navigate("TournamentTeamsMain",{username,groupList,tournamentName,"friends_list":friends});
+            if(!groupList.includes(username))groupList.push(username);
+            navigation.navigate("SelectTeamsManually",{username,groupList,tournamentName,"friends_list":friends});
         }
     }
 
@@ -95,7 +97,7 @@ export default function AddTournamentMembersScreen() {
                     username={username}
                 />
                 <View style={styles.pageTitleView}>
-                    <TouchableOpacity onPress={()=>navigation.navigate("FriendlyTournamentMain",{"username":username})}>
+                    <TouchableOpacity onPress={()=>navigation.navigate("TournamentTeamsMain",{"username":username})}>
                         <Image 
                             style={styles.icons} 
                             source={require('../../assets/back-icon.png')}
@@ -116,13 +118,14 @@ export default function AddTournamentMembersScreen() {
                     {friendsList}
                     {showWarningList && <Text style={styles.warningText}>You need to add some friends first</Text>}
                     <View style={styles.btnView}>
-                        <TouchableOpacity style={styles.nextBtn} onPress={gotoTournamentTeamMain}>
+                        <TouchableOpacity style={styles.nextBtn} onPress={gotoSelectTeamsManuallyScreen}>
                             <Text style={styles.nextText}>NEXT</Text>
                         </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.nextBtn} onPress={toggleOutsiderModalVisibility}>
-                            <Text style={styles.outsiderText}>Add an Outsider</Text>
-                        </TouchableOpacity>
+                        {manually &&
+                            <TouchableOpacity style={styles.nextBtn} onPress={toggleOutsiderModalVisibility}>
+                                <Text style={styles.outsiderText}>Add an Outsider</Text>
+                            </TouchableOpacity>
+                        }
                     </View>
                 </ScrollView>
             </View>

@@ -125,6 +125,7 @@ export default function Register(props) {
             "myRatings":[],
             "groups":[],
             "training":[],
+            "tournaments":[],
           }
           
           setDoc(myDoc2, docData)
