@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { useNavigation } from '@react-navigation/core'
+import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import {
     StyleSheet,
     Text,
@@ -13,18 +14,23 @@ import {doc, getDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
 import { db } from '../../Config'
-import { colors } from './../colors';
+import { colors } from '../colors';
 import ShotsModal from "../../components/ShotsModal";
 
 
-export default function TrainingMainScreen() {
+export default function TrainingHistoryScreen() {
     const route = useRoute();
     const navigation = useNavigation();
     const username = route.params.username;
+    const trainingHistoryData = route.params.training_history;
     const [showShotsModal,setShowShotsModal] = useState(false);
     const [btnPressed,setBtnPressed] = useState(0);
-    const [results,setResults] = useState([0,0,0,0,0,0,0]);
-    const [btnColor,setBtnColor] = useState([true,true,true,true,true,true,true]);
+    // const [results,setResults] = useState([0,0,0,0,0,0,0]);
+    // const [btnColor,setBtnColor] = useState([true,true,true,true,true,true,true]);
+    const [tableData,setTableData] = useState({HeadTable : ['Θέση 1', 'Θέση 2', 'Θέση 3', 'Θέση 4', 'Θέση 5','Θέση 6','Θέση 7'],
+    DataTable: [
+      trainingHistoryData
+    ]})
 
     function gotoHomeScreen(){
         navigation.navigate("Home",{"username":username});
@@ -47,49 +53,25 @@ export default function TrainingMainScreen() {
         */ 
     }
 
-
-    function gotoTrainingSessionScreen(){
-        const myDoc = doc(db, "HHcollection", username);
-        getDoc(myDoc)
-        .then((user)=>{
-            // const user_data = user.data();
-            // const friends_list = user_data.friends;
-            navigation.navigate("TrainingSession",{username});
-        }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code:)");
-        }); 
-    }
-
-    function gotoTrainingHistoryScreen(){
-        const myDoc = doc(db, "HHcollection", username);
-        getDoc(myDoc)
-        .then((user)=>{
-            const user_data = user.data();
-            const training_history = user_data.training;
-            navigation.navigate("TrainingHistory",{username,training_history});
-        }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code:)");
-        }); 
-    }
-
     return (
         <View style={styles.container}>
-            <View style={styles.iconView}>
-                <TouchableOpacity onPress={gotoHomeScreen}>
-                    <Image 
-                        style={styles.icons} 
-                        source={require('../../assets/back-icon.png')}
-                    />
-                </TouchableOpacity>
-            </View>
-           
-            <TouchableOpacity style={styles.buttons} onPress={gotoTrainingSessionScreen}>
-                <Text style={styles.btnsText}>Start a Training Session</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.buttons} onPress={gotoTrainingHistoryScreen}>
-                <Text style={styles.btnsText}>View Your Training History</Text>
-            </TouchableOpacity>
+                <View style={styles.iconView}>
+                    <TouchableOpacity onPress={gotoHomeScreen}>
+                        <Image 
+                            style={styles.icons} 
+                            source={require('../../assets/back-icon.png')}
+                        />
+                    </TouchableOpacity> 
+                </View>
+                <View>
+                <Table borderStyle={{borderWidth: 1, borderColor: '#ffa1d2'}}>
+                    <Row data={tableData.HeadTable} style={styles.HeadStyle} textStyle={styles.TableText}/>
+                    <Rows data={tableData.DataTable} textStyle={styles.TableText}/>
+                </Table>
+                <TouchableOpacity style={styles.finishBtn} onPress={handleFinish}>
+                       <Text style={styles.finishText}>finish</Text>
+                   </TouchableOpacity>
+                </View>
         </View>
     );
 }
@@ -109,20 +91,10 @@ const styles = StyleSheet.create({
         borderWidth: 2,
     },
 
-    buttons: {
-        width: "70%",
-        borderRadius: 7,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        marginBottom: 30,
-        backgroundColor: "white",
-        
-    },
-
-    btnsText:{
-        fontSize:20,
+    btnText:{
+        fontSize:26,
         fontWeight: 'bold',
+        color:colors.darkRed,
     },
 
     btnsView:{
@@ -136,10 +108,7 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        backgroundColor: colors.bgColor,
-        alignItems: "center",
-        justifyContent: "center",
-      },
+    },
 
     finishBtn:{
         width: "40%",
@@ -186,5 +155,16 @@ const styles = StyleSheet.create({
         marginBottom:40,
         textAlign:"center"
     },
+
+
+    // Table design
+    HeadStyle: { 
+        height: 50,
+        alignContent: "center",
+        backgroundColor: '#ffe0f0'
+      },
+      TableText: { 
+        margin: 10
+      }
    
 });
