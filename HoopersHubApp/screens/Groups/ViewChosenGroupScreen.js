@@ -39,7 +39,7 @@ export default function ViewChosenGroupScreen() {
     const [isScoreModalVisible, setScoreModalVisible] = useState(false);
     const [isStatisticsModalVisible, setStatisticsModalVisible] = useState(false);
 
-    const scoresInScreen = 20;
+    const scoresInScreen = 20; //show the 20 latest scores to the user
 
     let team1wins = 0;
     let team2wins = 0;
@@ -89,7 +89,7 @@ export default function ViewChosenGroupScreen() {
         else Alert.alert("You can't add a score","Only team leaders can add a score!");
     }
    
-    function addScore(score1,score2){
+    function addScore(score1,score2){ //add a new score to the database
         const myDoc = doc(db, "Groups", groupID);
 
         const newScore = {

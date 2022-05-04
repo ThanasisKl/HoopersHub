@@ -10,11 +10,13 @@ import {
     ScrollView,
 } from "react-native";
 import {Picker} from '@react-native-picker/picker';
-import {doc, getDoc} from 'firebase/firestore';
+import {doc, getDoc,setDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
+import uuid from 'react-native-uuid';
 
 import { db } from '../../Config'
 import { colors } from '../colors';
+
 
 
 export default function SelectTeamsManuallyScreen() {
@@ -24,6 +26,7 @@ export default function SelectTeamsManuallyScreen() {
     const friends_list = route.params.friends_list;
     const groupList = route.params.groupList;
     const tournamentName = route.params.tournamentName;
+    const outsiders = route.params.outsiders;
     const manually = true;
     const [selectedValue, setSelectedValue] = useState("8");
     const [showTeamsCreation,setShowTeamsCreation] = useState(false);
@@ -49,15 +52,106 @@ export default function SelectTeamsManuallyScreen() {
         setPlayerTeam([...newPlayerState]);
     }
 
+    function getTeams(){
+        let teams = [];
+        for(let i=1;i<=parseInt(selectedValue);i++){
+            for(let j=0;j<playerTeam.length;j++){
+                if(i === playerTeam[j]){
+                    teams.push(groupList[j])
+                }
+            }
+        }
+        return teams;
+    }
+
+    function getProgram(){
+        let program = [];
+        let numOfTeams = parseInt(selectedValue);
+        let index = 1;
+
+        for(let i=0;i<parseInt(numOfTeams/2);i++){
+            let teamObject = {
+                team1: index,
+                team2: index+1
+            }
+            program.push(teamObject);
+            index += 2;
+        }
+        
+        if((numOfTeams % 2) !== 0){
+            let teamObject = {
+                team1: numOfTeams,
+                team2: null
+            }
+            program.push(teamObject);
+        }
+
+        return program;
+    }
+
+    function registerNewTournament(){
+        const docID = uuid.v4();
+        const myDoc = doc(db, "Tournaments", docID);
+       
+        let tournamentElements = { 
+            "admin":username,
+            "tournamentName":tournamentName,
+            "history":[],
+            "teams": getTeams(),
+            "program":getProgram(),
+            "currentGame":0,
+            "numberofTeamMembers":parseInt(groupList.length/selectedValue),
+            "outsiders":[...outsiders],
+            "manually":true
+        }
+
+            
+
+        setDoc(myDoc, tournamentElements)
+        .then(() => {
+            for(let i=0;i<groupList.length;i++){
+                if(!outsiders.includes(groupList[i])){
+                    const myDoc2 = doc(db, "HHcollection", groupList[i]);
+                    getDoc(myDoc2)
+                    .then((user)=>{
+                        let user_tournaments = user.data().tournaments;
+                        let newTournamentsArray = [...user_tournaments,docID]
+
+                        let TournamentObject = {
+                            tournaments: newTournamentsArray
+                        }
+                
+                        setDoc(myDoc2, TournamentObject, { merge: true })
+                        .then(() => {
+                            console.log(`Tournament Updated for ${groupList[i]}`)
+                        })
+                        .catch((error) => {
+                            Alert.alert("","An Error has occured please try again later");
+                        });
+                    }).catch((error) => {
+                            Alert.alert("","An Error has occured please try again later");
+                    });
+                }
+                    
+            }
+            Alert.alert("","Tournament Created Successfully");
+            navigation.navigate("FriendlyTournamentMain",{"username":username});
+        })
+        .catch((error)=>{
+            console.log(error)
+        });
+    }
+        
+
 
     function getIndex(uname){
         return groupList.indexOf(uname);
     }
 
     function checkTeams(){
-        flag = true;
-        counter = 0;
-        countPlayers = -1;
+        let flag = true;
+        let counter = 0;
+        let countPlayers = -1;
         for(let i=0;i<playerTeam.length;i++){
             if(i === 1){
                 countPlayers = counter;
@@ -91,7 +185,7 @@ export default function SelectTeamsManuallyScreen() {
                     break;
                 }
             }
-            if(flag)console.log("GOOD")
+            if(flag) registerNewTournament();
             else Alert.alert("Teams Selection Problem","Each team must have the same number of players.")
         }
     }

@@ -24,6 +24,7 @@ export default function AddTournamentMembersScreen() {
     const username = route.params.username;
     const manually = route.params.manually;
     const [friends,setFriends] = useState(route.params.friends_list);
+    const [outsiders,setOutsiders] = useState([]);
     const [groupList,setGroupList] = useState([]);
     const [tournamentName,setTournamentName] = useState("");
     const [showWarningName, setShowWarningName] = useState(false);
@@ -49,7 +50,7 @@ export default function AddTournamentMembersScreen() {
             setShowWarningList(true);
         }else{
             if(!groupList.includes(username))groupList.push(username);
-            navigation.navigate("SelectTeamsManually",{username,groupList,tournamentName,"friends_list":friends});
+            navigation.navigate("SelectTeamsManually",{username,groupList,tournamentName,"friends_list":friends,outsiders});
         }
     }
 
@@ -95,6 +96,8 @@ export default function AddTournamentMembersScreen() {
                     btnIcon={btnIcon}
                     setBtnIcon={setBtnIcon}
                     username={username}
+                    outsiders={outsiders}
+                    setOutsiders={setOutsiders}
                 />
                 <View style={styles.pageTitleView}>
                     <TouchableOpacity onPress={()=>navigation.navigate("TournamentTeamsMain",{"username":username})}>

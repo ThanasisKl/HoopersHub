@@ -14,7 +14,7 @@ import { colors } from '../screens/colors';
 
 const { width,height } = Dimensions.get("window");
 
-export default function AddOutsiderModal({isModalVisible,toggleModalVisibility,friends,setFriends,btnIcon,setBtnIcon,username}){
+export default function AddOutsiderModal({isModalVisible,toggleModalVisibility,friends,setFriends,btnIcon,setBtnIcon,username,outsiders,setOutsiders}){
 
     const [name,setName] = useState("");
     const [showWarning,setShowWarning] = useState(false);
@@ -23,6 +23,7 @@ export default function AddOutsiderModal({isModalVisible,toggleModalVisibility,f
         if(name !== "" && name.length > 0 && name.length <= 15 && name!== username && !friends.includes(name)){
             setFriends([...friends,name]);
             setBtnIcon([...btnIcon,"+"]);
+            setOutsiders([...outsiders,name]);
             toggleModalVisibility();
         }else{
             setShowWarning(true);
