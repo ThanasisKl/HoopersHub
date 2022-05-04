@@ -20,22 +20,10 @@ export default function FriendlyTournamentMainScreen() {
     const navigation = useNavigation();
     const username = route.params.username;
 
-    function gotoAddTournamentMembers(){
-        const myDoc = doc(db, "HHcollection", username);
-        getDoc(myDoc)
-        .then((user)=>{
-            const user_data = user.data();
-            const friends_list = user_data.friends;
-            navigation.navigate("AddTournamentMembers",{username,friends_list});
-        }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later");
-        }); 
-    }
-
     return (
         <View style={styles.container}>
             <View style={styles.iconView}>
-                <TouchableOpacity onPress={()=>navigation.navigate("TournamentMain",{"username":username})}>
+                <TouchableOpacity onPress={() => navigation.navigate("Home",{"username":username})}>
                     <Image 
                         style={styles.icons} 
                         source={require('../../assets/back-icon.png')}
@@ -43,7 +31,7 @@ export default function FriendlyTournamentMainScreen() {
                 </TouchableOpacity>
             </View>
            
-            <TouchableOpacity style={styles.buttons} onPress={gotoAddTournamentMembers}>
+            <TouchableOpacity style={styles.buttons} onPress={() => navigation.navigate("TournamentTeamsMain",{username})}>
                 <Text style={styles.btnsText}>Create Friendly Tournament</Text>
             </TouchableOpacity>
 

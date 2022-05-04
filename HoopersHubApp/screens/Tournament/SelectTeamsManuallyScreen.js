@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import { useNavigation } from '@react-navigation/core'
 import {
     StyleSheet,
@@ -22,23 +22,100 @@ export default function SelectTeamsManuallyScreen() {
     const navigation = useNavigation();
     const username = route.params.username;
     const friends_list = route.params.friends_list;
+    const groupList = route.params.groupList;
+    const tournamentName = route.params.tournamentName;
+    const manually = true;
     const [selectedValue, setSelectedValue] = useState("8");
     const [showTeamsCreation,setShowTeamsCreation] = useState(false);
+    const [teamsArray,setTeamsArray] = useState([]);
 
-    let friendsList = [...friends_list,username].map(uname =>{
+    useEffect(() => {
+        let initialState = [];
+        for(let i=1;i<=parseInt(selectedValue);i++){
+            initialState.push(i);
+        }
+        setTeamsArray([...initialState])
+    }, [selectedValue]);
+
+    let initialState2 = [];
+    for(let i=0;i<groupList.length;i++){
+        initialState2.push(1);
+    }
+    const [playerTeam,setPlayerTeam] = useState([...initialState2]);
+
+    function changeTeam(team,player){
+        let newPlayerState = playerTeam;
+        newPlayerState[getIndex(player)] = team;
+        setPlayerTeam([...newPlayerState]);
+    }
+
+
+    function getIndex(uname){
+        return groupList.indexOf(uname);
+    }
+
+    function checkTeams(){
+        flag = true;
+        counter = 0;
+        countPlayers = -1;
+        for(let i=0;i<playerTeam.length;i++){
+            if(i === 1){
+                countPlayers = counter;
+            }else if(i > 1 && countPlayers !== counter){
+                flag = false;
+                break;
+            }
+            counter = 0;
+
+            for(let j=0;j<playerTeam.length;j++){
+                if(playerTeam[i] === playerTeam[j]){
+                    counter++;
+                }
+            }
+        }
+        
+        if(!flag){
+            Alert.alert("Teams Selection Problem","Each team must have the same number of players.")
+        }else{
+            let teamsNumber = parseInt(selectedValue);
+            for(let k = 1;k<=teamsNumber;k++){
+                let flag2 = false;
+                for(let x=0;x<playerTeam.length;x++){
+                    if (playerTeam[x] === k){
+                        flag2 = true
+                    }
+                }
+
+                if(!flag2){
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag)console.log("GOOD")
+            else Alert.alert("Teams Selection Problem","Each team must have the same number of players.")
+        }
+    }
+
+    const renderTeamsList = () => {
+        return teamsArray.map((teamNumber) => {
+          return <Picker.Item label={"Team"+teamNumber} value={teamNumber} key={teamNumber} />
+        })
+    }
+
+
+    let friendsList = groupList.map(uname =>{
         return (
             <View key={uname}>
-                <Text style={styles.playerTitle}>{uname}</Text>
+                <View style={{flexDirection:"row"}}>
+                    <Image style={styles.ballIcons} source={require('../../assets/basket-ball-icon.png')}/>
+                    <Text style={styles.playerTitle}>{uname}</Text>
+                </View>
                 <Picker
-                    selectedValue={selectedValue}
+                    selectedValue={playerTeam[getIndex(uname)]}
                     style={styles.picker4Players}
-                    onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                    onValueChange={(itemValue, itemIndex) => changeTeam(itemValue,uname)}
                 >
-                    <Picker.Item label="4" value="4" />
-                    <Picker.Item label="5" value="5" />
-                    <Picker.Item label="6" value="6" />
-                    <Picker.Item label="7" value="7" />
-                    <Picker.Item label="8" value="8" />
+                    {renderTeamsList()}
                 </Picker>
             </View>
         );
@@ -49,7 +126,7 @@ export default function SelectTeamsManuallyScreen() {
             <View style={styles.container2}>
 
                 <View style={styles.pageTitleView}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate("AddTournamentMembers",{username,friends_list,manually})}>
                         <Image 
                             style={styles.icons} 
                             source={require('../../assets/back-icon.png')}
@@ -80,12 +157,13 @@ export default function SelectTeamsManuallyScreen() {
                     <Text style={styles.nextText}>Next</Text>
                 </TouchableOpacity>
                 {showTeamsCreation && 
-                    <View>
+                    <ScrollView>
                         <Text style={styles.teamsCreationTitle}>Choose team for every player</Text>
-                        <ScrollView>
-                            {friendsList}
-                        </ScrollView>
-                    </View>
+                        {friendsList}
+                        <TouchableOpacity style={styles.createBtn} onPress={checkTeams}>
+                            <Text style={styles.nextText}>Create Tournament</Text>
+                        </TouchableOpacity>
+                    </ScrollView>
                 }
             </View>
         </View>
@@ -106,6 +184,27 @@ const styles = StyleSheet.create({
         marginTop:20,
         marginLeft:"auto",
         marginRight:"auto",
+    },
+
+    createBtn:{
+        borderRadius: 12,
+        borderWidth:2,
+        borderColor:colors.textColor,
+        backgroundColor: "white",
+        textAlign:'center',
+        alignItems:"center",
+        width:"75%",
+        paddingVertical:14,
+        marginTop:20,
+        marginBottom:10,
+        marginLeft:"auto",
+        marginRight:"auto",
+    },
+
+    ballIcons:{
+        width:20,
+        height:20,
+        marginRight:7,
     },
 
     nextText:{
@@ -160,7 +259,7 @@ const styles = StyleSheet.create({
 
     picker4Players:{
         height: 50, 
-        width: 80 ,
+        width: 150 ,
         color:"black",
         marginBottom:10,
         backgroundColor:"white",

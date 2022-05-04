@@ -19,18 +19,24 @@ export default function TournamentTeamsMainScreen() {
     const route = useRoute();
     const navigation = useNavigation();
     const username = route.params.username;
-    const groupList = route.params.groupList;
-    const friends_list = route.params.friends_list;
-    const tournamentName = route.params.tournamentName;
     
-    function gotoSelectTeams(){
-        navigation.navigate("SelectTeamsManually",{username,friends_list});
+    function gotoAddTournamentMembers(){
+        const myDoc = doc(db, "HHcollection", username);
+        getDoc(myDoc)
+        .then((user)=>{
+            const user_data = user.data();
+            const friends_list = user_data.friends;
+            const manually = true
+            navigation.navigate("AddTournamentMembers",{username,friends_list,manually});
+        }).catch((error)=>{
+            Alert.alert("","An Error has occured please try again later");
+        }); 
     }
 
     return (
         <View style={styles.container}>
             <View style={styles.iconView}>
-                <TouchableOpacity onPress={()=>navigation.navigate("AddTournamentMembers",{username,friends_list})}>
+                <TouchableOpacity onPress={()=>navigation.navigate("FriendlyTournamentMain",{username})}>
                     <Image 
                         style={styles.icons} 
                         source={require('../../assets/back-icon.png')}
@@ -38,7 +44,7 @@ export default function TournamentTeamsMainScreen() {
                 </TouchableOpacity>
             </View>
            
-            <TouchableOpacity style={styles.buttons} onPress={gotoSelectTeams}>
+            <TouchableOpacity style={styles.buttons} onPress={gotoAddTournamentMembers}>
                 <Text style={styles.btnsText}>Select Teams Manually</Text>
             </TouchableOpacity>
 

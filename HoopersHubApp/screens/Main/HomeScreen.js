@@ -81,10 +81,6 @@ export default function HomeScreen({route}) {
         navigation.navigate("GroupMain",{username});
     }
 
-    function gotoTournamentMainScreen(){
-        navigation.navigate("TournamentMain",{username});
-    }
-
     async function sendFriendRequest(){
         toggleModalVisibility();
         const input = inputValue;
@@ -190,7 +186,7 @@ export default function HomeScreen({route}) {
                 <Text style={styles.btnsText}>Search Team Nearby</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttons} onPress={gotoTournamentMainScreen}>
+            <TouchableOpacity style={styles.buttons} onPress={() => navigation.navigate("FriendlyTournamentMain",{"username":username})}>
                 <Text style={styles.btnsText}>Create Tournament</Text>
             </TouchableOpacity>
 
