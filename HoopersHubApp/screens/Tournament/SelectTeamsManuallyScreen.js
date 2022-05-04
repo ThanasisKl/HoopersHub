@@ -102,10 +102,9 @@ export default function SelectTeamsManuallyScreen() {
             "currentGame":0,
             "numberofTeamMembers":parseInt(groupList.length/selectedValue),
             "outsiders":[...outsiders],
-            "manually":true
+            "manually":true,
+            "id":docID,
         }
-
-            
 
         setDoc(myDoc, tournamentElements)
         .then(() => {

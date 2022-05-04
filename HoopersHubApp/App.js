@@ -14,12 +14,15 @@ import ViewGroupsScreen from './screens/Groups/ViewGroupsScreen';
 import ViewChosenGroupScreen from './screens/Groups/ViewChosenGroupScreen';
 import GroupSettingsScreen from './screens/Groups/GroupSettingsScreen';
 import TrainingMainScreen from './screens/Training/TrainingMainScreen';
-import FriendlyTournamentMainScreen from './screens/Tournament/FriendlyTournamentMainScreen';
-import AddTournamentMembersScreen from './screens/Tournament/AddTournamentMembersScreen';
-import TournamentTeamsMainScreen from './screens/Tournament/TournamentTeamsMainScreen'
-import SelectTeamsManuallyScreen from './screens/Tournament/SelectTeamsManuallyScreen';
 import TrainingSessionScreen from './screens/Training/TrainingSessionScreen';
 import TrainingHistoryScreen from './screens/Training/TrainingHistoryScreen';
+import FriendlyTournamentMainScreen from './screens/Tournament/FriendlyTournamentMainScreen';
+import AddTournamentMembersScreen from './screens/Tournament/AddTournamentMembersScreen';
+import TournamentTeamsMainScreen from './screens/Tournament/TournamentTeamsMainScreen';
+import SelectTeamsManuallyScreen from './screens/Tournament/SelectTeamsManuallyScreen';
+import ViewTournamentsScreen from './screens/Tournament/ViewTournamentsScreen';
+import ViewChosenTournamentScreen from './screens/Tournament/ViewChosenTournamentScreen';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -39,12 +42,14 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="ViewChosenGroup" component={ViewChosenGroupScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="GroupSettings" component={GroupSettingsScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="TrainingMain" component={TrainingMainScreen}/>
+        <Stack.Screen options={{ headerShown: false }} name="TrainingSession" component={TrainingSessionScreen}/>
+        <Stack.Screen options={{ headerShown: false }} name="TrainingHistory" component={TrainingHistoryScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="FriendlyTournamentMain" component={FriendlyTournamentMainScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="AddTournamentMembers" component={AddTournamentMembersScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="TournamentTeamsMain" component={TournamentTeamsMainScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="SelectTeamsManually" component={SelectTeamsManuallyScreen}/>
-        <Stack.Screen options={{ headerShown: false }} name="TrainingSession" component={TrainingSessionScreen}/>
-        <Stack.Screen options={{ headerShown: false }} name="TrainingHistory" component={TrainingHistoryScreen}/>
+        <Stack.Screen options={{ headerShown: false }} name="ViewTournaments" component={ViewTournamentsScreen}/>
+        <Stack.Screen options={{ headerShown: false }} name="ViewChosenTournament" component={ViewChosenTournamentScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

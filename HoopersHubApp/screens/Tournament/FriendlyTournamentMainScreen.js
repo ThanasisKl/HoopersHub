@@ -14,11 +14,40 @@ import { useRoute } from '@react-navigation/native';
 import { db } from '../../Config'
 import { colors } from '../colors';
 
-
 export default function FriendlyTournamentMainScreen() {
     const route = useRoute();
     const navigation = useNavigation();
     const username = route.params.username;
+
+    function gotoViewTournamentsScreen(){
+        const myDoc = doc(db, "HHcollection", username);
+        getDoc(myDoc)
+        .then((user)=>{
+            const user_data = user.data();
+            const tournamentIDS = user_data.tournaments;
+            const myDoc = doc(db, "HHcollection", username);
+
+            if (tournamentIDS.length === 0){
+                Alert.alert("No Tournaments Found","You are not in a tournament. You can create one or a friend of yours can add you to a tournament")
+            }else{
+                let tournamentNames = [];
+                for(let i=0;i<tournamentIDS.length;i++){
+                    const myDoc2 = doc(db, "Tournaments", tournamentIDS[i]);
+                    getDoc(myDoc2)
+                    .then((tournament)=>{
+                        tournamentNames.push(tournament.data().tournamentName);
+                        if (i === tournamentIDS.length-1){
+                            navigation.navigate("ViewTournaments",{username,tournamentNames,tournamentIDS});
+                        }
+                    }).catch((error)=>{
+                        Alert.alert("","An Error has occured please try again later (error code:)");
+                    });
+                }
+            }
+        }).catch((error)=>{
+            Alert.alert("","An Error has occured please try again later (error code:)");
+        }); 
+    }
 
     return (
         <View style={styles.container}>
@@ -35,7 +64,7 @@ export default function FriendlyTournamentMainScreen() {
                 <Text style={styles.btnsText}>Create Friendly Tournament</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttons}>
+            <TouchableOpacity style={styles.buttons} onPress={gotoViewTournamentsScreen}>
                 <Text style={styles.btnsText}>View Friendly Tournament</Text>
             </TouchableOpacity>
             
