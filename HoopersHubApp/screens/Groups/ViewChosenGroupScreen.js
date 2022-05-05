@@ -139,6 +139,8 @@ export default function ViewChosenGroupScreen() {
                     isScoreModalVisible={isScoreModalVisible}
                     addScore={addScore}
                     flag={false}
+                    team1Name={"Team1"}
+                    team2Name={"Team2"}
                 />
 
                 <ShowGroupStatisticsModal

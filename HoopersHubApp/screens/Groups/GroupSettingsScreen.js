@@ -329,6 +329,8 @@ export default function GroupSettingsScreen() { //simazema kai inputs scores sta
                 addScore={addScore}
                 flag={true}
                 deleteLatestScore={deleteLatestScore}
+                team1Name={"Team1"}
+                team2Name={"Team2"}
             />
 
             <View style={styles.headerView}>

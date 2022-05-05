@@ -94,7 +94,7 @@ export default function SelectTeamsManuallyScreen() {
         const myDoc = doc(db, "Tournaments", docID);
        
         let tournamentElements = { 
-            "admin":username,
+            "leader":username,
             "tournamentName":tournamentName,
             "history":[],
             "teams": getTeams(),
@@ -104,6 +104,7 @@ export default function SelectTeamsManuallyScreen() {
             "outsiders":[...outsiders],
             "manually":true,
             "id":docID,
+            "gameCounter":1
         }
 
         setDoc(myDoc, tournamentElements)

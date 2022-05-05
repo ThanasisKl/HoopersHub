@@ -15,8 +15,10 @@ import { colors } from '../screens/colors';
 
 const { width,height } = Dimensions.get("window");
 
-export default function ScoreModal({isScoreModalVisible,toggleScoreModalVisibility,addScore,flag,deleteLatestScore}){
+export default function ScoreModal({isScoreModalVisible,toggleScoreModalVisibility,team1Name,team2Name,addScore,flag,deleteLatestScore}){
 
+    const team1 = team1Name;
+    const team2 = team2Name;
     const [inputScore1,setInputScore1] = useState(-1);
     const [inputScore2,setInputScore2] = useState(-1);
     const [showWarning,setShowWarning] = useState(false);
@@ -56,7 +58,7 @@ export default function ScoreModal({isScoreModalVisible,toggleScoreModalVisibili
                         </TouchableOpacity>
                     </View>
                     <View style={styles.scoreView}>
-                        <Text style={styles.textScore}>Team1</Text>
+                        <Text style={styles.textScore}>{team1}</Text>
                         <TextInput
                             style={styles.textInput} 
                             onChangeText={(value) => setInputScore1(value)}
@@ -70,7 +72,7 @@ export default function ScoreModal({isScoreModalVisible,toggleScoreModalVisibili
                             keyboardType='numeric'
                             maxLength={3} 
                         />
-                        <Text style={styles.textScore}>Team2</Text>
+                        <Text style={styles.textScore}>{team2}</Text>
                     </View>
                     <TouchableOpacity style={styles.buttons} onPress={checkInputScore}>
                         <Text style={styles.btnsText}>{flag ? "Update " : "Add "}Score</Text>   
