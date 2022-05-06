@@ -12,6 +12,7 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import {doc, getDoc,setDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
+import ConfettiCannon from 'react-native-confetti-cannon';
 
 import { db } from '../../Config'
 import { colors } from '../colors';
@@ -36,14 +37,27 @@ export default function ViewChosenTournamentScreen() {
     const teams = tournamentInfo.teams;
     const leader = tournamentInfo.leader;
     const numberofTeamMembers = tournamentInfo.numberofTeamMembers;
+    const teamsOut = tournamentInfo.teamsOut;
     const team1Name = `Team${program[currentGame].team1}`;
     const team2Name = `Team${program[currentGame].team2}`;
     const team1Members = findTeam(program[currentGame].team1);
     const team2Members = findTeam(program[currentGame].team2);
+    const tournamentFinished = program.length === 1 && program[0].team2 === null;
 
     const [isScoreModalVisible, setScoreModalVisible] = useState(false);
     const [isHistoryModalVisible, setHistoryModalVisible] = useState(false);
     const [is2TeamsModalVisible, set2TeamsModalVisible] = useState(false);
+    const [confettiTime,setConfettiTime] = useState(false);
+
+    let [flag,setFlag] = useState(true);
+    if(tournamentFinished && flag){
+        setFlag(false);
+        setConfettiTime(true);
+
+        setTimeout(() => {
+            setConfettiTime(false)
+        },5000)
+    };
 
     function toggleScoreModalVisibility(){
         setScoreModalVisible(!isScoreModalVisible);
@@ -79,11 +93,59 @@ export default function ViewChosenTournamentScreen() {
             'team2Score': score2,
         }
 
-        const historyObject = {
-            history: [...history,newScore]
+        const team1Number = program[currentGame].team1
+        const team2Number = program[currentGame].team2
+
+        let loserTeam = team1Number ;
+        if(score1 > score2){
+            loserTeam = team2Number;
+        }
+
+        let winnerTeam = team1Number;
+        if(score1 < score2){
+            winnerTeam =  team2Number;
+        }
+
+        let newProgram = program;
+        newProgram.reverse().pop();
+        newProgram.reverse();
+
+        const programObject = {
+            'team1':winnerTeam,
+            'team2':null
+        };
+        newProgram.push(programObject);
+
+        let nullcounter = 0;
+        for(let i=0;i<newProgram.length;i++){
+            if(newProgram[i].team2 === null)nullcounter++
+        }
+
+        if(nullcounter === 2){
+            let nullteams = [];
+            for(let i=0;i<newProgram.length;i++){
+                if(program[i].team2 === null){
+                    nullteams.push(program[i].team1);
+                }
+            }
+            program.pop();
+            program.pop();
+
+            const newProgramElement = {
+                'team1':nullteams[0],
+                'team2':nullteams[1],
+            };
+            newProgram.push(newProgramElement);
+        }
+
+        const tournamentObject = {
+            history: [...history,newScore],
+            gameCounter: gameCounter+1,
+            teamsOut: [...teamsOut,loserTeam],
+            program: newProgram
         };
 
-        setDoc(myDoc, historyObject, { merge: true })
+        setDoc(myDoc, tournamentObject, { merge: true })
         .then(() => {
             toggleScoreModalVisibility();
             navigation.navigate("ViewTournaments",{username,tournamentIDS,tournamentNames});
@@ -129,6 +191,13 @@ export default function ViewChosenTournamentScreen() {
                     </TouchableOpacity>
 
                     <View style={styles.rigthIconsView}>
+                        <TouchableOpacity onPress={() => navigation.navigate("ShowTournamentMembers",{username,tournamentIDS,tournamentNames,tournamentInfo})}>
+                            <Image 
+                                style={styles.icons2} 
+                                source={require('../../assets/team-icon.png')}
+                            />
+                        </TouchableOpacity> 
+
                         <TouchableOpacity onPress={toggleHistoryModalVisibility}>
                             <Image 
                                 style={styles.icons2} 
@@ -137,14 +206,27 @@ export default function ViewChosenTournamentScreen() {
                         </TouchableOpacity>
                     </View>
                 </View>
-
-                <Text style={[styles.gameText,{color: program.length === 0 ? "yellow" : colors.darkRed}]}>{program.length === 0 ? "Final" : "Game " + gameCounter}</Text>
-                <TouchableOpacity onPress={toggle2TeamsModalVisibility}>
-                    <Text style={styles.teamsText}>{team1Name} - {team2Name}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={toggleScoreModalVisibility}>
-                        <Text style={styles.btnsText}>Add Score</Text>
-                </TouchableOpacity>
+                {!tournamentFinished &&
+                    <View style={styles.container3}>
+                        <Text style={[styles.gameText,{color: program.length === 1 ? "yellow" : colors.darkRed}]}>{program.length === 1 ? "Final" : "Game " + gameCounter}</Text>
+                        <TouchableOpacity onPress={toggle2TeamsModalVisibility}>
+                            <Text style={styles.teamsText}>{team1Name} - {team2Name}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={toggleScoreModalVisibility}>
+                                <Text style={styles.btnsText}>Add Score</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
+                {tournamentFinished &&
+                    <View style={styles.container3}>
+                        {confettiTime && <ConfettiCannon count={300} origin={{x: -10, y: 0}} fadeOut={true} />}
+                        <Text style={[styles.gameText,{color: "yellow",textAlign:"center"}]}>{team1Name} WON!</Text>
+                        <Image 
+                            style={styles.trophyIcon} 
+                            source={require('../../assets/trophy-icon.png')}
+                        />
+                    </View>
+                }
             </View>
         </View>
     );
@@ -186,6 +268,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
 
+    container3: {
+        marginLeft:10,
+        flex:1,
+        alignItems: "center",
+    },
+
     gameText:{
         fontWeight:"bold",
         fontSize:35,
@@ -203,6 +291,12 @@ const styles = StyleSheet.create({
         borderTopWidth:2,
         borderColor:"white",
 
+    },
+
+    trophyIcon:{
+        marginTop:"10%",
+        width:300,
+        height:300,
     },
     
     icons:{

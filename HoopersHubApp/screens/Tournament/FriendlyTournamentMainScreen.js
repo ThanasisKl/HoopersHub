@@ -61,11 +61,11 @@ export default function FriendlyTournamentMainScreen() {
             </View>
            
             <TouchableOpacity style={styles.buttons} onPress={() => navigation.navigate("TournamentTeamsMain",{username})}>
-                <Text style={styles.btnsText}>Create Friendly Tournament</Text>
+                <Text style={styles.btnsText}>Create Tournament</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.buttons} onPress={gotoViewTournamentsScreen}>
-                <Text style={styles.btnsText}>View Friendly Tournament</Text>
+                <Text style={styles.btnsText}>View Tournament</Text>
             </TouchableOpacity>
             
         </View>

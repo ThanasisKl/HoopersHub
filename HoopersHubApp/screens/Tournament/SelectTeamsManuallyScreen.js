@@ -104,7 +104,9 @@ export default function SelectTeamsManuallyScreen() {
             "outsiders":[...outsiders],
             "manually":true,
             "id":docID,
-            "gameCounter":1
+            "gameCounter":1,
+            "numberOfTeams":parseInt(selectedValue),
+            "teamsOut":[],
         }
 
         setDoc(myDoc, tournamentElements)
