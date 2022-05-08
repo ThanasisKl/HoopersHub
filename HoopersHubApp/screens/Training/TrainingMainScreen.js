@@ -66,6 +66,7 @@ export default function TrainingMainScreen() {
         .then((user)=>{
             const user_data = user.data();
             const training_history = user_data.training;
+            // console.log(training_history);
             navigation.navigate("TrainingHistory",{username,training_history});
         }).catch((error)=>{
             Alert.alert("","An Error has occured please try again later (error code:)");
@@ -141,18 +142,18 @@ const styles = StyleSheet.create({
         justifyContent: "center",
       },
 
-    finishBtn:{
-        width: "40%",
-        borderRadius: 7,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 20,
-        marginBottom:10,
-        backgroundColor: 'white',
-        borderColor:"black",
-        borderWidth: 2.5,
-    },
+    // finishBtn:{
+    //     width: "40%",
+    //     borderRadius: 7,
+    //     height: 50,
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //     marginTop: 20,
+    //     marginBottom:10,
+    //     backgroundColor: 'white',
+    //     borderColor:"black",
+    //     borderWidth: 2.5,
+    // },
 
     finishText:{
         fontSize:25,

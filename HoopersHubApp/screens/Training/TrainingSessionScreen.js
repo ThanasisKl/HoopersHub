@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
     Alert,
 } from "react-native";
-import {doc, getDoc} from 'firebase/firestore';
+import {doc, getDoc, setDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
 import { db } from '../../Config'
@@ -35,16 +35,50 @@ export default function TrainingSessionScreen() {
         setShowShotsModal(!showShotsModal);
     }
 
-    function handleFinish(){
-        console.log(results);//fixme
-        /*
-            beginner
-            regular
-            great
-            rising star
-            professional
-            legend
-        */ 
+    const handleFinish = (value,merge) => {
+        // console.log(results);//fixme
+        const myDoc = doc(db, "HHcollection",username);
+        getDoc(myDoc)
+        .then((user)=>{
+            const user_data = user.data();
+            const new_session = {
+                "Point_1": value[0],
+                "Point_2": value[1],
+                "Point_3": value[2],
+                "Point_4": value[3],
+                "Point_5": value[4],
+                "Point_6": value[5],
+                "Point_7": value[6],
+            }
+            const new_training_data = {training:[...user_data.training,new_session]}
+            // user_data.training.push(new_session);
+            // console.log(new_training_data)
+            // const updated_user = {
+            //     "name": user_data.name,
+            //     "username":user_data.username,
+            //     "password":user_data.password,
+            //     "heigth":user_data.heigth,
+            //     "weigth":user_data.weigth,
+            //     "yearOfBirth":user_data.yearOfBirth,
+            //     "friendRequests": user_data.friendRequests,
+            //     "friends":user_data.friends,
+            //     "ratings":user_data.ratings,
+            //     "myRatings":user_data.myRatings,
+            //     "groups":user_data.groups,
+            //     "training":user_data.training,
+            //     "tournaments":user_data.tournaments,
+            //   }
+            // console.log(training_history);
+            setDoc(myDoc,new_training_data,{merge: merge})
+            .then(()=>{
+                // myDoc.training.add(results);
+                Alert.alert("Congratulations!","Training Session Completed!")
+                navigation.navigate("TrainingMain",{username});
+
+        }).catch((error)=>{
+            Alert.alert("","An Error has occured please try again later (error code:)");
+        }); 
+    })
     }
 
     return (
@@ -101,7 +135,9 @@ export default function TrainingSessionScreen() {
                        <Text style={styles.btnText}>7</Text>
                    </TouchableOpacity>
 
-                   <TouchableOpacity style={styles.finishBtn} onPress={handleFinish}>
+                   <TouchableOpacity style={styles.finishBtn} onPress={()=> {
+                    handleFinish(results,true)
+                   }}>
                        <Text style={styles.finishText}>finish</Text>
                    </TouchableOpacity>
                </View>
