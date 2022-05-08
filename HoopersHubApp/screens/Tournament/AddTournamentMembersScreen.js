@@ -221,6 +221,7 @@ const styles = StyleSheet.create({
         color:"red",
         fontSize:18,
         fontWeight :'bold',
+        textAlign:"center",
     },
 
     pageTitle:{

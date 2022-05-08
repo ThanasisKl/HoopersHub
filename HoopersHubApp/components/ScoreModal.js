@@ -15,20 +15,29 @@ import { colors } from '../screens/colors';
 
 const { width,height } = Dimensions.get("window");
 
-export default function ScoreModal({isScoreModalVisible,toggleScoreModalVisibility,team1Name,team2Name,addScore,flag,deleteLatestScore}){
+export default function ScoreModal({isScoreModalVisible,toggleScoreModalVisibility,team1Name,team2Name,addScore,flag,deleteLatestScore,tournamentFlag}){
 
     const team1 = team1Name;
     const team2 = team2Name;
     const [inputScore1,setInputScore1] = useState(-1);
     const [inputScore2,setInputScore2] = useState(-1);
     const [showWarning,setShowWarning] = useState(false);
+    const [showDrawWarning,setShowDrawWarning] = useState(false);
 
     function checkInputScore(){
         if(!isNaN(inputScore1) && !isNaN(inputScore2) && parseInt(inputScore1) >= 0 && parseInt(inputScore2) >= 0){
             if (flag){
                 deleteLatestScore(parseInt(inputScore1),parseInt(inputScore2));
             }else{
-                addScore(parseInt(inputScore1),parseInt(inputScore2));
+                if(tournamentFlag){
+                    if(parseInt(inputScore1)===parseInt(inputScore2)){
+                        setShowDrawWarning(true);
+                    }else{
+                        addScore(parseInt(inputScore1),parseInt(inputScore2));
+                    }
+                }else{
+                    addScore(parseInt(inputScore1),parseInt(inputScore2));
+                }
             }
             setInputScore1(-1);
             setInputScore2(-1);    
@@ -39,6 +48,7 @@ export default function ScoreModal({isScoreModalVisible,toggleScoreModalVisibili
 
     function closeScoreModal(){
         setShowWarning(false);
+        setShowDrawWarning(false);
         toggleScoreModalVisibility();
     }
 
@@ -78,6 +88,7 @@ export default function ScoreModal({isScoreModalVisible,toggleScoreModalVisibili
                         <Text style={styles.btnsText}>{flag ? "Update " : "Add "}Score</Text>   
                     </TouchableOpacity>
                     {showWarning && <Text style={styles.warningStyle}>Please give numbers greater than zero as inputs for score</Text>}
+                    {showDrawWarning && <Text style={styles.warningStyle}>Draws are not allowed</Text>}
                 </View>
             </View>
         </Modal>

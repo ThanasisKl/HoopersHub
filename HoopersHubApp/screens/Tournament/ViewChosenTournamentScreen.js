@@ -71,6 +71,11 @@ export default function ViewChosenTournamentScreen() {
         set2TeamsModalVisible(!is2TeamsModalVisible)
     }
 
+    function handleAddScore(){
+        if (leader  === username)toggleScoreModalVisibility();
+        else Alert.alert("Warning","Only a leader can add a new score");
+    }
+
     function findTeam(teamNumber){
         let teamMember = [];
         let team = 1
@@ -166,6 +171,7 @@ export default function ViewChosenTournamentScreen() {
                     flag={false}
                     team1Name={team1Name}
                     team2Name={team2Name}
+                    tournamentFlag={true}
                 />
 
                 <TournamentHistoryModal 
@@ -212,7 +218,7 @@ export default function ViewChosenTournamentScreen() {
                         <TouchableOpacity onPress={toggle2TeamsModalVisibility}>
                             <Text style={styles.teamsText}>{team1Name} - {team2Name}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={toggleScoreModalVisibility}>
+                        <TouchableOpacity style={styles.button} onPress={handleAddScore}>
                                 <Text style={styles.btnsText}>Add Score</Text>
                         </TouchableOpacity>
                     </View>
