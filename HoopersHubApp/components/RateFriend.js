@@ -21,6 +21,7 @@ export default function RateFriend({friendUname,username,message}){
     const [skill5State,setskill5State] = useState([false,false,false,false,false]);
     const [skill6State,setskill6State] = useState([false,false,false,false,false]);
     const [skill7State,setskill7State] = useState([false,false,false,false,false]);
+    const [skill8State,setskill8State] = useState([false,false,false,false,false]);
 
     const myDoc = doc(db, "HHcollection", friendUname);
     const myDoc2 = doc(db, "HHcollection", username);
@@ -59,6 +60,7 @@ export default function RateFriend({friendUname,username,message}){
                 "twopoints":countStars(skill3State),
                 "rebounds":countStars(skill4State),
                 "team_player":countStars(skill5State),
+                "athleticism":countStars(skill8State),
                 "overall_score":countStars(skill6State), 
             }
             user_ratings.push(friendratings);
@@ -82,6 +84,7 @@ export default function RateFriend({friendUname,username,message}){
                         "twopoints":countStars(skill3State),
                         "rebounds":countStars(skill4State),
                         "team_player":countStars(skill5State),
+                        "athleticism":countStars(skill8State),
                         "overall_score":countStars(skill6State), 
                     }
                     my_ratings.push(friendratings);
@@ -139,6 +142,10 @@ export default function RateFriend({friendUname,username,message}){
         setskill7State(state);
     }
 
+    function setSkill8(state){
+        setskill8State(state);
+    }
+
     
     return (
         <View style={styles.viewContainer}>
@@ -147,6 +154,7 @@ export default function RateFriend({friendUname,username,message}){
             <RateSkill skill="3 Points" getSkill={setSkill2}/>
             <RateSkill skill="2 Points" getSkill={setSkill3}/>
             <RateSkill skill="Rebounds" getSkill={setSkill4}/>
+            <RateSkill skill="Athleticism" getSkill={setSkill8}/>
             <RateSkill skill="Team Player" getSkill={setSkill5}/>
             <RateSkill skill="Overall Score" getSkill={setSkill6}/>
             {message && <Text style={styles.messageStyle}>You already have rated this friend. If you rate him again the new rating will replace the old one.</Text>}

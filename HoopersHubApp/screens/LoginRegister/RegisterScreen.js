@@ -30,7 +30,7 @@ export default function Register(props) {
     const [eye,setEye] = useState("eye");
     const [warning,setWarning] = useState("");
     const [userDoc, setUserDoc] = useState(null);
-
+    const [radioButton,setRadioButton] = useState(true);
     const navigation = useNavigation();
     
     useEffect(() => {
@@ -126,6 +126,7 @@ export default function Register(props) {
             "groups":[],
             "training":[],
             "tournaments":[],
+            "begginer":radioButton
           }
           
           setDoc(myDoc2, docData)
@@ -148,7 +149,7 @@ export default function Register(props) {
 
     return (
         <View style={styles.container}>
-            <Image style={styles.image} source={require("../../assets/icon3.jpg")} />
+            <Image style={styles.image} source={require("../../assets/icon4.png")} />
             <StatusBar style="auto" />
 
             <View style={styles.inputView}>
@@ -218,6 +219,20 @@ export default function Register(props) {
                 </Pressable>
             </View>
 
+            <View style={styles.radioButtonView}>
+              <View style={[styles.radioButton,{backgroundColor: radioButton ? "white" : colors.textColor}]}>
+                <TouchableOpacity style={{width:20,height:20}} onPress={() => setRadioButton(!radioButton)}/>
+              </View>
+              <Text>I play basketball professionally</Text>
+            </View>
+
+            <View style={styles.radioButtonView}>
+              <View style={[styles.radioButton,{backgroundColor: !radioButton ? "white" : colors.textColor}]}>
+                <TouchableOpacity style={{width:20,height:20}} onPress={() => setRadioButton(!radioButton)}/>
+              </View>
+              <Text>I do not play basketball professionally</Text>
+            </View>
+
             <TouchableOpacity style={styles.registerBtn} onPress={handleRegister}>
                 <Text style={styles.registerText}>Register</Text>
             </TouchableOpacity>
@@ -231,6 +246,21 @@ export default function Register(props) {
 }
 
 const styles = StyleSheet.create({
+
+    radioButton:{
+      borderRadius:15,
+      borderColor:"white",
+      borderWidth:2,
+      marginRight:10,
+      marginBottom:10,
+    },
+
+    radioButtonView:{
+      flexDirection:"row",
+      marginRight:"auto",
+      marginLeft:"5%",
+    },
+
     container: {
       flex: 1,
       backgroundColor: colors.bgColor,
@@ -241,8 +271,8 @@ const styles = StyleSheet.create({
     image: {
       marginTop:-25,
       marginBottom: 40,
-      width: 150,
-      height:120
+      width: 95,
+      height:110
     },
    
     inputView: {
