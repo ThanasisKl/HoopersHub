@@ -27,7 +27,7 @@ export default function SelectTeamsManuallyScreen() {
     const groupList = route.params.groupList;
     const tournamentName = route.params.tournamentName;
     const outsiders = route.params.outsiders;
-    const manually = true;
+    const manually = route.params.manually;
     const [selectedValue, setSelectedValue] = useState("8");
     const [showTeamsCreation,setShowTeamsCreation] = useState(false);
     const [teamsArray,setTeamsArray] = useState([]);
@@ -50,6 +50,19 @@ export default function SelectTeamsManuallyScreen() {
         let newPlayerState = playerTeam;
         newPlayerState[getIndex(player)] = team;
         setPlayerTeam([...newPlayerState]);
+    }
+
+    function handleNext(){
+        if(manually){
+            setShowTeamsCreation(true)
+        }else{
+            // if(groupList.length % parseInt(selectedValue === 0)){
+                navigation.navigate("ShowTournamentTeams",{username,friends_list,groupList,tournamentName,outsiders,manually})
+            // }else{
+            //     Alert.alert("Warning",`Each team must have the same number of members. You have chosen ${groupList.length} members to be in ${selectedValue} teams`);
+            // } 
+            
+        }
     }
 
     function getTeams(){
@@ -249,7 +262,7 @@ export default function SelectTeamsManuallyScreen() {
                     <Picker.Item label="15" value="15" />
                     <Picker.Item label="16" value="16" />
                 </Picker>
-                <TouchableOpacity style={styles.buttons} onPress={() => setShowTeamsCreation(true)}>
+                <TouchableOpacity style={styles.buttons} onPress={handleNext}>
                     <Text style={styles.nextText}>Next</Text>
                 </TouchableOpacity>
                 {showTeamsCreation && 

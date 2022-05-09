@@ -20,13 +20,13 @@ export default function TournamentTeamsMainScreen() {
     const navigation = useNavigation();
     const username = route.params.username;
     
-    function gotoAddTournamentMembers(){
+    function gotoAddTournamentMembers(flag){
         const myDoc = doc(db, "HHcollection", username);
         getDoc(myDoc)
         .then((user)=>{
             const user_data = user.data();
             const friends_list = user_data.friends;
-            const manually = true
+            const manually = flag;
             navigation.navigate("AddTournamentMembers",{username,friends_list,manually});
         }).catch((error)=>{
             Alert.alert("","An Error has occured please try again later");
@@ -44,11 +44,11 @@ export default function TournamentTeamsMainScreen() {
                 </TouchableOpacity>
             </View>
            
-            <TouchableOpacity style={styles.buttons} onPress={gotoAddTournamentMembers}>
+            <TouchableOpacity style={styles.buttons} onPress={() => gotoAddTournamentMembers(true)}>
                 <Text style={styles.btnsText}>Select Teams Manually</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttons}>
+            <TouchableOpacity style={styles.buttons} onPress={() => gotoAddTournamentMembers(false)}>
                 <Text style={styles.btnsText}>Create Teams Automatically</Text>
             </TouchableOpacity>
             

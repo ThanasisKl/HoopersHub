@@ -50,7 +50,7 @@ export default function AddTournamentMembersScreen() {
             setShowWarningList(true);
         }else{
             if(!groupList.includes(username))groupList.push(username);
-            navigation.navigate("SelectTeamsManually",{username,groupList,tournamentName,"friends_list":friends,outsiders});
+            navigation.navigate("SelectTeamsManually",{username,groupList,tournamentName,"friends_list":friends,outsiders,manually});
         }
     }
 
