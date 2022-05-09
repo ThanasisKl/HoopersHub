@@ -63,8 +63,8 @@ export default function TrainingHistoryScreen() {
 //    }
 
 
-    function gotoHomeScreen(){
-        navigation.navigate("Home",{"username":username});
+    function gotoTrainingMainScreen(){
+        navigation.navigate("TrainingMain",{"username":username});
     }
 
     function toggleModalVisibility(number){
@@ -124,7 +124,7 @@ export default function TrainingHistoryScreen() {
     return (
         <View style={styles.container}>
                 <View style={styles.iconView}>
-                    <TouchableOpacity onPress={gotoHomeScreen}>
+                    <TouchableOpacity onPress={gotoTrainingMainScreen}>
                         <Image 
                             style={styles.icons} 
                             source={require('../../assets/back-icon.png')}
