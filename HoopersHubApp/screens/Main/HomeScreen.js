@@ -77,6 +77,19 @@ export default function HomeScreen({route}) {
         });
     }
 
+    function gotoSearchGameNearby(){
+        const myDoc = doc(db, "HHcollection", username);
+        getDoc(myDoc)
+        .then((user)=>{
+            // const user_data = user.data();
+            // const friends_list = user_data.friends;
+            // const myRatings = user_data.myRatings;
+            navigation.navigate("SearchGameMain",{username});
+        }).catch((error)=>{
+            Alert.alert("","An Error has occured please try again later (error code: 12)");
+        });
+    }
+
     function gotoGroupScreen(){
         navigation.navigate("GroupMain",{username});
     }
