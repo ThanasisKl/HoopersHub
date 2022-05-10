@@ -57,7 +57,7 @@ export default function SelectTeamsManuallyScreen() {
             setShowTeamsCreation(true)
         }else{
             // if(groupList.length % parseInt(selectedValue === 0)){
-                navigation.navigate("ShowTournamentTeams",{username,friends_list,groupList,tournamentName,outsiders,manually})
+                navigation.navigate("ShowTournamentTeams",{username,friends_list,groupList,tournamentName,outsiders,manually,selectedValue})
             // }else{
             //     Alert.alert("Warning",`Each team must have the same number of members. You have chosen ${groupList.length} members to be in ${selectedValue} teams`);
             // } 
