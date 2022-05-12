@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import { useNavigation } from '@react-navigation/core'
 import {
     StyleSheet,
@@ -9,22 +9,31 @@ import {
     TouchableOpacity,
     Alert,
 } from "react-native";
-import {doc, getDoc} from 'firebase/firestore';
+import {doc, getDoc, setDoc } from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
 import { db } from '../../Config'
 import { colors } from './../colors';
-import ShotsModal from "../../components/ShotsModal";
 import * as Location from 'expo-location';
 import { TextInput } from 'react-native-gesture-handler';
+import {Picker} from '@react-native-picker/picker';
+import {TimePicker} from 'react-native-simple-time-picker';
+import { set } from 'react-native-reanimated';
 
 
 export default function CreateGameScreen() {
 
+    const route = useRoute();
+    const navigation = useNavigation();
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-    const [numberOfPlayers, setNumberOfPlayers] = useState(null);
+    const [numberOfPlayers, setNumberOfPlayers] = useState("1");
     const [gameName, setGameName] = useState(null);
+    const username = route.params.username;
+    const [selectedHours, setSelectedHours] = useState(0);
+    const [selectedMinutes, setSelectedMinutes] = useState(0);
+    const [warning,setWarning] = useState("");
+
 
   
     useEffect(() => {
@@ -44,46 +53,103 @@ export default function CreateGameScreen() {
     if (errorMsg) {
       text = errorMsg;
     } else if (location) {
+
       text = JSON.stringify(location);
       console.log
     }
 
+    function checkInputs(){
+      let today = new Date();
+      let hours = (today.getHours() < 10 ? '0' : '') + today.getHours();
+      let minutes = (today.getMinutes() < 10 ? '0' : '') + today.getMinutes();
+      console.log
+
+      if ((selectedHours - hours) > 0){
+        return "no_problem"
+      } else if ((selectedHours - hours) == 0){
+        if ((selectedMinutes - minutes) > 0 ){
+          return "no_problem"
+        }
+      } else {
+        return "problem"
+      }
+    }
+
+    async function submitGame(){
+      let problem = checkInputs();
+
+      if (problem == "no_problem"){
+        const myDoc = doc(db, "HHcollection", username);
+        let query_result = await getDoc(myDoc);
+        const docData = {
+          "name": gameName,
+          "owner": username,
+          // "latitude":  ,
+          // "longitude":
+          "friendRequests": []
+        }
+      } else{
+        setWarning("Pick an appropriate time")
+      }
+
+    }
+
+    function gotoSearchGameMainScreen(){
+      navigation.navigate("SearchGameMain",{"username":username});
+    }
+
 
     return (
-        <View >
+        <View style={styles.container}>
             <View style={styles.iconView}>
-                <TouchableOpacity onPress={gotoHomeScreen}>
+                <TouchableOpacity onPress={gotoSearchGameMainScreen}>
                     <Image 
                         style={styles.icons} 
                         source={require('../../assets/back-icon.png')}
                     />
                 </TouchableOpacity>
             </View>
+              <Text>
+                Name your Game :
+              </Text>
+                <TextInput
+                style={styles.input}
+                onChangeText={setGameName}
+                value={gameName}
+                placeholder="Game Title"
+                keyboardType="text"
+                />
 
-            <TextInput
-            style={styles.input}
-            onChangeText={setGameName}
-            value={number}
-            placeholder="Game Title"
-            keyboardType="numeric"
-            />
-            <Label>
-                Number of players per team
-            </Label>
-            <Select value={setNumberOfPlayers}>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </Select>
-             {/* <TextInput
-            style={styles.input}
-            onChangeText={onChangeNumber}
-            value={number}
-            placeholder="Game Title"
-            keyboardType="numeric"
-            />                       */}
+                <Text>
+                    Number of players per team:
+                </Text>
+                <Picker
+                  numberOfPlayers={numberOfPlayers}
+                  style={{ height: 50, width: 150 }}
+                  onValueChange={(itemValue, itemIndex)=> setNumberOfPlayers(itemValue)}
+                >
+                  <Picker.Item label="1" value="1" />
+                  <Picker.Item label="2" value="2" />
+                  <Picker.Item label="3" value="3" />
+                  <Picker.Item label="4" value="4" />
+                  <Picker.Item label="5" value="5" />
+                </Picker>
+                <Text>Time of the Game:</Text>
+
+                <TimePicker
+                  selectedHours={selectedHours}
+                  //initial Hourse value
+                  selectedMinutes={selectedMinutes}
+                  //initial Minutes value
+                  onChange={(hours, minutes) => {
+                    setSelectedHours(hours);
+                    setSelectedMinutes(minutes);
+                  }}
+                />
+            <TouchableOpacity style={styles.createBtn} onPress={submitGame}>
+                            <Text style={styles.nextText}>Create Game</Text>
+            </TouchableOpacity>
+            <Text style={styles.warning}>{warning}</Text>
         </View>
       );
 
@@ -97,4 +163,43 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       padding: 10,
     },
+
+    createBtn:{
+      borderRadius: 12,
+      borderWidth:2,
+      borderColor:colors.textColor,
+      backgroundColor: "white",
+      textAlign:'center',
+      alignItems:"center",
+      width:"75%",
+      paddingVertical:14,
+      marginTop:20,
+      marginBottom:10,
+      marginLeft:"auto",
+      marginRight:"auto",
+  },
+  
+  container: {
+    flex: 1,
+    backgroundColor: colors.bgColor,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  
+  icons:{
+    width:45,
+    height:30, 
+    marginRight:20,
+    marginTop:30,
+    marginLeft:20,
+},
+
+iconView:{
+    position: 'absolute',
+    top:0,
+    alignSelf: "flex-start",
+    flexDirection:"row"
+},
+
   });

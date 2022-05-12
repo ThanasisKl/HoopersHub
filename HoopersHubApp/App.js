@@ -57,6 +57,9 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="ViewTournaments" component={ViewTournamentsScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="ViewChosenTournament" component={ViewChosenTournamentScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="ShowTournamentMembers" component={ShowTournamentMembersScreen}/>
+        <Stack.Screen options={{ headerShown: false }} name="SearchGameMain" component={SearchGameMainScreen}/>
+        <Stack.Screen options={{ headerShown: false }} name="CreateGame" component={CreateGameScreen}/>
+        <Stack.Screen options={{ headerShown: false }} name="FindGameNearby" component={FindGameNearbyScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
