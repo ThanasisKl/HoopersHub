@@ -18,8 +18,9 @@ import * as Location from 'expo-location';
 import { TextInput } from 'react-native-gesture-handler';
 import {Picker} from '@react-native-picker/picker';
 import {TimePicker} from 'react-native-simple-time-picker';
-import { set } from 'react-native-reanimated';
-
+// import { set } from 'react-native-reanimated';
+// import DatePickerModal  from '../../components/DatePickerModal';
+// import DatePicker from 'react-native-date-picker'
 
 export default function CreateGameScreen() {
 
@@ -33,6 +34,7 @@ export default function CreateGameScreen() {
     const [selectedHours, setSelectedHours] = useState(0);
     const [selectedMinutes, setSelectedMinutes] = useState(0);
     const [warning,setWarning] = useState("");
+    const [date, setDate] = useState(new Date());
 
 
   
@@ -55,7 +57,7 @@ export default function CreateGameScreen() {
     } else if (location) {
 
       text = JSON.stringify(location);
-      console.log
+      console.log(location)
     }
 
     function checkInputs(){
@@ -84,9 +86,11 @@ export default function CreateGameScreen() {
         const docData = {
           "name": gameName,
           "owner": username,
-          // "latitude":  ,
-          // "longitude":
-          "friendRequests": []
+          "latitude": location.coords.latitude ,
+          "longitude": location.coords.longitude,
+          "team_1":[],
+          "team_2":[],
+          "time_of_game":[selectedHours,selectedMinutes]
         }
       } else{
         setWarning("Pick an appropriate time")
@@ -117,14 +121,14 @@ export default function CreateGameScreen() {
                 onChangeText={setGameName}
                 value={gameName}
                 placeholder="Game Title"
-                keyboardType="text"
+                keyboardType="default"
                 />
 
                 <Text>
                     Number of players per team:
                 </Text>
                 <Picker
-                  numberOfPlayers={numberOfPlayers}
+                  selectedValue={numberOfPlayers}
                   style={{ height: 50, width: 150 }}
                   onValueChange={(itemValue, itemIndex)=> setNumberOfPlayers(itemValue)}
                 >
@@ -135,6 +139,7 @@ export default function CreateGameScreen() {
                   <Picker.Item label="5" value="5" />
                 </Picker>
                 <Text>Time of the Game:</Text>
+                {/* <DatePickerModal /> */}
 
                 <TimePicker
                   selectedHours={selectedHours}
