@@ -15,16 +15,29 @@ import { useRoute } from '@react-navigation/native';
 import { db } from '../../Config'
 import { colors } from '../colors';
 import ShotsModal from "../../components/ShotsModal";
+import TrainingResultsModal from "../../components/TrainingResultsModal";
 
 
 export default function TrainingSessionScreen() {
     const route = useRoute();
     const navigation = useNavigation();
     const username = route.params.username;
+
+    const [isResultModalVisible,setResultModalVisibility] = useState(false);
     const [showShotsModal,setShowShotsModal] = useState(false);
     const [btnPressed,setBtnPressed] = useState(0);
     const [results,setResults] = useState([0,0,0,0,0,0,0]);
     const [btnColor,setBtnColor] = useState([true,true,true,true,true,true,true]);
+    const [newSave,setNewSave] = useState(false);
+
+    if(newSave){
+        setNewSave(false);
+        handleFinish();
+    }
+
+    function toggleResultModalVisibility(){
+        setResultModalVisibility(!isResultModalVisible)
+    }
 
     function gotoTrainingMainScreen(){
         navigation.navigate("TrainingMain",{"username":username});
@@ -35,50 +48,33 @@ export default function TrainingSessionScreen() {
         setShowShotsModal(!showShotsModal);
     }
 
-    const handleFinish = (value,merge) => {
-        // console.log(results);//fixme
+    function handleFinish(){
         const myDoc = doc(db, "HHcollection",username);
         getDoc(myDoc)
         .then((user)=>{
             const user_data = user.data();
             const new_session = {
-                "Point_1": value[0],
-                "Point_2": value[1],
-                "Point_3": value[2],
-                "Point_4": value[3],
-                "Point_5": value[4],
-                "Point_6": value[5],
-                "Point_7": value[6],
+                "Point_1": results[0],
+                "Point_2": results[1],
+                "Point_3": results[2],
+                "Point_4": results[3],
+                "Point_5": results[4],
+                "Point_6": results[5],
+                "Point_7": results[6],
             }
+
             const new_training_data = {training:[...user_data.training,new_session]}
-            // user_data.training.push(new_session);
-            // console.log(new_training_data)
-            // const updated_user = {
-            //     "name": user_data.name,
-            //     "username":user_data.username,
-            //     "password":user_data.password,
-            //     "heigth":user_data.heigth,
-            //     "weigth":user_data.weigth,
-            //     "yearOfBirth":user_data.yearOfBirth,
-            //     "friendRequests": user_data.friendRequests,
-            //     "friends":user_data.friends,
-            //     "ratings":user_data.ratings,
-            //     "myRatings":user_data.myRatings,
-            //     "groups":user_data.groups,
-            //     "training":user_data.training,
-            //     "tournaments":user_data.tournaments,
-            //   }
-            // console.log(training_history);
-            setDoc(myDoc,new_training_data,{merge: merge})
+            setDoc(myDoc,new_training_data,{merge: true})
             .then(()=>{
-                // myDoc.training.add(results);
-                Alert.alert("Congratulations!","Training Session Completed!")
+                Alert.alert("Congratulations!","Training Session Completed!");
                 navigation.navigate("TrainingMain",{username});
+            }).catch((error) =>{
+                console.log(error)
+            });
 
         }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code:)");
+            Alert.alert("","An Error has occured please try again later");
         }); 
-    })
     }
 
     return (
@@ -93,6 +89,14 @@ export default function TrainingSessionScreen() {
                     btnColor={btnColor}
                     setBtnColor={setBtnColor}
                 />
+
+                <TrainingResultsModal
+                    isModalVisible={isResultModalVisible}
+                    toggleModalVisibility={toggleResultModalVisibility}
+                    results={results}
+                    setNewSave={setNewSave}
+                />
+
                 <View style={styles.iconView}>
                     <TouchableOpacity onPress={gotoTrainingMainScreen}>
                         <Image 
@@ -135,10 +139,8 @@ export default function TrainingSessionScreen() {
                        <Text style={styles.btnText}>7</Text>
                    </TouchableOpacity>
 
-                   <TouchableOpacity style={styles.finishBtn} onPress={()=> {
-                    handleFinish(results,true)
-                   }}>
-                       <Text style={styles.finishText}>finish</Text>
+                   <TouchableOpacity style={styles.finishBtn} onPress={toggleResultModalVisibility}>
+                       <Text style={styles.finishText}>FINISH</Text>
                    </TouchableOpacity>
                </View>
             </ImageBackground>
@@ -194,7 +196,7 @@ const styles = StyleSheet.create({
     },
 
     finishText:{
-        fontSize:25,
+        fontSize:22,
         fontWeight: 'bold',
         color:'black',
     },

@@ -5,20 +5,14 @@ import {
     StyleSheet,
     Text,
     View,
-    ImageBackground,
-    ScrollView,
     Image,
     TouchableOpacity,
-    Alert,
 } from "react-native";
 import {doc, getDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
 import { db } from '../../Config'
 import { colors } from '../colors';
-import ShotsModal from "../../components/ShotsModal";
-import { stringify } from '@firebase/util';
-
 
 export default function TrainingHistoryScreen() {
     const route = useRoute();
@@ -35,7 +29,7 @@ export default function TrainingHistoryScreen() {
     DataTable: [ ]})
 
 
-    const sessionsOnScreen = 10;
+    const sessionsOnScreen = 7;
 
     const reverseTrainingDataHistory = [...trainingHistoryData].reverse();
     let loops = reverseTrainingDataHistory.length > sessionsOnScreen ? sessionsOnScreen : reverseTrainingDataHistory.length;
@@ -47,12 +41,6 @@ export default function TrainingHistoryScreen() {
     function gotoTrainingMainScreen(){
         navigation.navigate("TrainingMain",{"username":username});
     }
-
-    function toggleModalVisibility(number){
-        setBtnPressed(number);
-        setShowShotsModal(!showShotsModal);
-    }
-
 
     let sessionStats = screenTrainingDataHistory.map((session,i) =>{
         let data =[session.Point_1, session.Point_2, session.Point_3, session.Point_4, session.Point_5, session.Point_6, session.Point_7];
@@ -68,7 +56,7 @@ export default function TrainingHistoryScreen() {
 
     function statsAverage() {
         let sum_of_points = [0,0,0,0,0,0,0]
-        for (let i=0;i<screenTrainingDataHistory.length;i++){
+        for (let i=0;i<loops;i++){
             sum_of_points[0] += screenTrainingDataHistory[i].Point_1
             sum_of_points[1] += screenTrainingDataHistory[i].Point_2
             sum_of_points[2] += screenTrainingDataHistory[i].Point_3
@@ -77,8 +65,6 @@ export default function TrainingHistoryScreen() {
             sum_of_points[5] += screenTrainingDataHistory[i].Point_6
             sum_of_points[6] += screenTrainingDataHistory[i].Point_7
         }
-
-       
         
         let max = -1;
         let min = 101;
@@ -121,36 +107,36 @@ export default function TrainingHistoryScreen() {
 
     return (
         <View style={styles.container}>
-                <View style={styles.iconView}>
-                    <TouchableOpacity onPress={gotoTrainingMainScreen}>
-                        <Image 
-                            style={styles.icons} 
-                            source={require('../../assets/back-icon.png')}
-                        />
-                    </TouchableOpacity> 
-                    <Text style={styles.pageTitle}>See your latest training results</Text>
-                </View>
-                <View>
-                    <Table borderStyle={{borderWidth: 2, borderColor: colors.header}}>
-                        <Row
-                            data={tableData.HeadTable} 
-                            style={[styles.head,{backgroundColor:colors.header}]}
-                            textStyle={{textAlign:"center",fontWeight:"bold"}} 
-                        />
+            <View style={styles.iconView}>
+                <TouchableOpacity onPress={gotoTrainingMainScreen}>
+                    <Image 
+                        style={styles.icons} 
+                        source={require('../../assets/back-icon.png')}
+                    />
+                </TouchableOpacity> 
+                <Text style={styles.pageTitle}>See your latest training results</Text>
+            </View>
+            <View>
+                <Table borderStyle={{borderWidth: 2, borderColor: colors.header}}>
+                    <Row
+                        data={tableData.HeadTable} 
+                        style={[styles.head,{backgroundColor:colors.header}]}
+                        textStyle={{textAlign:"center",fontWeight:"bold"}} 
+                    />
         
-                        {sessionStats}
+                    {sessionStats}
 
-                    </Table>
-                </View>
+                </Table>
+            </View>
+            <View>
+                {statsAverage()}
+            </View>
+            {showResults && 
                 <View>
-                    {statsAverage()}
+                    <Text style={styles.bestPointStyle}>Your best Point: <Text style={{fontSize:22,fontWeight:"bold"}}>Point{bestPoint}</Text></Text>
+                     <Text style={styles.worstPointStyle}>Your worst Point: <Text style={{fontSize:22,fontWeight:"bold"}}>Point{worstPoint}</Text></Text>
                 </View>
-                {showResults && 
-                    <View>
-                        <Text style={styles.bestPointStyle}>Your best Point: <Text style={{fontSize:22,fontWeight:"bold"}}>Point{bestPoint}</Text></Text>
-                        <Text style={styles.worstPointStyle}>Your best Point: <Text style={{fontSize:22,fontWeight:"bold"}}>Point{worstPoint}</Text></Text>
-                    </View>
-                }
+            }
 
         </View>
     );

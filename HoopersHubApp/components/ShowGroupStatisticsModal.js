@@ -20,7 +20,6 @@ export default function ShowGroupStatisticsModal({isModalVisible,toggleModalVisi
     if(numberOfgames!==0){
         team1Rate = ((team1wins/numberOfgames)*100).toFixed(2);
         team2Rate = ((team2wins/numberOfgames)*100).toFixed(2);
-        drawRate = (((numberOfgames - team1wins - team2wins)/numberOfgames)*100).toFixed(2);
     }
 
     return (
@@ -39,12 +38,12 @@ export default function ShowGroupStatisticsModal({isModalVisible,toggleModalVisi
                         </TouchableOpacity>
                     </View>
                     <View>
+                        <Text style={styles.modalTitle}>Statistics</Text>
                         <Text style={styles.textStyle}>Overall Score: 
-                            <Text style={[{color:colors.bgColor}]}> {team1wins} - {team2wins} {team1wins>team2wins ? "(team1 on the lead)" : team1wins<team2wins ? "(team2 on the lead)" :"" }</Text>
+                            <Text style={[{color:colors.bgColor}]}> {team1wins} - {team2wins}                                                 {team1wins>team2wins ? "(team1 on the lead)" : team1wins<team2wins ? "(team2 on the lead)" :"" }</Text>
                         </Text>
                         <Text style={styles.textStyle}>Team1 Win Rate: <Text style={[{color:colors.bgColor}]}>{team1Rate}{numberOfgames!==0 && "%"}</Text></Text>
                         <Text style={styles.textStyle}>Team2 Win Rate: <Text style={[{color:colors.bgColor}]}>{team2Rate}{numberOfgames!==0 && "%"}</Text></Text>
-                        <Text style={styles.textStyle}>Draw Rate: <Text style={[{color:colors.bgColor}]}>{drawRate}{numberOfgames!==0 && "%"}</Text></Text>
                     </View>
                 </View>
             </View>
@@ -73,7 +72,7 @@ export default function ShowGroupStatisticsModal({isModalVisible,toggleModalVisi
         elevation: 5,
         transform: [{ translateX: -(width * 0.4) }, 
                     { translateY: -90 }],
-        height:220,
+        height:210,
         width: width * 0.85,
         backgroundColor: "#fff",
         borderRadius: 7,
@@ -91,6 +90,19 @@ export default function ShowGroupStatisticsModal({isModalVisible,toggleModalVisi
         color:colors.textColor,
         marginBottom:10,
         marginLeft:10,
+    },
+
+    modalTitle:{
+        fontSize:25,
+        color:colors.darkRed,
+        fontWeight:"bold",
+        borderColor:colors.darkRed,
+        borderBottomWidth:2,
+        marginBottom:7,
+        marginRight:"auto",
+        marginLeft:"auto",
+        paddingHorizontal:20,
+        letterSpacing:3,
     },
 
  });
