@@ -195,7 +195,7 @@ export default function HomeScreen({route}) {
                 <Text style={styles.btnsText}>Groups</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttons}>
+            <TouchableOpacity style={styles.buttons} onPress={gotoSearchGameNearby}>
                 <Text style={styles.btnsText}>Search Team Nearby</Text>
             </TouchableOpacity>
 

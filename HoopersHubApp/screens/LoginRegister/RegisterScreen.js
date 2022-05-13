@@ -117,7 +117,7 @@ export default function Register(props) {
             "username":username,
             "password":password,
             "heigth":heigth,
-            "weight":weigth,
+            "weigth":weigth,
             "yearOfBirth":yearOfBirth,
             "friendRequests": [],
             "friends":[],
@@ -126,8 +126,7 @@ export default function Register(props) {
             "groups":[],
             "training":[],
             "tournaments":[],
-            "beginner":radioButton,
-            "averageRatings":{},
+            "begginer":radioButton
           }
           
           setDoc(myDoc2, docData)

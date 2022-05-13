@@ -7,15 +7,12 @@ import {
     Alert,
 } from "react-native";
 import {doc, getDoc,setDoc} from 'firebase/firestore';
-import { useNavigation } from '@react-navigation/core';
 
 import { db } from '../Config'
 import RateSkill from "./RateSkill";
 import { colors } from '../screens/colors';
 
 export default function RateFriend({friendUname,username,message}){
-
-    const navigation = useNavigation();
 
     const [skill1State,setskill1State] = useState([false,false,false,false,false]);
     const [skill2State,setskill2State] = useState([false,false,false,false,false]);
@@ -68,39 +65,8 @@ export default function RateFriend({friendUname,username,message}){
             }
             user_ratings.push(friendratings);
 
-            let blocksSum = 0;
-            let defenseSum = 0;
-            let threepointsSum = 0;
-            let twopointsSum = 0;
-            let reboundsSum = 0;
-            let team_playerSum = 0;
-            let athleticismSum = 0;
-            let overall_scoreSum = 0;
-            for(let i=0;i<user_ratings.length;i++){
-                blocksSum += user_ratings[i].blocks;
-                defenseSum += user_ratings[i].defense;
-                threepointsSum += user_ratings[i].threepoints;
-                twopointsSum += user_ratings[i].twopoints;
-                reboundsSum += user_ratings[i].rebounds;
-                team_playerSum += user_ratings[i].team_player;
-                athleticismSum += user_ratings[i].athleticism;
-                overall_scoreSum += user_ratings[i].overall_score;
-            }
-
-            const user_averageRatings = {
-                "averageBlocks": (blocksSum / user_ratings.length).toFixed(4),
-                "averageDefense": (defenseSum / user_ratings.length).toFixed(4),
-                "averageThreepoints": (threepointsSum / user_ratings.length).toFixed(4),
-                "averageTwopoints": (twopointsSum / user_ratings.length).toFixed(4),
-                "averageRebounds": (reboundsSum / user_ratings.length).toFixed(4),
-                "averageTeam_player": (team_playerSum / user_ratings.length).toFixed(4),
-                "averageAtheleticism": (athleticismSum / user_ratings.length).toFixed(4),
-                "averageOverall_score": (overall_scoreSum / user_ratings.length).toFixed(4),
-            };
-
-            const ratingsObject = {
-                ratings : user_ratings,
-                averageRatings:user_averageRatings
+            let ratingsObject = {
+                ratings : user_ratings
             }
 
             setDoc(myDoc, ratingsObject, { merge: true })
@@ -130,7 +96,6 @@ export default function RateFriend({friendUname,username,message}){
                     setDoc(myDoc2, ratingsObject, { merge: true })
                     .then(() => {
                         Alert.alert("","Rating added successfully");
-                        navigation.navigate("Home",{username});
                     })
                     .catch((error) => {
                         Alert.alert("","An Error has occured please try again later (error code: 15)");
