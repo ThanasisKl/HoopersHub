@@ -3,4 +3,5 @@ export const colors = {
     bgColor:'#e5a646',
     lightBlue: '#7FDBFF',
     darkRed:'#962020',
+    selectedtextColor:"#FFFFFF"
 }

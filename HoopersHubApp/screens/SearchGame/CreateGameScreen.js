@@ -19,7 +19,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import {Picker} from '@react-native-picker/picker';
 import {TimePicker} from 'react-native-simple-time-picker';
 // import { set } from 'react-native-reanimated';
-// import DatePickerModal  from '../../components/DatePickerModal';
+import DatePickerModal  from '../../components/DatePickerModal';
 // import DatePicker from 'react-native-date-picker'
 
 export default function CreateGameScreen() {
@@ -35,7 +35,8 @@ export default function CreateGameScreen() {
     const [selectedMinutes, setSelectedMinutes] = useState(0);
     const [warning,setWarning] = useState("");
     const [date, setDate] = useState(new Date());
-
+    
+    const[isDatePickerModalVisible,setDatePickerModalVisible] = useState(false);
 
   
     useEffect(() => {
@@ -57,7 +58,11 @@ export default function CreateGameScreen() {
     } else if (location) {
 
       text = JSON.stringify(location);
-      console.log(location)
+      // console.log(location)
+    }
+
+    function toggleDatePickerModalVisibility(){
+      setDatePickerModalVisible(!isDatePickerModalVisible)
     }
 
     function checkInputs(){
@@ -123,13 +128,12 @@ export default function CreateGameScreen() {
                 placeholder="Game Title"
                 keyboardType="default"
                 />
-
                 <Text>
                     Number of players per team:
                 </Text>
                 <Picker
                   selectedValue={numberOfPlayers}
-                  style={{ height: 50, width: 150 }}
+                  style={styles.picker}
                   onValueChange={(itemValue, itemIndex)=> setNumberOfPlayers(itemValue)}
                 >
                   <Picker.Item label="1" value="1" />
@@ -139,8 +143,11 @@ export default function CreateGameScreen() {
                   <Picker.Item label="5" value="5" />
                 </Picker>
                 <Text>Time of the Game:</Text>
-                {/* <DatePickerModal /> */}
-
+                <DatePickerModal
+                 toggleDatePickerModalVisibility={toggleDatePickerModalVisibility} 
+                 isDatePickerModalVisible={isDatePickerModalVisible} 
+                 />
+{/* 
                 <TimePicker
                   selectedHours={selectedHours}
                   //initial Hourse value
@@ -150,9 +157,9 @@ export default function CreateGameScreen() {
                     setSelectedHours(hours);
                     setSelectedMinutes(minutes);
                   }}
-                />
+                /> */}
             <TouchableOpacity style={styles.createBtn} onPress={submitGame}>
-                            <Text style={styles.nextText}>Create Game</Text>
+                            <Text style={styles.nextText}>Create Game!</Text>
             </TouchableOpacity>
             <Text style={styles.warning}>{warning}</Text>
         </View>
@@ -165,6 +172,7 @@ const styles = StyleSheet.create({
     input: {
       height: 40,
       margin: 12,
+      marginBottom:20,
       borderWidth: 1,
       padding: 10,
     },
@@ -206,5 +214,11 @@ iconView:{
     alignSelf: "flex-start",
     flexDirection:"row"
 },
+
+picker:{
+  height: 50,
+  width: 150,
+  marginBottom:20
+}
 
   });
