@@ -6,18 +6,13 @@ import { Button,
   Image,
   TouchableOpacity,
   Text,
-  Dimensions } from 'react-native'
-  import DatePicker from 'react-native-modern-datepicker';
+  Dimensions } from 'react-native';
+import DatePicker from 'react-native-modern-datepicker';
 import { colors } from '../screens/colors';
 
 const { width,height } = Dimensions.get("window");
 
-export default function DatePickerModal({toggleDatePickerModalVisibility,isDatePickerModalVisible}){
-  // const [date, setDate] = useState(new Date())
-  const [currentDate,setCurrentDate] = useState(new Date())
-  // const [open, setOpen] = useState(false)
-  const [selectedDate, setSelectedDate] = useState('');
-  // console.log(isDatePickerModalVisible)
+export default function DatePickerModal({toggleDatePickerModalVisibility,isDatePickerModalVisible,setDatePicked,currentDate}){
 
   function closeModal(){
     toggleDatePickerModalVisibility();
@@ -51,7 +46,8 @@ export default function DatePickerModal({toggleDatePickerModalVisibility,isDateP
         // modal={true}
         // open={isDatePickerModalVisible}
         // date={date}
-        selectorStartingYear={currentDate.getFullYear}
+        // selectorStartingYear={currentDate.getFullYear}
+        minimumDate={currentDate.getFullYear()+"-"+((currentDate.getMonth()< 10 ? '0': '')+ (currentDate.getMonth() +1))+"-"+((currentDate.getDate() < 10 ? '0': '')+currentDate.getDate())}
         options={{
           textHeaderColor: '#FFA25B',
           textDefaultColor: colors.textColor,
@@ -60,7 +56,7 @@ export default function DatePickerModal({toggleDatePickerModalVisibility,isDateP
           textSecondaryColor: '#D6C7A1',
           borderColor: 'rgba(122, 146, 165, 0.1)',
         }}
-        onSelectedChange={date => setSelectedDate(date)}
+        onSelectedChange={date => setDatePicked(date)}
       />
       <TouchableOpacity style={styles.buttons} onPress={closeModal}>
         <Text style={styles.btnsText}>Done!</Text>   

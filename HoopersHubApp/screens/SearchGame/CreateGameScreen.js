@@ -34,7 +34,7 @@ export default function CreateGameScreen() {
     const [selectedHours, setSelectedHours] = useState(0);
     const [selectedMinutes, setSelectedMinutes] = useState(0);
     const [warning,setWarning] = useState("");
-    const [date, setDate] = useState(new Date());
+    const [datePicked, setDatePicked] = useState(null);
     
     const[isDatePickerModalVisible,setDatePickerModalVisible] = useState(false);
 
@@ -67,19 +67,55 @@ export default function CreateGameScreen() {
 
     function checkInputs(){
       let today = new Date();
-      let hours = (today.getHours() < 10 ? '0' : '') + today.getHours();
-      let minutes = (today.getMinutes() < 10 ? '0' : '') + today.getMinutes();
-      console.log
+      let year = today.getFullYear();
+      let month = today.getMonth() + 1;
+      let day = today.getDate();
+      let hour = today.getHours();
+      let minute = today.getMinutes();
 
-      if ((selectedHours - hours) > 0){
+
+
+      let year_picked = ""
+      console.log("Month on create game: "+month)
+      for (var i = 0; i <= 3; i++) {
+        year_picked += datePicked.charAt(i);
+    }
+      year_picked = parseInt(year_picked);
+      let month_picked = parseInt(datePicked.charAt(5) + datePicked.charAt(6));
+      let day_picked = parseInt(datePicked.charAt(8) + datePicked.charAt(9));
+      let hour_picked = parseInt(datePicked.charAt(11) + datePicked.charAt(12));
+      let minute_picked = parseInt(datePicked.charAt(13) + datePicked.charAt(14));
+      console.log(year_picked+"/"+month_picked+"/"+day_picked)
+
+      
+      if (month_picked > month){
         return "no_problem"
-      } else if ((selectedHours - hours) == 0){
-        if ((selectedMinutes - minutes) > 0 ){
+      } else if (month_picked == month){
+        if (datePicked> day){
           return "no_problem"
+        } else if ( datePicked == day){
+          if (hour_picked > hour){
+            return "no_problem"
+          } else if ( hour_picked == hour){
+            if (minute_picked> minute){
+              return "no_problem"
+            } else {
+              return "problem"
+            }
+          }
         }
       } else {
         return "problem"
       }
+      // if ((selectedHours - hours) > 0){
+      //   return "no_problem"
+      // } else if ((selectedHours - hours) == 0){
+      //   if ((selectedMinutes - minutes) > 0 ){
+      //     return "no_problem"
+      //   }
+      // } else {
+      //   return "problem"
+      // }
     }
 
     async function submitGame(){
@@ -146,6 +182,8 @@ export default function CreateGameScreen() {
                 <DatePickerModal
                  toggleDatePickerModalVisibility={toggleDatePickerModalVisibility} 
                  isDatePickerModalVisible={isDatePickerModalVisible} 
+                 setDatePicked= {setDatePicked}
+                 currentDate={new Date()}
                  />
 {/* 
                 <TimePicker
