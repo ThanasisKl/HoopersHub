@@ -28,7 +28,7 @@ export default function FindGameNearbyScreen() {
   const navigation = useNavigation();
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [tableData,setTableData] = useState({DataTable:["Game 1 - 3/10 players - 1km away","Join","Game 2 - 2/4 players - 2km away","Join","Game 3 - 6/8 players - 3km away","Join"]})
+  const [tableData,setTableData] = useState({DataTable:[["Game 1 - 3/10 players - 1km away","Join"],["Game 2 - 2/4 players - 2km away","Join"],["Game 3 - 6/8 players - 3km away","Join"]]})
 
   useEffect(() => {
     (async () => {
