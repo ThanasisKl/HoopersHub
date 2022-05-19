@@ -21,42 +21,18 @@ export default function TrainingMainScreen() {
     const route = useRoute();
     const navigation = useNavigation();
     const username = route.params.username;
-    const [showShotsModal,setShowShotsModal] = useState(false);
-    const [btnPressed,setBtnPressed] = useState(0);
-    const [results,setResults] = useState([0,0,0,0,0,0,0]);
-    const [btnColor,setBtnColor] = useState([true,true,true,true,true,true,true]);
 
     function gotoHomeScreen(){
         navigation.navigate("Home",{"username":username});
     }
 
-    function toggleModalVisibility(number){
-        setBtnPressed(number);
-        setShowShotsModal(!showShotsModal);
-    }
-
-    function handleFinish(){
-        console.log(results);//fixme
-        /*
-            beginner
-            regular
-            great
-            rising star
-            professional
-            legend
-        */ 
-    }
-
-
     function gotoTrainingSessionScreen(){
         const myDoc = doc(db, "HHcollection", username);
         getDoc(myDoc)
         .then((user)=>{
-            // const user_data = user.data();
-            // const friends_list = user_data.friends;
             navigation.navigate("TrainingSession",{username});
         }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code:)");
+            Alert.alert("","An Error has occured please try again later");
         }); 
     }
 
@@ -66,10 +42,13 @@ export default function TrainingMainScreen() {
         .then((user)=>{
             const user_data = user.data();
             const training_history = user_data.training;
-            // console.log(training_history);
-            navigation.navigate("TrainingHistory",{username,training_history});
+            if (training_history.length === 0){
+                Alert.alert("Warning","No trainings found. Start a training session first and then come to see your results");
+            }else{
+                navigation.navigate("TrainingHistory",{username,training_history});
+            }
         }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code:)");
+            Alert.alert("","An Error has occured please try again later");
         }); 
     }
 
