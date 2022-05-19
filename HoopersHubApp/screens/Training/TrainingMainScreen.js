@@ -42,6 +42,7 @@ export default function TrainingMainScreen() {
         .then((user)=>{
             const user_data = user.data();
             const training_history = user_data.training;
+            
             if (training_history.length === 0){
                 Alert.alert("Warning","No trainings found. Start a training session first and then come to see your results");
             }else{

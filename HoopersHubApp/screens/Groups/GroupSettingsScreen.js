@@ -209,6 +209,7 @@ export default function GroupSettingsScreen() { //simazema kai inputs scores sta
 
     function addNewLeader(newLeader){
         const newLeaders = [...groupLeaders,newLeader];
+        
         const leaderObject = {
             leader:newLeaders,
         };

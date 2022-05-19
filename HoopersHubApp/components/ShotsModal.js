@@ -29,6 +29,7 @@ export default function ShotsModal({isShotsModalVisible,toggleShotsModalVisibili
             newResults[btnNumber-1] = parseInt(shotsInTarget);
             setResults([...newResults])
             let newColors = btnColor;
+            
             if (newColors[btnNumber-1]){
                 newColors[btnNumber-1] = !newColors[btnNumber-1];
                 setBtnColor([...newColors]);
@@ -164,4 +165,5 @@ export default function ShotsModal({isShotsModalVisible,toggleShotsModalVisibili
         color:"red",
         textAlign:"center",
     }
+
 });
