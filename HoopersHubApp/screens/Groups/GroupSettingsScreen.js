@@ -104,24 +104,28 @@ export default function GroupSettingsScreen() { //simazema kai inputs scores sta
     }
 
     function deleteLatestScore(score1,score2){
-        let newScores = [];
-        for(let i=0;i<groupInfo.scores.length-1;i++){
-            newScores.push(groupInfo.scores[i]);
+        if(groupInfo.scores.length === 0){
+            Alert.alert("Warning","You can't update the latest score because no scores exist")
+        }else{
+            let newScores = [];
+            for(let i=0;i<groupInfo.scores.length-1;i++){
+                newScores.push(groupInfo.scores[i]);
+            }
+    
+            const scoreObject = {
+                scores: [...newScores]
+            };
+    
+            setDoc(myDoc, scoreObject, { merge: true })
+            .then(() => {
+                console.log("Latest Score Deleted");
+                groupInfo.scores = newScores;
+                addScore(score1,score2);
+            })
+            .catch((error) => {
+                Alert.alert("","An Error has occured please try again later");
+            })
         }
-
-        const scoreObject = {
-            scores: [...newScores]
-        };
-
-        setDoc(myDoc, scoreObject, { merge: true })
-        .then(() => {
-            console.log("Latest Score Deleted");
-            groupInfo.scores = newScores;
-            addScore(score1,score2);
-        })
-        .catch((error) => {
-            Alert.alert("","An Error has occured please try again later");
-        })
     }
 
     function handleSwitchTeams(member){
@@ -205,6 +209,7 @@ export default function GroupSettingsScreen() { //simazema kai inputs scores sta
 
     function addNewLeader(newLeader){
         const newLeaders = [...groupLeaders,newLeader];
+        
         const leaderObject = {
             leader:newLeaders,
         };
