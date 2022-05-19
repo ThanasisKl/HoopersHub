@@ -158,10 +158,11 @@ export default function CreateGameScreen() {
                 Name your Game :
               </Text>
                 <TextInput
-                style={styles.input}
+
+                style={[styles.input,{width:200}]}
                 onChangeText={setGameName}
                 value={gameName}
-                placeholder="Game Title"
+                placeholder="Lobby Name"
                 keyboardType="default"
                 />
                 <Text>

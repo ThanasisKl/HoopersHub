@@ -8,13 +8,13 @@ import {
     Image,
     TouchableOpacity,
     Alert,
+    Button
 } from "react-native";
 import {doc, getDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
 import { db } from '../../Config'
 import { colors } from './../colors';
-import ShotsModal from "../../components/ShotsModal";
 // import GetLocation from 'react-native-get-location'
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
@@ -26,10 +26,12 @@ export default function FindGameNearbyScreen() {
 
   const route = useRoute();
   const navigation = useNavigation();
+  const username = route.params.username;
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [tableData,setTableData] = useState({DataTable:[["Game 1 - 3/10 players - 1km away","Join"],["Game 2 - 2/4 players - 2km away","Join"],["Game 3 - 6/8 players - 3km away","Join"]]})
-
+  // const [tableData,setTableData] = useState({DataTable:[["Game 1 - 3/10 players - 1km away","Join"],["Game 2 - 2/4 players - 2km away","Join"],["Game 3 - 6/8 players - 3km away","Join"]]})
+  const [tableData,setTableData] = useState({HeadTable : ['Point 1', 'Point 2', 'Point 3', 'Point 4', 'Point 5','Point 6','Point 7'], DataTable: ["Game 1 - 3/10 players - 1km away","Join","Game 2 - 2/4 players - 2km away","Join","Game 3 - 6/8 players - 3km away","Join"]})
+ 
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -55,6 +57,18 @@ export default function FindGameNearbyScreen() {
     navigation.navigate("SearchGameMain",{"username":username});
   }
 
+  function gotoGameLobbyScreen(){
+    navigation.navigate("GameLobby",{"username":username});
+  }
+
+  function customButton(text){
+    return (
+      <TouchableOpacity style={styles.btnStyle} onPress={gotoGameLobbyScreen}>
+      <Text style={styles.btnsText}>{text}</Text>
+      </TouchableOpacity>
+    )
+  }
+
   return (
     <View style={styles.container}>
     <View style={styles.iconView}>
@@ -67,9 +81,24 @@ export default function FindGameNearbyScreen() {
     </View>
    
     <View>
-        <Table borderStyle={{borderWidth: 2, borderColor: colors.header}}>
-            <Rows data={tableData.DataTable} textStyle={{textAlign:"center",fontWeight:"bold"}}/>
-\       </Table>
+        <Table borderStyle={{borderWidth: 3, borderColor: colors.darkRed}}>
+    
+        <Row
+                        data={["Game 1  -  3/10 players - 1km away",customButton('Join')]} 
+                        style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
+                        textStyle={{textAlign:"center",fontWeight:"bold"}}
+                        flexArr={[2,1]} />
+        <Row
+                        data={["Game 2  -  2/4 players - 2km away",customButton("Join")]} 
+                        style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
+                        textStyle={{textAlign:"center",fontWeight:"bold"}}
+                        flexArr={[2,1]} />
+        <Row
+                        data={["Game 3  -  6/8 players - 3km away",customButton("Join")]} 
+                        style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
+                        textStyle={{textAlign:"center",fontWeight:"bold"}}
+                        flexArr={[2,1]} />                                                
+        </Table>
     </View>
 </View>
   );
@@ -77,47 +106,57 @@ export default function FindGameNearbyScreen() {
 
 const styles = StyleSheet.create({
 
+  customBtnStyle:{
+    width: "100%",
+    borderRadius: 100,
+    borderColor:colors.lightBlue,
+    borderWidth: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
   btnStyle:{
-      width: "5%",
-      borderRadius: 40,
-      height: 65,
-      width: 65,
+      // width: "5%",
+      borderRadius: 0,
+      height: 30,
+      width: 100,
       alignItems: "center",
       justifyContent: "center",
       marginHorizontal:15,
       borderColor:colors.darkRed,
       borderWidth: 2,
+      backgroundColor:colors.darkRed,
   },
 
-  buttons: {
-      width: "70%",
-      borderRadius: 7,
-      height: 50,
-      alignItems: "center",
-      justifyContent: "center",
-      marginBottom: 30,
-      backgroundColor: "white",
+  // buttons: {
+  //     width: "70%",
+  //     borderRadius: 7,
+  //     height: 50,
+  //     alignItems: "center",
+  //     justifyContent: "center",
+  //     marginBottom: 30,
+  //     backgroundColor: "white",
       
-  },
+  // },
 
   btnsText:{
-      fontSize:20,
+      fontSize:16,
       fontWeight: 'bold',
+      color:colors.selectedtextColor
   },
 
-  btnsView:{
-      alignSelf: "center",
-      marginTop:"auto",
-      marginBottom:"30%",
-      flexDirection:"row",
-      flexWrap: 'wrap',
-      justifyContent:"center",
-  },
+  // btnsView:{
+  //     alignSelf: "center",
+  //     marginTop:"auto",
+  //     marginBottom:"30%",
+  //     flexDirection:"row",
+  //     flexWrap: 'wrap',
+  //     justifyContent:"center",
+  // },
 
   container: {
       flex: 1,
       backgroundColor: colors.bgColor,
-      alignItems: "center",
       justifyContent: "center",
     },
 
@@ -166,5 +205,11 @@ const styles = StyleSheet.create({
       marginBottom:40,
       textAlign:"center"
   },
+  row: { 
+    height: 50, 
+    alignContent: "center", 
+    textAlign:"center",
+    
+},
  
 });

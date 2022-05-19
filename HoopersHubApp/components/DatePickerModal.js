@@ -130,12 +130,12 @@ const styles = StyleSheet.create({
 
   buttons: {
       width: "40%",
-      borderRadius: 7,
+      borderRadius: 3,
       height: 50,
       alignItems: "center",
       justifyContent: "center",
       marginTop: 10,
-      marginBottom:10,
+      marginBottom:30,
       backgroundColor: colors.bgColor,
   },
 
@@ -144,5 +144,19 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       color:'white',
   },
+
+//   btnStyle:{
+//     width: "30%",
+//     height: 50,
+//     width: 180,
+//     alignItems: "center",
+//     justifyContent: "center",
+//     marginTop:10, 
+//     margin
+//     marginHorizontal:95,
+//     borderColor:colors.darkRed,
+//     borderWidth: 2,
+//     backgroundColor:colors.darkRed
+// },
 
 });

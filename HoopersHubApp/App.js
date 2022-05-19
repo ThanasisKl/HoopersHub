@@ -27,6 +27,7 @@ import ShowTournamentTeamsScreen from './screens/Tournament/ShowTournamentTeamsS
 import SearchGameMainScreen from './screens/SearchGame/SearchGameMainScreen';
 import CreateGameScreen from './screens/SearchGame/CreateGameScreen';
 import FindGameNearbyScreen from './screens/SearchGame/FindGameNearbyScreen';
+import GameLobbyScreen from './screens/SearchGame/GameLobbyScreen';
 
 
 
@@ -61,6 +62,7 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="SearchGameMain" component={SearchGameMainScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="CreateGame" component={CreateGameScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="FindGameNearby" component={FindGameNearbyScreen}/>
+        <Stack.Screen options={{ headerShown: false }} name="GameLobby" component={GameLobbyScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
