@@ -113,7 +113,7 @@ export default function ShowTournamentTeamsScreen() {
                 let scoresBasedOnDefense = [...playersScores];
                 scoresBasedOnDefense.sort((a, b) => {
                     return b.defense - a.defense;
-                }).reverse(); //with reverse -> 20,30,50 (pop)
+                }).reverse(); 
 
                 let team_list = [];
                 let num_team_list = [];
@@ -147,17 +147,18 @@ export default function ShowTournamentTeamsScreen() {
                     }
                 }
 
-                let team_list2 = [];
+                let actual_team_list = [];
                 for(let h=1; h<=numberOfTeams;h++){
                     for(let k=0; k<team_list.length;k++){
                         if(h === num_team_list[k]){
-                            team_list2.push(team_list[k])
+                            actual_team_list.push(team_list[k])
                         }
                     }
                 }
-                console.log("team_list:");
-                console.log(team_list2);
-
+                // console.log("team_list:");
+                // console.log(actual_team_list);
+                setFinalTeam([...actual_team_list]);
+                setDataFetch(true);
 
                 //  --end new code--
                
@@ -190,18 +191,18 @@ export default function ShowTournamentTeamsScreen() {
                 //     }
                 // }
 
-                let teams = [];
-                for(let j2 in teamsScores){
-                    for (let j in playersScores){
-                        if (teamsScores[j2] === playersScores[j] && !teams.includes(groupList[j])){
-                            teams.push(groupList[j]);
-                            break;
-                        }
-                    }
-                }
+                // let teams = [];
+                // for(let j2 in teamsScores){
+                //     for (let j in playersScores){
+                //         if (teamsScores[j2] === playersScores[j] && !teams.includes(groupList[j])){
+                //             teams.push(groupList[j]);
+                //             break;
+                //         }
+                //     }
+                // }
                 
-                setFinalTeam([...teams]);
-                setDataFetch(true);
+                // setFinalTeam([...teams]);
+                // setDataFetch(true);
             }
         }).catch((error) => {
             Alert.alert("","An Error has occured please try again later");
