@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import { useNavigation } from '@react-navigation/core'
 import {
     StyleSheet,
@@ -9,40 +9,40 @@ import {
     TouchableOpacity,
     Alert,
 } from "react-native";
-import {doc, getDoc} from 'firebase/firestore';
+import {collection, doc, getDoc,getDocs,query} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
-import { db } from '../../Config'
+import { db} from '../../Config'
 import { colors } from './../colors';
+import * as Permissions from 'expo-permissions';
+import * as Location from 'expo-location';
+import { cos } from 'react-native-reanimated';
 
 
 export default function SearchGameMainScreen() {
     const route = useRoute();
     const navigation = useNavigation();
     const username = route.params.username;
-    const [showShotsModal,setShowShotsModal] = useState(false);
-    const [btnPressed,setBtnPressed] = useState(0);
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
 
     function gotoHomeScreen(){
         navigation.navigate("Home",{"username":username});
     }
 
-    // function toggleModalVisibility(number){
-    //     setBtnPressed(number);
-    //     setShowShotsModal(!showShotsModal);
-    // }
+    useEffect(() => {
+        (async () => {
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
+          }
+    
+          let location = await Location.getCurrentPositionAsync({});
+          setLocation(location);
+        })();
+      }, []);
 
-    function handleFinish(){
-        console.log(results);//fixme
-        /*
-            beginner
-            regular
-            great
-            rising star
-            professional
-            legend
-        */ 
-    }
 
     function gotoCreateGameScreen(){
         const myDoc = doc(db, "HHcollection", username);
@@ -56,14 +56,28 @@ export default function SearchGameMainScreen() {
         }); 
     }
 
-    function gotoFindGameNearbyScreen(){
-        const myDoc = doc(db, "HHcollection", username);
-        getDoc(myDoc)
-        .then((user)=>{
-            navigation.navigate("FindGameNearby",{username});
-        }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code:)");
-        }); 
+    function degrees_to_radians(degrees)
+        {
+        var pi = Math.PI;
+        return degrees * (pi/180);
+        }
+
+    async function gotoFindGameNearbyScreen(){
+        const q = query(collection(db, "Games"))
+        const gamesFound = []
+        const latitude = degrees_to_radians(location.coords.latitude);
+        const longitude =degrees_to_radians(location.coords.longitude);
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            let gameLatitude = degrees_to_radians(doc.data().latitude);
+            let gameLongitude = degrees_to_radians(doc.data().longitude);
+            let radius = Math.acos(Math.sin(latitude)*Math.sin(gameLatitude) + Math.cos(latitude)*Math.cos(gameLatitude)* Math.cos(gameLongitude - longitude)) * 6371
+            if (radius <= 3){
+                gamesFound.push(doc.data())
+            }
+        // console.log(doc.id, " => ", doc.data());
+        });
+        navigation.navigate("FindGameNearby",{gamesFound});
     }
 
     return (

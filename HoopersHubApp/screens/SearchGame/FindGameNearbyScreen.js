@@ -27,10 +27,10 @@ export default function FindGameNearbyScreen() {
   const route = useRoute();
   const navigation = useNavigation();
   const username = route.params.username;
+  const activeGames = route.params.gamesFound;
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  // const [tableData,setTableData] = useState({DataTable:[["Game 1 - 3/10 players - 1km away","Join"],["Game 2 - 2/4 players - 2km away","Join"],["Game 3 - 6/8 players - 3km away","Join"]]})
-  const [tableData,setTableData] = useState({HeadTable : ['Point 1', 'Point 2', 'Point 3', 'Point 4', 'Point 5','Point 6','Point 7'], DataTable: ["Game 1 - 3/10 players - 1km away","Join","Game 2 - 2/4 players - 2km away","Join","Game 3 - 6/8 players - 3km away","Join"]})
+  
  
   useEffect(() => {
     (async () => {
@@ -69,6 +69,21 @@ export default function FindGameNearbyScreen() {
     )
   }
 
+
+  let displayGames = activeGames.map((Game,i) =>{  
+    const players = 0;
+    if ((Game.team_1.lenght + Game.team_2.lenght)){
+      players = Game.team_1.lenght + Game.team_2.lenght;
+    }
+    return (
+        <Row key={i}
+            data={[Game.name+' - '+ players+'/'+ Game.number_of_players,customButton('Join')]} 
+            style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
+            textStyle={{textAlign:"center",fontWeight:"bold"}}
+            flexArr={[2,1]} />
+    )
+  })
+
   return (
     <View style={styles.container}>
     <View style={styles.iconView}>
@@ -82,8 +97,8 @@ export default function FindGameNearbyScreen() {
    
     <View>
         <Table borderStyle={{borderWidth: 3, borderColor: colors.darkRed}}>
-    
-        <Row
+        {displayGames}
+        {/* <Row
                         data={["Game 1  -  3/10 players - 1km away",customButton('Join')]} 
                         style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
                         textStyle={{textAlign:"center",fontWeight:"bold"}}
@@ -97,7 +112,7 @@ export default function FindGameNearbyScreen() {
                         data={["Game 3  -  6/8 players - 3km away",customButton("Join")]} 
                         style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
                         textStyle={{textAlign:"center",fontWeight:"bold"}}
-                        flexArr={[2,1]} />                                                
+                        flexArr={[2,1]} />                                                 */}
         </Table>
     </View>
 </View>

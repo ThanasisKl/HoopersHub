@@ -17,10 +17,8 @@ import { colors } from './../colors';
 import * as Location from 'expo-location';
 import { TextInput } from 'react-native-gesture-handler';
 import {Picker} from '@react-native-picker/picker';
-import {TimePicker} from 'react-native-simple-time-picker';
-// import { set } from 'react-native-reanimated';
 import DatePickerModal  from '../../components/DatePickerModal';
-// import DatePicker from 'react-native-date-picker'
+import uuid from 'react-native-uuid';
 
 export default function CreateGameScreen() {
 
@@ -91,9 +89,9 @@ export default function CreateGameScreen() {
       if (month_picked > month){
         return "no_problem"
       } else if (month_picked == month){
-        if (datePicked> day){
+        if (day_picked > day){
           return "no_problem"
-        } else if ( datePicked == day){
+        } else if ( day_picked == day){
           if (hour_picked > hour){
             return "no_problem"
           } else if ( hour_picked == hour){
@@ -122,17 +120,30 @@ export default function CreateGameScreen() {
       let problem = checkInputs();
 
       if (problem == "no_problem"){
-        const myDoc = doc(db, "HHcollection", username);
-        let query_result = await getDoc(myDoc);
+        const docID = uuid.v4();
+        const myDoc = doc(db, "Games", docID);
+        let time_of_game ={'hour':selectedHours,
+                          'minute':selectedMinutes}
         const docData = {
           "name": gameName,
           "owner": username,
           "latitude": location.coords.latitude ,
           "longitude": location.coords.longitude,
+          "number_of_players": numberOfPlayers*2,
           "team_1":[],
           "team_2":[],
-          "time_of_game":[selectedHours,selectedMinutes]
+          "time_of_game":time_of_game
         }
+
+        setDoc(myDoc, docData)
+          .then(() => {
+            Alert.alert("","Game Created");
+            navigation.replace("SearchGameMain",{username});
+          })
+          .catch((error) => {
+            Alert.alert("","An Error has occured please try again later (error code: 1)");
+          });
+
       } else{
         setWarning("Pick an appropriate time")
       }
