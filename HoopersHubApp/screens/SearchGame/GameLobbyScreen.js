@@ -21,12 +21,18 @@ export default function GameLobbyScreen() {
     const route = useRoute();
     const navigation = useNavigation();
     const username = route.params.username;
-    const [showShotsModal,setShowShotsModal] = useState(false);
-    const [btnPressed,setBtnPressed] = useState(0);
+    const lobbyID = route.params.lobbyID;
+    const lobbyData = route.params.lobbyData;
+    const team_1 = lobbyData.team_1;
+
+    console.log(team_1)
 
     function gotoFindGameNearbyScreen(){
-        navigation.navigate("FindGameNearby",{"username":username});
+        navigation.navigate("SearchGameMain",{username});
     }
+
+
+
 
     return (
         <View style={styles.container}>
@@ -48,24 +54,24 @@ export default function GameLobbyScreen() {
         </View>
 
         <View>
-            <Text style={{color:colors.darkRed, margin:50, textAlign: 'center', fontSize:20, fontWeight:"bold",}}>GAME DATE: 15:00 23/05/2022</Text>
+            <Text style={{color:colors.darkRed, margin:50, textAlign: 'center', fontSize:20, fontWeight:"bold",}}>GAME DATE: {lobbyData.time_of_game.hour}:{lobbyData.time_of_game.minute}  {lobbyData.date_of_game.day}/{lobbyData.date_of_game.month}/{lobbyData.date_of_game.year}</Text>
             <Table borderStyle={{borderWidth: 3, borderColor: colors.darkRed}}>
 
             <Row style={[styles.row ,{height: 40,  backgroundColor: '#f1f8ff'}]} data= {["TEAM 1","TEAM 2"]} textStyle={styles.text_header} />
-            <Row style={styles.row}  data = {["Selios",'Thanasis']}  textStyle={styles.text} />
-            <Row style={styles.row} data = {["Iasonas",'Themis']} textStyle={styles.text} />
-            <Row style={styles.row} data = {['Nikos','Giwrgos']}  textStyle={styles.text}/>
-            <Row style={styles.row} data = {['  ','Xristos']}  textStyle={styles.text}/>
-            <Row style={styles.row} data = {['  ',' ']}  textStyle={styles.text}/>
+            <Row style={styles.row}  data = {[lobbyData.team_1[0],lobbyData.team_2[0]]}  textStyle={styles.text} />
+            <Row style={styles.row} data = {[lobbyData.team_1[1],lobbyData.team_2[1]]} textStyle={styles.text} />
+            <Row style={styles.row} data = {[lobbyData.team_1[2],lobbyData.team_2[2]]}  textStyle={styles.text}/>
+            <Row style={styles.row} data = {[lobbyData.team_1[3],lobbyData.team_2[3]]}  textStyle={styles.text}/>
+            <Row style={styles.row} data = {[lobbyData.team_1[4],lobbyData.team_2[4]]}  textStyle={styles.text}/>
 
             </Table>
             <View>
-            <TouchableOpacity style={styles.btnStyle}>
+            <TouchableOpacity style={styles.btnStyle} onPress={()=> changeTeam()}>
                 <Text style={styles.btnsText}>Change teams</Text>
             </TouchableOpacity>
             </View>
             <View>
-            <TouchableOpacity style={styles.btnStyle}>
+            <TouchableOpacity style={styles.btnStyle} onPress={()=> leaveGame()}>
                 <Text style={styles.btnsText}>Leave Game</Text>
             </TouchableOpacity>
             </View>

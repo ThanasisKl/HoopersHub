@@ -73,7 +73,8 @@ export default function SearchGameMainScreen() {
             let gameLongitude = degrees_to_radians(doc.data().longitude);
             let radius = Math.acos(Math.sin(latitude)*Math.sin(gameLatitude) + Math.cos(latitude)*Math.cos(gameLatitude)* Math.cos(gameLongitude - longitude)) * 6371
             if (radius <= 3){
-                gamesFound.push(doc.data())
+                let qualifiedGame = [doc.id,doc.data()];
+                gamesFound.push(qualifiedGame);
             }
         // console.log(doc.id, " => ", doc.data());
         });

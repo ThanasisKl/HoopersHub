@@ -10,7 +10,7 @@ import {
     Alert,
     Button
 } from "react-native";
-import {doc, getDoc} from 'firebase/firestore';
+import {doc, getDoc, setDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
 import { db } from '../../Config'
@@ -50,34 +50,52 @@ export default function FindGameNearbyScreen() {
     text = errorMsg;
   } else if (location) {
     text = JSON.stringify(location);
-    console.log
   }
 
   function gotoSearchGameMainScreen(){
-    navigation.navigate("SearchGameMain",{"username":username});
+    navigation.navigate("SearchGameMain",{username});
   }
 
-  function gotoGameLobbyScreen(){
-    navigation.navigate("GameLobby",{"username":username});
+  function gotoGameLobbyScreen(lobbyID,lobbyData){
+    const myDoc = doc(db, "Games", lobbyID);
+    getDoc(myDoc)
+    .then((game)=>{
+        const user_data = game.data();
+        if (user_data.team_1.lenght > user_data.team_2.lenght){
+          user_data.team_2.push(username);
+        } else {
+          user_data.team_1.push(username);
+        }
+        const new_teams = {team_1 :[user_data.team_1],
+          team_2:[user_data.team_2]}
+        setDoc(myDoc,new_teams,{merge: true})
+        .then(()=>{
+            Alert.alert("Congratulations!","Welcome to the Game");
+            navigation.navigate("GameLobby",{username,lobbyID,lobbyData});
+        }).catch((error) =>{
+            console.log(error)
+        });
+    }).catch((error)=>{
+        Alert.alert("","An Error has occured please try again later");
+    }); 
   }
 
-  function customButton(text){
+  function customButton(text,lobbyID,lobbyData){
     return (
-      <TouchableOpacity style={styles.btnStyle} onPress={gotoGameLobbyScreen}>
+      <TouchableOpacity style={styles.btnStyle} onPress={()=> gotoGameLobbyScreen(lobbyID,lobbyData)}>
       <Text style={styles.btnsText}>{text}</Text>
       </TouchableOpacity>
     )
   }
 
-
   let displayGames = activeGames.map((Game,i) =>{  
     const players = 0;
-    if ((Game.team_1.lenght + Game.team_2.lenght)){
-      players = Game.team_1.lenght + Game.team_2.lenght;
+    if ((Game[1].team_1.lenght + Game[1].team_2.lenght)){
+      players = Game[1].team_1.lenght + Game[1].team_2.lenght;
     }
     return (
         <Row key={i}
-            data={[Game.name+' - '+ players+'/'+ Game.number_of_players,customButton('Join')]} 
+            data={[Game[1].name+' - '+ players+'/'+ Game[1].number_of_players,customButton('Join',Game[0],Game[1])]} 
             style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
             textStyle={{textAlign:"center",fontWeight:"bold"}}
             flexArr={[2,1]} />
@@ -98,21 +116,6 @@ export default function FindGameNearbyScreen() {
     <View>
         <Table borderStyle={{borderWidth: 3, borderColor: colors.darkRed}}>
         {displayGames}
-        {/* <Row
-                        data={["Game 1  -  3/10 players - 1km away",customButton('Join')]} 
-                        style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
-                        textStyle={{textAlign:"center",fontWeight:"bold"}}
-                        flexArr={[2,1]} />
-        <Row
-                        data={["Game 2  -  2/4 players - 2km away",customButton("Join")]} 
-                        style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
-                        textStyle={{textAlign:"center",fontWeight:"bold"}}
-                        flexArr={[2,1]} />
-        <Row
-                        data={["Game 3  -  6/8 players - 3km away",customButton("Join")]} 
-                        style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
-                        textStyle={{textAlign:"center",fontWeight:"bold"}}
-                        flexArr={[2,1]} />                                                 */}
         </Table>
     </View>
 </View>

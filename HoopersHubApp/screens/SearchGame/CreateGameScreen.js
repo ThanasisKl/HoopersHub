@@ -74,7 +74,6 @@ export default function CreateGameScreen() {
 
 
       let year_picked = ""
-      console.log("Month on create game: "+month)
       for (var i = 0; i <= 3; i++) {
         year_picked += datePicked.charAt(i);
     }
@@ -82,8 +81,8 @@ export default function CreateGameScreen() {
       let month_picked = parseInt(datePicked.charAt(5) + datePicked.charAt(6));
       let day_picked = parseInt(datePicked.charAt(8) + datePicked.charAt(9));
       let hour_picked = parseInt(datePicked.charAt(11) + datePicked.charAt(12));
-      let minute_picked = parseInt(datePicked.charAt(13) + datePicked.charAt(14));
-      console.log(year_picked+"/"+month_picked+"/"+day_picked)
+      let minute_picked = parseInt(datePicked.charAt(14) + datePicked.charAt(15));
+      // console.log(year_picked+"/"+month_picked+"/"+day_picked)
 
       
       if (month_picked > month){
@@ -105,25 +104,27 @@ export default function CreateGameScreen() {
       } else {
         return "problem"
       }
-      // if ((selectedHours - hours) > 0){
-      //   return "no_problem"
-      // } else if ((selectedHours - hours) == 0){
-      //   if ((selectedMinutes - minutes) > 0 ){
-      //     return "no_problem"
-      //   }
-      // } else {
-      //   return "problem"
-      // }
     }
 
     async function submitGame(){
       let problem = checkInputs();
-
+      let year_picked = ""
+      for (var i = 0; i <= 3; i++) {
+        year_picked += datePicked.charAt(i);
+      }
+      year_picked = parseInt(year_picked);
+      let month_picked = parseInt(datePicked.charAt(5) + datePicked.charAt(6));
+      let day_picked = parseInt(datePicked.charAt(8) + datePicked.charAt(9));
+      let hour_picked = parseInt(datePicked.charAt(11) + datePicked.charAt(12));
+      let minute_picked = parseInt(datePicked.charAt(14) + datePicked.charAt(15));
       if (problem == "no_problem"){
         const docID = uuid.v4();
         const myDoc = doc(db, "Games", docID);
-        let time_of_game ={'hour':selectedHours,
-                          'minute':selectedMinutes}
+        let time_of_game ={'hour':hour_picked,
+                          'minute':minute_picked}
+        let date_of_game = {'day':day_picked,
+                          'month': month_picked,
+                          'year':year_picked}
         const docData = {
           "name": gameName,
           "owner": username,
@@ -132,7 +133,8 @@ export default function CreateGameScreen() {
           "number_of_players": numberOfPlayers*2,
           "team_1":[],
           "team_2":[],
-          "time_of_game":time_of_game
+          "time_of_game":time_of_game,
+          "date_of_game":date_of_game
         }
 
         setDoc(myDoc, docData)
@@ -197,17 +199,6 @@ export default function CreateGameScreen() {
                  setDatePicked= {setDatePicked}
                  currentDate={new Date()}
                  />
-{/* 
-                <TimePicker
-                  selectedHours={selectedHours}
-                  //initial Hourse value
-                  selectedMinutes={selectedMinutes}
-                  //initial Minutes value
-                  onChange={(hours, minutes) => {
-                    setSelectedHours(hours);
-                    setSelectedMinutes(minutes);
-                  }}
-                /> */}
             <TouchableOpacity style={styles.createBtn} onPress={submitGame}>
                             <Text style={styles.nextText}>Create Game!</Text>
             </TouchableOpacity>
