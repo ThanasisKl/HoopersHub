@@ -16,7 +16,6 @@ export default function DatePickerModal({toggleDatePickerModalVisibility,isDateP
 
   function closeModal(){
     toggleDatePickerModalVisibility();
-    // console.log()
   }
 
   function openModal(){
@@ -33,15 +32,7 @@ export default function DatePickerModal({toggleDatePickerModalVisibility,isDateP
             transparent visible={isDatePickerModalVisible} 
             presentationStyle="overFullScreen" 
         >
-           <View style={styles.viewWrapper}>
-            <View style={styles.xView}>
-              <TouchableOpacity onPress={closeModal}>
-                <Image 
-                  style={styles.xicon} 
-                    source={require('../assets/x.png')}
-                />
-                </TouchableOpacity>
-            </View>              
+           <View style={styles.viewWrapper}>            
       <DatePicker
         // modal={true}
         // open={isDatePickerModalVisible}
@@ -80,10 +71,6 @@ const styles = StyleSheet.create({
       fontSize:20,
   },
 
-  xView:{
-      alignSelf:"flex-end",
-      marginTop:5,
-  },
 
   viewWrapper: {
       // marginTop:,
@@ -134,9 +121,9 @@ const styles = StyleSheet.create({
       height: 50,
       alignItems: "center",
       justifyContent: "center",
-      marginTop: 10,
+      marginTop: 20,
       marginBottom:30,
-      backgroundColor: colors.bgColor,
+      backgroundColor: colors.textColor,
   },
 
   btnsText:{
@@ -144,19 +131,4 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       color:'white',
   },
-
-//   btnStyle:{
-//     width: "30%",
-//     height: 50,
-//     width: 180,
-//     alignItems: "center",
-//     justifyContent: "center",
-//     marginTop:10, 
-//     margin
-//     marginHorizontal:95,
-//     borderColor:colors.darkRed,
-//     borderWidth: 2,
-//     backgroundColor:colors.darkRed
-// },
-
 });

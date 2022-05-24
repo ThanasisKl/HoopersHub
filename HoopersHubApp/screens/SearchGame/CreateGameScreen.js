@@ -139,11 +139,11 @@ export default function CreateGameScreen() {
 
         setDoc(myDoc, docData)
           .then(() => {
-            Alert.alert("","Game Created");
+            Alert.alert("Game Created","");
             navigation.replace("SearchGameMain",{username});
           })
           .catch((error) => {
-            Alert.alert("","An Error has occured please try again later (error code: 1)");
+            Alert.alert("","An Error has occured please try again later");
           });
 
       } else{
@@ -166,20 +166,20 @@ export default function CreateGameScreen() {
                         source={require('../../assets/back-icon.png')}
                     />
                 </TouchableOpacity>
+                <Text style={styles.pageTitle}>Create a Game</Text>
             </View>
-              <Text>
-                Name your Game :
+              <Text style={styles.textStyle}>
+                Name your Game
               </Text>
                 <TextInput
-
-                style={[styles.input,{width:200}]}
-                onChangeText={setGameName}
-                value={gameName}
-                placeholder="Lobby Name"
-                keyboardType="default"
+                  style={styles.input}
+                  onChangeText={setGameName}
+                  value={gameName}
+                  placeholder="Lobby Name"
+                  keyboardType="default"
                 />
-                <Text>
-                    Number of players per team:
+                <Text style={styles.textStyle}>
+                    Number of players per team
                 </Text>
                 <Picker
                   selectedValue={numberOfPlayers}
@@ -192,7 +192,7 @@ export default function CreateGameScreen() {
                   <Picker.Item label="4" value="4" />
                   <Picker.Item label="5" value="5" />
                 </Picker>
-                <Text>Time of the Game:</Text>
+                <Text style={styles.textStyle}>Select Time and Date of the Game</Text>
                 <DatePickerModal
                  toggleDatePickerModalVisibility={toggleDatePickerModalVisibility} 
                  isDatePickerModalVisible={isDatePickerModalVisible} 
@@ -200,7 +200,7 @@ export default function CreateGameScreen() {
                  currentDate={new Date()}
                  />
             <TouchableOpacity style={styles.createBtn} onPress={submitGame}>
-                            <Text style={styles.nextText}>Create Game!</Text>
+              <Text style={styles.btnText}>Create Game!</Text>
             </TouchableOpacity>
             <Text style={styles.warning}>{warning}</Text>
         </View>
@@ -210,27 +210,39 @@ export default function CreateGameScreen() {
 }
 
 const styles = StyleSheet.create({
-    input: {
-      height: 40,
-      margin: 12,
-      marginBottom:20,
-      borderWidth: 1,
-      padding: 10,
-    },
+    
+  input: {
+    height: 50,
+    width: "75%",
+    margin: 12,
+    marginBottom:20,
+    borderWidth: 1,
+    padding: 10,
+    backgroundColor:"white",
+    color:"black",
+    fontSize:18,
+    borderRadius:7,
+  },
 
-    createBtn:{
-      borderRadius: 12,
-      borderWidth:2,
-      borderColor:colors.textColor,
-      backgroundColor: "white",
-      textAlign:'center',
-      alignItems:"center",
-      width:"75%",
-      paddingVertical:14,
-      marginTop:20,
-      marginBottom:10,
-      marginLeft:"auto",
-      marginRight:"auto",
+  createBtn:{
+    borderRadius: 12,
+    borderWidth:2,
+    borderColor:colors.textColor,
+    backgroundColor: "white",
+    textAlign:'center',
+    alignItems:"center",
+    width:"55%",
+    paddingVertical:14,
+    marginTop:20,
+    marginBottom:10,
+    marginLeft:"auto",
+    marginRight:"auto",
+  },
+
+  btnText:{
+    color:colors.textColor,
+    fontSize:20,
+    fontWeight:"bold",
   },
   
   container: {
@@ -245,21 +257,37 @@ const styles = StyleSheet.create({
     width:45,
     height:30, 
     marginRight:20,
-    marginTop:30,
     marginLeft:20,
-},
+  },
 
-iconView:{
+  iconView:{
     position: 'absolute',
     top:0,
     alignSelf: "flex-start",
-    flexDirection:"row"
-},
+    alignItems:"baseline",
+    justifyContent:"center",
+    flexDirection:"row",
+    marginTop:30,
+  },
 
-picker:{
-  height: 50,
-  width: 150,
-  marginBottom:20
-}
+  picker:{
+    height: 50,
+    width: 150,
+    marginBottom:20,
+    backgroundColor:"white",
+    marginTop:10,
 
-  });
+  },
+
+  textStyle:{
+    fontSize:21,
+    fontWeight:"bold",
+  },
+
+  pageTitle:{
+    fontSize:30,
+    borderColor:colors.bgColor,
+    borderBottomColor:colors.textColor,
+    borderWidth: 2,
+  },
+});
