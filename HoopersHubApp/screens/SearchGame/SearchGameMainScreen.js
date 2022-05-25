@@ -25,6 +25,13 @@ export default function SearchGameMainScreen() {
     const username = route.params.username;
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
+    // const [playerFound,setPlayerFound] = useState(false);
+    // const [lobbyID,setLobbyID] = useState(null);
+    // const [lobbyData,setLobbyData] = useState(null);
+    const [laps,setLaps] = useState(0);
+
+
+
 
     function gotoHomeScreen(){
         navigation.navigate("Home",{"username":username});
@@ -42,6 +49,12 @@ export default function SearchGameMainScreen() {
           setLocation(location);
         })();
       }, []);
+    
+    function degrees_to_radians(degrees)
+    {
+      var pi = Math.PI;
+      return degrees * (pi/180);
+    }
 
 
     function gotoCreateGameScreen(){
@@ -56,29 +69,55 @@ export default function SearchGameMainScreen() {
         }); 
     }
 
-    function degrees_to_radians(degrees)
-        {
-        var pi = Math.PI;
-        return degrees * (pi/180);
-        }
-
-    async function gotoFindGameNearbyScreen(){
+    function gotoFindGameNearbyScreen(){
         const q = query(collection(db, "Games"))
-        const gamesFound = []
+        // console.log("LATITUDE : "+ location.coords.latitude);
+        // console.log("LONGITUDE : "+ location.coords.longitude);
         const latitude = degrees_to_radians(location.coords.latitude);
         const longitude =degrees_to_radians(location.coords.longitude);
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-            let gameLatitude = degrees_to_radians(doc.data().latitude);
-            let gameLongitude = degrees_to_radians(doc.data().longitude);
-            let radius = Math.acos(Math.sin(latitude)*Math.sin(gameLatitude) + Math.cos(latitude)*Math.cos(gameLatitude)* Math.cos(gameLongitude - longitude)) * 6371
-            if (radius <= 3){
-                let qualifiedGame = [doc.id,doc.data()];
-                gamesFound.push(qualifiedGame);
-            }
-        // console.log(doc.id, " => ", doc.data());
-        });
-        navigation.navigate("FindGameNearby",{gamesFound});
+        const gamesFound = []
+        let playerFound = false;
+        let lobbyID = null;
+        let lobbyData = null;
+        getDocs(q)
+        .then((querySnapshot)=>{
+            querySnapshot.forEach((doc) => {
+                setLaps(laps+1)
+                if (doc.data().team_1 != undefined || doc.data().team_2 != undefined ){
+                    if (doc.data().team_1.includes(username) || doc.data().team_2.includes(username)){
+                        console.log("Player included")
+                        lobbyID = doc.id
+                        lobbyData = doc.data()
+                        playerFound = true
+                    } else {
+                        let gameLatitude = degrees_to_radians(doc.data().latitude);
+                        let gameLongitude = degrees_to_radians(doc.data().longitude);
+                        let radius = Math.acos(Math.sin(latitude)*Math.sin(gameLatitude) + Math.cos(latitude)*Math.cos(gameLatitude)* Math.cos(gameLongitude - longitude)) * 6371
+                        if (radius <= 3){
+                            let qualifiedGame = [doc.id,doc.data()];
+                            gamesFound.push(qualifiedGame);
+                        }
+                    }
+                } else {
+                    let gameLatitude = degrees_to_radians(doc.data().latitude);
+                    let gameLongitude = degrees_to_radians(doc.data().longitude);
+                    let radius = Math.acos(Math.sin(latitude)*Math.sin(gameLatitude) + Math.cos(latitude)*Math.cos(gameLatitude)* Math.cos(gameLongitude - longitude)) * 6371
+                    if (radius <= 3){
+                        let qualifiedGame = [doc.id,doc.data()];
+                        gamesFound.push(qualifiedGame);
+                    }
+                }
+                if(laps >= querySnapshot.size){
+                    if(playerFound){
+                        console.log("Lobby time")
+                        navigation.navigate("GameLobby",{username,lobbyID,lobbyData});
+                    } else{
+                        navigation.navigate("FindGameNearby",{username,gamesFound});
+                    }
+                }
+            });
+        })
+
     }
 
     return (

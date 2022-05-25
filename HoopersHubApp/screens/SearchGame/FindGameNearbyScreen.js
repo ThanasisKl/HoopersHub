@@ -30,44 +30,32 @@ export default function FindGameNearbyScreen() {
   const activeGames = route.params.gamesFound;
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [lobbyChosen,setLobbyChosen] = useState(null);
   
- 
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    })();
-  }, []);
-
-  let text = 'Waiting..';
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
 
   function gotoSearchGameMainScreen(){
     navigation.navigate("SearchGameMain",{username});
   }
 
-  function gotoGameLobbyScreen(lobbyID,lobbyData){
+  function gotoGameLobbyScreen(lobbyID){
     const myDoc = doc(db, "Games", lobbyID);
+    var teamJoined = 0;
     getDoc(myDoc)
     .then((game)=>{
-        const user_data = game.data();
-        if (user_data.team_1.lenght > user_data.team_2.lenght){
-          user_data.team_2.push(username);
+        const lobbyData = game.data();
+        if (lobbyData.team_1.length && lobbyData.team_2.length){
+          if (lobbyData.team_1.length > lobbyData.team_2.length){
+            lobbyData.team_2.push(username);
+          } else {
+            lobbyData.team_1.push(username);
+          }
+        } else if (lobbyData.team_1.length){
+          lobbyData.team_2.push(username)
         } else {
-          user_data.team_1.push(username);
+          lobbyData.team_1.push(username)
         }
-        const new_teams = {team_1 :[user_data.team_1],
-          team_2:[user_data.team_2]}
+        const new_teams = {team_1 :lobbyData.team_1,
+          team_2:lobbyData.team_2}
         setDoc(myDoc,new_teams,{merge: true})
         .then(()=>{
             Alert.alert("Congratulations!","Welcome to the Game");
@@ -76,7 +64,7 @@ export default function FindGameNearbyScreen() {
             console.log(error)
         });
     }).catch((error)=>{
-        Alert.alert("","An Error has occured please try again later");
+        Alert.alert("","An Error has occured please try again later"+ error);
     }); 
   }
 
@@ -88,10 +76,17 @@ export default function FindGameNearbyScreen() {
     )
   }
 
+  // console.log("ACTIVE GAMES: ")
+  // console.log("--------------------------------")
+  // console.log(activeGames)
   let displayGames = activeGames.map((Game,i) =>{  
-    const players = 0;
-    if ((Game[1].team_1.lenght + Game[1].team_2.lenght)){
-      players = Game[1].team_1.lenght + Game[1].team_2.lenght;
+    var players = 0;
+    if ((Game[1].team_1.length != undefined && Game[1].team_2.length != undefined)){
+      players = Game[1].team_1.length + Game[1].team_2.length;
+    } else if (Game[1].team_1.length != undefined){
+      players = Game[1].team_1.length;
+    } else if (Game[1].team_2.length != undefined){
+      players = Game[1].team_2.length;
     }
     return (
         <Row key={i}
