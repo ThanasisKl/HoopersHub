@@ -69,7 +69,7 @@ export default function ShowTournamentTeamsScreen() {
                         //scoreSum += fromHeigth2Stars(height) * 3.5 + fromWeigth2Stars(height,weigth) * 2 + fromLevel2Stars(level) * 4.5;
 
                         //  --new code--
-                        attack += fromStars2NewRange(35,fromHeigth2Stars(height)) + fromStars2NewRange(25,fromWeigth2Stars(height,weigth)) + fromStars2NewRange(40,fromLevel2Stars(level)) ;
+                        attack += fromStars2NewRange(35,fromHeigth2Stars(height)) + fromStars2NewRange(18,fromWeigth2Stars(height,weigth)) + fromStars2NewRange(47,fromLevel2Stars(level)) ;
                         defense += attack;
                         // --end new code--
                     }else{
@@ -84,7 +84,7 @@ export default function ShowTournamentTeamsScreen() {
                         // scoreSum += fromWeigth2Stars(height,weigth) * 0.7;
 
                         //  --new code--
-                        attack += fromStars2NewRange(15,fromHeigth2Stars(height)) + fromStars2NewRange(10,fromWeigth2Stars(height,weigth)) + fromStars2NewRange(17,fromLevel2Stars(level));
+                        attack += fromStars2NewRange(15,fromHeigth2Stars(height)) + fromStars2NewRange(7,fromWeigth2Stars(height,weigth)) + fromStars2NewRange(20,fromLevel2Stars(level));
                         defense += attack;
                         attack += fromStars2NewRange(14,averageObj.averageThreepoints) + fromStars2NewRange(14,averageObj.averageTwopoints) + fromStars2NewRange(10,averageObj.averageAtheleticism) + fromStars2NewRange(10,averageObj.averageTeam_player) + fromStars2NewRange(10,averageObj.averageOverall_score);
                         defense += fromStars2NewRange(11,averageObj.averageBlocks) + fromStars2NewRange(13,averageObj.averageRebounds) + fromStars2NewRange(10,averageObj.averageAtheleticism) + fromStars2NewRange(10,averageObj.averageOverall_score) + fromStars2NewRange(14,averageObj.averageDefense);

@@ -1,5 +1,5 @@
 //30 professional players from NBA 2K20
-const data = [
+const groupList = [
     {
         name:"Anthony Davis",
         beginner:false,
@@ -482,10 +482,9 @@ const data = [
     },
 ]
 
-//args: groupList,membersPerTeam,numberOfTeams
-const membersPerTeam = 5;
-const numberOfTeams = 6;
-const groupList = data;
+//args: membersPerTeam,numberOfTeams
+const membersPerTeam = 3;
+const numberOfTeams = 10;
 findTeams();
 function findTeams(){
     let averagePlayersScores = [];
@@ -511,10 +510,10 @@ function findTeams(){
                         let defense = 0;
                        
                         if(averageObj === undefined || Object.keys(averageObj).length === 0){
-                            attack += fromStars2NewRange(35,fromHeigth2Stars(height)) + fromStars2NewRange(25,fromWeigth2Stars(height,weigth)) + fromStars2NewRange(40,fromLevel2Stars(level)) ;
+                            attack += fromStars2NewRange(35,fromHeigth2Stars(height)) + fromStars2NewRange(18,fromWeigth2Stars(height,weigth)) + fromStars2NewRange(47,fromLevel2Stars(level)) ;
                             defense += attack;
                         }else{
-                            attack += fromStars2NewRange(15,fromHeigth2Stars(height)) + fromStars2NewRange(10,fromWeigth2Stars(height,weigth)) + fromStars2NewRange(17,fromLevel2Stars(level));
+                            attack += fromStars2NewRange(15,fromHeigth2Stars(height)) + fromStars2NewRange(7,fromWeigth2Stars(height,weigth)) + fromStars2NewRange(20,fromLevel2Stars(level));
                             defense += attack;
                             attack += fromStars2NewRange(14,averageObj.averageThreepoints) + fromStars2NewRange(14,averageObj.averageTwopoints) + fromStars2NewRange(10,averageObj.averageAtheleticism) + fromStars2NewRange(10,averageObj.averageTeam_player) + fromStars2NewRange(10,averageObj.averageOverall_score);
                             defense += fromStars2NewRange(11,averageObj.averageBlocks) + fromStars2NewRange(13,averageObj.averageRebounds) + fromStars2NewRange(10,averageObj.averageAtheleticism) + fromStars2NewRange(10,averageObj.averageOverall_score) + fromStars2NewRange(14,averageObj.averageDefense);
