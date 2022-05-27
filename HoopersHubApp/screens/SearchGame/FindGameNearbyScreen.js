@@ -39,7 +39,6 @@ export default function FindGameNearbyScreen() {
 
   function gotoGameLobbyScreen(lobbyID){
     const myDoc = doc(db, "Games", lobbyID);
-    var teamJoined = 0;
     getDoc(myDoc)
     .then((game)=>{
         const lobbyData = game.data();

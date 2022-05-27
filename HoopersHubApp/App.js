@@ -28,6 +28,8 @@ import SearchGameMainScreen from './screens/SearchGame/SearchGameMainScreen';
 import CreateGameScreen from './screens/SearchGame/CreateGameScreen';
 import FindGameNearbyScreen from './screens/SearchGame/FindGameNearbyScreen';
 import GameLobbyScreen from './screens/SearchGame/GameLobbyScreen';
+import ChangeTeamsMainScreen from './screens/SearchGame/ChangeTeamsMainScreen';
+import ChangeTeamsManuallyScreen from './screens/SearchGame/ChangeTeamsManuallyScreen';
 
 
 
@@ -63,6 +65,8 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="CreateGame" component={CreateGameScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="FindGameNearby" component={FindGameNearbyScreen}/>
         <Stack.Screen options={{ headerShown: false }} name="GameLobby" component={GameLobbyScreen}/>
+        <Stack.Screen options={{ headerShown: false }} name="ChangeTeamsMain" component={ChangeTeamsMainScreen}/>
+        <Stack.Screen options={{ headerShown: false }} name="ChangeTeamsManually" component={ChangeTeamsManuallyScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

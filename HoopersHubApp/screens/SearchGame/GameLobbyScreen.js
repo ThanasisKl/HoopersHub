@@ -32,7 +32,11 @@ export default function GameLobbyScreen() {
     }
 
     function changeTeam(){
-
+        if (lobbyData.owner == username){
+            navigation.navigate("ChangeTeamsMain",{username,lobbyID,lobbyData});
+        } else {
+            Alert.alert("Forbidden","Only the lobby Owner can change the teams");
+        }
     }
 
     function leaveGame(){

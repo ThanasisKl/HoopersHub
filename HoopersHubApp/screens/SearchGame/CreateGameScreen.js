@@ -131,7 +131,7 @@ export default function CreateGameScreen() {
           "latitude": location.coords.latitude ,
           "longitude": location.coords.longitude,
           "number_of_players": numberOfPlayers*2,
-          "team_1":[],
+          "team_1":[username],
           "team_2":[],
           "time_of_game":time_of_game,
           "date_of_game":date_of_game
