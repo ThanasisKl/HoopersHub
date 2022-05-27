@@ -204,11 +204,10 @@ const styles = StyleSheet.create({
     },
 
     container: {
-      flex: 1,
-      backgroundColor: colors.bgColor,
-      alignItems: "flex-start",
-      justifyContent: "flex-start",
-    },
+        flex: 1,
+        backgroundColor: colors.bgColor,
+        justifyContent: "center",
+      },
 
     container2: {
         marginTop:50,
@@ -224,8 +223,9 @@ const styles = StyleSheet.create({
 
     iconView:{
         position: 'absolute',
-        top:0,
+        top:30,
         alignSelf: "flex-start",
+        flexDirection:"row"
     },
     
     pageTitleView:{

@@ -110,7 +110,7 @@ export default function SearchGameMainScreen() {
                 querySnapshot.forEach((doc) => {
                     if (doc.data().team_1 != undefined || doc.data().team_2 != undefined ){
                         if (doc.data().team_1.includes(username) || doc.data().team_2.includes(username)){
-                            console.log("Player included")
+                        // console.log("Player included")
                             lobbyID = doc.id
                             lobbyData = doc.data()
                             navigation.navigate("GameLobby",{username,lobbyID,lobbyData});
@@ -119,7 +119,7 @@ export default function SearchGameMainScreen() {
                             let gameLongitude = degrees_to_radians(doc.data().longitude);
                             let radius = Math.acos(Math.sin(latitude)*Math.sin(gameLatitude) + Math.cos(latitude)*Math.cos(gameLatitude)* Math.cos(gameLongitude - longitude)) * 6371
                             if (radius <= 3){
-                                let qualifiedGame = [doc.id,doc.data()];
+                                let qualifiedGame = [doc.id,doc.data(),radius];
                                 gamesFound.push(qualifiedGame);
                             }
                         }
@@ -128,7 +128,7 @@ export default function SearchGameMainScreen() {
                         let gameLongitude = degrees_to_radians(doc.data().longitude);
                         let radius = Math.acos(Math.sin(latitude)*Math.sin(gameLatitude) + Math.cos(latitude)*Math.cos(gameLatitude)* Math.cos(gameLongitude - longitude)) * 6371
                         if (radius <= 3){
-                            let qualifiedGame = [doc.id,doc.data()];
+                            let qualifiedGame = [doc.id,doc.data(),radius];
                             gamesFound.push(qualifiedGame);
                         }
                     }

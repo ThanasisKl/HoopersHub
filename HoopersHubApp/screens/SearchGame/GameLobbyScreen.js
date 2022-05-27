@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useCallback} from 'react';
 import { useNavigation } from '@react-navigation/core'
 import {
     StyleSheet,
@@ -8,6 +8,7 @@ import {
     Image,
     TouchableOpacity,
     Alert,
+    Linking
 } from "react-native";
 import {doc, getDoc, setDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
@@ -25,6 +26,8 @@ export default function GameLobbyScreen() {
     const lobbyData = route.params.lobbyData;
     const team_1 = lobbyData.team_1;
     const team_2 = lobbyData.team_2;
+    const mapURL ="https://www.google.gr/maps/search/?api=1&query="+lobbyData.latitude+","+lobbyData.longitude
+
 
 
     function gotoFindGameNearbyScreen(){
@@ -38,6 +41,30 @@ export default function GameLobbyScreen() {
             Alert.alert("Forbidden","Only the lobby Owner can change the teams");
         }
     }
+
+
+    const OpenURLButton = ({ url, children }) => {
+        const handlePress = useCallback(async () => {
+          // Checking if the link is supported for links with custom URL scheme.
+          const supported = await Linking.canOpenURL(url);
+      
+          if (supported) {
+            // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+            // by some browser in the mobile
+            await Linking.openURL(url);
+          } else {
+            Alert.alert(`Don't know how to open this URL: ${url}`);
+          }
+        }, [url]);
+      
+        return(<TouchableOpacity title={children} onPress={handlePress}>
+        <Image 
+            style={styles.map} 
+            source={require('../../assets/map_transparent.png')}
+        />
+        </TouchableOpacity>
+        )
+      };
 
     function leaveGame(){
         const myDoc = doc(db, "Games", lobbyID);
@@ -82,12 +109,7 @@ export default function GameLobbyScreen() {
             </TouchableOpacity>
         </View>
         <View style={styles.upperContainer}>
-            <TouchableOpacity onPress={gotoFindGameNearbyScreen}>
-                <Image 
-                    style={styles.map} 
-                    source={require('../../assets/map_transparent.png')}
-                />
-            </TouchableOpacity>
+            <OpenURLButton url={mapURL}/>
         </View>
 
         <View>

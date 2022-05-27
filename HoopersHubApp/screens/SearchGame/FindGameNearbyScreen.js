@@ -27,7 +27,7 @@ export default function FindGameNearbyScreen() {
   const route = useRoute();
   const navigation = useNavigation();
   const username = route.params.username;
-  const activeGames = route.params.gamesFound;
+  const activeGames = route.params.gamesFound.sort((a, b) => a[2] - b[2]);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [lobbyChosen,setLobbyChosen] = useState(null);
@@ -89,7 +89,7 @@ export default function FindGameNearbyScreen() {
     }
     return (
         <Row key={i}
-            data={[Game[1].name+' - '+ players+'/'+ Game[1].number_of_players,customButton('Join',Game[0],Game[1])]} 
+            data={[Game[1].name+' - '+ players+'/'+ Game[1].number_of_players +' - '+ Game[2].toFixed(2)+" Km Away",customButton('Join',Game[0],Game[1])]} 
             style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
             textStyle={{textAlign:"center",fontWeight:"bold"}}
             flexArr={[2,1]} />
