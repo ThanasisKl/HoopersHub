@@ -34,7 +34,7 @@ export default function ViewGroupsScreen() {
             const groupInfo = group.data();
             navigation.navigate("ViewChosenGroup",{username,groupInfo,groupID,groupList,groupsIDS});
         }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code:)");
+            Alert.alert("","An Error has occured please try again later");
         });
     }
 

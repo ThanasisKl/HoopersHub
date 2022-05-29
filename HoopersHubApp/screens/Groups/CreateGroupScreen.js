@@ -38,7 +38,7 @@ export default function GroupMainScreen() {
     }
 
     function gotoCreateTeams(){
-        if(groupName === ""){
+        if(groupName === "" || groupName.length > 15 || groupName.length < 4){
             setShowWarningName(true);
         }else if(groupList.length === 0){
             setShowWarningList(true);
@@ -100,7 +100,7 @@ export default function GroupMainScreen() {
                         onChangeText={(newName) => setGroupName(newName)}
                     />
                 </View>
-                {showWarningName && <Text style={styles.warningText}>You need to name your group first</Text>}
+                {showWarningName && <Text style={styles.warningText}>You need to name your group first (name must include 4-15 characters)</Text>}
                 <ScrollView>
                     {friendsList}
                     {showWarningList && <Text style={styles.warningText}>You need to add some friends first</Text>}
@@ -150,7 +150,6 @@ const styles = StyleSheet.create({
 
     friendText:{
         fontSize:25,
-        // fontFamily:'monospace',
         color:'white',
     },
     

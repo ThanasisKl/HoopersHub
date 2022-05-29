@@ -157,7 +157,7 @@ export default function ViewChosenTournamentScreen() {
             Alert.alert("","Score Added Successfully!");
         })
         .catch((error) => {
-            Alert.alert("","An Error has occured please try again later (error code: 2)");
+            Alert.alert("","An Error has occured please try again later");
         })
     }
 
@@ -288,7 +288,6 @@ const styles = StyleSheet.create({
     },
 
     teamsText:{
-        // fontWeight:"bold",
         fontSize:30,
         marginTop:"15%",
         color: "white",

@@ -93,7 +93,7 @@ const groupList = [
             averageAtheleticism:3.65,
             averageDefense:4.15,
             averageRebounds:2.3,
-            averageBlocks:3,//fixme 
+            averageBlocks:3,
         }
     },
     {

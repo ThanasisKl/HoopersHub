@@ -74,7 +74,7 @@ export default function TournamentHistoryModal({isHistoryModalVisible,toggleHist
         elevation: 5,
         transform: [{ translateX: -(width * 0.4) }, 
                     { translateY: -90 }],
-        height: height * 0.85,
+        height: height * 0.95,
         width: width * 0.85,
         backgroundColor: "#fff",
         borderRadius: 7,

@@ -32,7 +32,7 @@ export default function GroupMainScreen() {
             const friends_list = user_data.friends;
             navigation.navigate("CreateGroup",{username,friends_list});
         }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code:)");
+            Alert.alert("","An Error has occured please try again later");
         }); 
     }
 
@@ -57,12 +57,12 @@ export default function GroupMainScreen() {
                             navigation.navigate("ViewGroups",{username,groupsNames,groupsIDs});
                         }
                     }).catch((error)=>{
-                        Alert.alert("","An Error has occured please try again later (error code:)");
+                        Alert.alert("","An Error has occured please try again later)");
                     });
                 }
             }
         }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code:)");
+            Alert.alert("","An Error has occured please try again later");
         }); 
     }
     
