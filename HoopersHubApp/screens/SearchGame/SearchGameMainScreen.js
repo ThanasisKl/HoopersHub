@@ -31,23 +31,23 @@ export default function SearchGameMainScreen() {
     const [status,setStatus] = useState(null);
     const [laps,setLaps] = useState(0);
 
-    useEffect(() => {
-        (async () => {
-          let { status } = await Location.requestForegroundPermissionsAsync();
-          if (status !== 'granted') {
-            setErrorMsg('Permission to access location was denied');
-            return;
-          }
-          Location.getCurrentPositionAsync({})
-          .then((result)=>{
-              console.log("result: "+ result)
-              setLocation(result)
-          })
-          .catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code:)"+error);
-          })
-        })();
-    }, []);
+    // useEffect(() => {
+    //     (async () => {
+    //       let { status } = await Location.requestForegroundPermissionsAsync();
+    //       if (status !== 'granted') {
+    //         setErrorMsg('Permission to access location was denied');
+    //         return;
+    //       }
+    //       Location.getCurrentPositionAsync({})
+    //       .then((result)=>{
+    //           console.log("result: "+ result)
+    //           setLocation(result)
+    //       })
+    //       .catch((error)=>{
+    //         Alert.alert("","An Error has occured please try again later (error code:)"+error);
+    //       })
+    //     })();
+    // }, []);
     
 
 
@@ -55,26 +55,26 @@ export default function SearchGameMainScreen() {
         navigation.navigate("Home",{"username":username});
     }
 
-    async function getLocation(){
-        Location.requestForegroundPermissionsAsync()
-        .then((status)=>{
-            setStatus(status);
-            if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
-                return;
-            }
-            Location.getCurrentPositionAsync({})
-            .then((result)=>{
-                setLocation(result)
-            })
-            .catch((error)=>{
-                Alert.alert("","Error when setting result"+error);
-            })
-        })
-        .catch((error)=>{
-            Alert.alert("","Wait for the program to analyze your location. Thank you very much!"+error);
-        })
-    }
+    // async function getLocation(){
+    //     Location.requestForegroundPermissionsAsync()
+    //     .then((status)=>{
+    //         setStatus(status);
+    //         if (status !== 'granted') {
+    //             setErrorMsg('Permission to access location was denied');
+    //             return;
+    //         }
+    //         Location.getCurrentPositionAsync({})
+    //         .then((result)=>{
+    //             setLocation(result)
+    //         })
+    //         .catch((error)=>{
+    //             Alert.alert("","Error when setting result"+error);
+    //         })
+    //     })
+    //     .catch((error)=>{
+    //         Alert.alert("","Wait for the program to analyze your location. Thank you very much!"+error);
+    //     })
+    // }
     
     function degrees_to_radians(degrees)
     {
@@ -96,52 +96,56 @@ export default function SearchGameMainScreen() {
     }
 
     function gotoFindGameNearbyScreen(){
-        const q = query(collection(db, "Games"))
-        getLocation()
-        .then(() =>{
-            const latitude = degrees_to_radians(location.coords.latitude);
-            const longitude =degrees_to_radians(location.coords.longitude);
-            const gamesFound = []
-            let playerFound = false;
-            let lobbyID = null;
-            let lobbyData = null;
-            getDocs(q)
-            .then((querySnapshot)=>{
-                querySnapshot.forEach((doc) => {
-                    if (doc.data().team_1 != undefined || doc.data().team_2 != undefined ){
-                        if (doc.data().team_1.includes(username) || doc.data().team_2.includes(username)){
-                        // console.log("Player included")
-                            lobbyID = doc.id
-                            lobbyData = doc.data()
-                            navigation.navigate("GameLobby",{username,lobbyID,lobbyData});
-                        } else {
-                            let gameLatitude = degrees_to_radians(doc.data().latitude);
-                            let gameLongitude = degrees_to_radians(doc.data().longitude);
-                            let radius = Math.acos(Math.sin(latitude)*Math.sin(gameLatitude) + Math.cos(latitude)*Math.cos(gameLatitude)* Math.cos(gameLongitude - longitude)) * 6371
-                            if (radius <= 3){
-                                let qualifiedGame = [doc.id,doc.data(),radius];
-                                gamesFound.push(qualifiedGame);
-                            }
-                        }
-                    } else {
-                        let gameLatitude = degrees_to_radians(doc.data().latitude);
-                        let gameLongitude = degrees_to_radians(doc.data().longitude);
-                        let radius = Math.acos(Math.sin(latitude)*Math.sin(gameLatitude) + Math.cos(latitude)*Math.cos(gameLatitude)* Math.cos(gameLongitude - longitude)) * 6371
-                        if (radius <= 3){
-                            let qualifiedGame = [doc.id,doc.data(),radius];
-                            gamesFound.push(qualifiedGame);
-                        }
-                    }
-                })
-                if(lobbyID == null){
-                navigation.navigate("FindGameNearby",{username,gamesFound});
-                }
-            })
-        })
-        .catch((error)=>{
-            Alert.alert("","Wait for the program to analyze your location. Thank you very much!"+ error);
-        }); 
+        navigation.navigate("FindGameNearby",{username})
     }
+
+    // function gotoFindGameNearbyScreen(){
+    //     const q = query(collection(db, "Games"))
+    //     getLocation()
+    //     .then(() =>{
+    //         const latitude = degrees_to_radians(location.coords.latitude);
+    //         const longitude =degrees_to_radians(location.coords.longitude);
+    //         const gamesFound = []
+    //         let playerFound = false;
+    //         let lobbyID = null;
+    //         let lobbyData = null;
+    //         getDocs(q)
+    //         .then((querySnapshot)=>{
+    //             querySnapshot.forEach((doc) => {
+    //                 if (doc.data().team_1 != undefined || doc.data().team_2 != undefined ){
+    //                     if (doc.data().team_1.includes(username) || doc.data().team_2.includes(username)){
+    //                     // console.log("Player included")
+    //                         lobbyID = doc.id
+    //                         lobbyData = doc.data()
+    //                         navigation.navigate("GameLobby",{username,lobbyID,lobbyData});
+    //                     } else {
+    //                         let gameLatitude = degrees_to_radians(doc.data().latitude);
+    //                         let gameLongitude = degrees_to_radians(doc.data().longitude);
+    //                         let radius = Math.acos(Math.sin(latitude)*Math.sin(gameLatitude) + Math.cos(latitude)*Math.cos(gameLatitude)* Math.cos(gameLongitude - longitude)) * 6371
+    //                         if (radius <= 3){
+    //                             let qualifiedGame = [doc.id,doc.data(),radius];
+    //                             gamesFound.push(qualifiedGame);
+    //                         }
+    //                     }
+    //                 } else {
+    //                     let gameLatitude = degrees_to_radians(doc.data().latitude);
+    //                     let gameLongitude = degrees_to_radians(doc.data().longitude);
+    //                     let radius = Math.acos(Math.sin(latitude)*Math.sin(gameLatitude) + Math.cos(latitude)*Math.cos(gameLatitude)* Math.cos(gameLongitude - longitude)) * 6371
+    //                     if (radius <= 3){
+    //                         let qualifiedGame = [doc.id,doc.data(),radius];
+    //                         gamesFound.push(qualifiedGame);
+    //                     }
+    //                 }
+    //             })
+    //             if(lobbyID == null){
+    //             navigation.navigate("FindGameNearby",{username,gamesFound});
+    //             }
+    //         })
+    //     })
+    //     .catch((error)=>{
+    //         Alert.alert("","Wait for the program to analyze your location. Thank you very much!"+ error);
+    //     }); 
+    // }
 
     return (
         <View style={styles.container}>

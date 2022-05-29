@@ -10,7 +10,7 @@ import {
     Alert,
     Button
 } from "react-native";
-import {doc, getDoc, setDoc} from 'firebase/firestore';
+import {collection, doc, getDoc,getDocs,query,setDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
 import { db } from '../../Config'
@@ -19,6 +19,7 @@ import { colors } from './../colors';
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+import RangePickerModal from '../../components/RangePickerModal';
 
 
 
@@ -27,11 +28,45 @@ export default function FindGameNearbyScreen() {
   const route = useRoute();
   const navigation = useNavigation();
   const username = route.params.username;
-  const activeGames = route.params.gamesFound.sort((a, b) => a[2] - b[2]);
+  // const activeGames = route.params.gamesFound.sort((a, b) => a[2] - b[2]);
+  const [activeGames,setActiveGames] = useState([]);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [lobbyChosen,setLobbyChosen] = useState(null);
-  
+  const [displayGames,setDisplayGames] = useState(null);
+  const [gamesRetrieved, setGamesRetrieved] = useState(false);
+  const [rangePicked, setRangePicked] = useState(3);
+  const[isRangePickerModalVisible,setRangePickerModalVisible] = useState(false);
+
+
+
+
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+      Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.High,
+      })
+      .then((result)=>{
+          setLocation(result)
+          // console.log("Location is : "+location +" is location null: "+ (location === null))
+          retrieveGames()
+      })
+      .catch((error)=>{
+        Alert.alert("","An Error has occured please try again later (error code:)"+error);
+      })
+    })();
+
+
+function degrees_to_radians(degrees)
+{
+  var pi = Math.PI;
+  return degrees * (pi/180);
+}
+
 
   function gotoSearchGameMainScreen(){
     navigation.navigate("SearchGameMain",{username});
@@ -75,26 +110,84 @@ export default function FindGameNearbyScreen() {
     )
   }
 
-  // console.log("ACTIVE GAMES: ")
-  // console.log("--------------------------------")
-  // console.log(activeGames)
-  let displayGames = activeGames.map((Game,i) =>{  
-    var players = 0;
-    if ((Game[1].team_1.length != undefined && Game[1].team_2.length != undefined)){
-      players = Game[1].team_1.length + Game[1].team_2.length;
-    } else if (Game[1].team_1.length != undefined){
-      players = Game[1].team_1.length;
-    } else if (Game[1].team_2.length != undefined){
-      players = Game[1].team_2.length;
+  useEffect(() => {
+    let gamesShown = activeGames.map((Game,i) =>{  
+      var players = 0;
+      if ((Game[1].team_1.length != undefined && Game[1].team_2.length != undefined)){
+        players = Game[1].team_1.length + Game[1].team_2.length;
+      } else if (Game[1].team_1.length != undefined){
+        players = Game[1].team_1.length;
+      } else if (Game[1].team_2.length != undefined){
+        players = Game[1].team_2.length;
+      }
+      return (
+          <Row key={i}
+              data={[Game[1].name+' - '+ players+'/'+ Game[1].number_of_players +' - '+ Game[2].toFixed(2)+" Km Away",customButton('Join',Game[0],Game[1])]} 
+              style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
+              textStyle={{textAlign:"center",fontWeight:"bold"}}
+              flexArr={[2,1]} />
+      )
+    })
+    setDisplayGames(gamesShown)
+  },[activeGames])
+
+  function retrieveGames(){
+    if ((!(location === null)) && (gamesRetrieved === false)){
+      setGamesRetrieved(true)
+      const q = query(collection(db, "Games"))
+      const latitude = degrees_to_radians(location.coords.latitude);
+      const longitude =degrees_to_radians(location.coords.longitude);
+      const gamesFound = []
+      let lobbyID = null;
+      let lobbyData = null;
+      getDocs(q)
+      .then((querySnapshot)=>{
+          querySnapshot.forEach((doc) => {
+              if (doc.data().team_1 != undefined || doc.data().team_2 != undefined ){
+                  if (doc.data().team_1.includes(username) || doc.data().team_2.includes(username)){
+                  // console.log("Player included")
+                      lobbyID = doc.id
+                      lobbyData = doc.data()
+                      navigation.navigate("GameLobby",{username,lobbyID,lobbyData});
+                  } else {
+                      let gameLatitude = degrees_to_radians(doc.data().latitude);
+                      let gameLongitude = degrees_to_radians(doc.data().longitude);
+                      let radius = Math.acos(Math.sin(latitude)*Math.sin(gameLatitude) + Math.cos(latitude)*Math.cos(gameLatitude)* Math.cos(gameLongitude - longitude)) * 6371
+                      if (radius <= rangePicked){
+                          let qualifiedGame = [doc.id,doc.data(),radius];
+                          gamesFound.push(qualifiedGame);
+                      }
+                  }
+              } else {
+                  let gameLatitude = degrees_to_radians(doc.data().latitude);
+                  let gameLongitude = degrees_to_radians(doc.data().longitude);
+                  let radius = Math.acos(Math.sin(latitude)*Math.sin(gameLatitude) + Math.cos(latitude)*Math.cos(gameLatitude)* Math.cos(gameLongitude - longitude)) * 6371
+                  if (radius <= rangePicked){
+                      let qualifiedGame = [doc.id,doc.data(),radius];
+                      gamesFound.push(qualifiedGame);
+                  }
+              }
+          })
+          if(lobbyID == null){
+            gamesFound.sort((a, b) => a[2] - b[2])
+            setActiveGames(gamesFound)
+          // navigation.navigate("FindGameNearby",{username,gamesFound});
+          }
+      })
     }
-    return (
-        <Row key={i}
-            data={[Game[1].name+' - '+ players+'/'+ Game[1].number_of_players +' - '+ Game[2].toFixed(2)+" Km Away",customButton('Join',Game[0],Game[1])]} 
-            style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
-            textStyle={{textAlign:"center",fontWeight:"bold"}}
-            flexArr={[2,1]} />
-    )
-  })
+  }
+
+
+  useEffect(()=>{
+    console.log("Range changed")
+    setGamesRetrieved(false)
+    retrieveGames()
+  },[rangePicked])
+
+
+  function toggleRangePickerModalVisibility(){
+    setRangePickerModalVisible(!isRangePickerModalVisible)
+  }
 
   return (
     <View style={styles.container}>
@@ -105,6 +198,13 @@ export default function FindGameNearbyScreen() {
                 source={require('../../assets/back-icon.png')}
             />
         </TouchableOpacity>
+    </View>
+    <View style={styles.upperContainer}>
+      <RangePickerModal 
+       toggleRangePickerModalVisibility={toggleRangePickerModalVisibility} 
+       isRangePickerModalVisible={isRangePickerModalVisible} 
+       setRangePicked= {setRangePicked}
+        />
     </View>
    
     <View>
@@ -223,5 +323,59 @@ const styles = StyleSheet.create({
     textAlign:"center",
     
 },
+
+upperContainer:{
+  flex: 1,
+  position:'absolute',
+  top:30,
+  justifyContent:'flex-end',
+  alignSelf:'flex-end',
+  flexDirection:'row'
+},
  
 });
+
+
+
+
+
+
+  // console.log("ACTIVE GAMES: ")
+  // console.log("--------------------------------")
+  // console.log(activeGames)
+
+  // let displayGames = activeGames.map((Game,i) =>{  
+  //     var players = 0;
+  //     if ((Game[1].team_1.length != undefined && Game[1].team_2.length != undefined)){
+  //       players = Game[1].team_1.length + Game[1].team_2.length;
+  //     } else if (Game[1].team_1.length != undefined){
+  //       players = Game[1].team_1.length;
+  //     } else if (Game[1].team_2.length != undefined){
+  //       players = Game[1].team_2.length;
+  //     }
+  //     return (
+  //         <Row key={i}
+  //             data={[Game[1].name+' - '+ players+'/'+ Game[1].number_of_players +' - '+ Game[2].toFixed(2)+" Km Away",customButton('Join',Game[0],Game[1])]} 
+  //             style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
+  //             textStyle={{textAlign:"center",fontWeight:"bold"}}
+  //             flexArr={[2,1]} />
+  //     )
+  //   })
+
+  // let displayGames = activeGames.map((Game,i) =>{  
+  //   var players = 0;
+  //   if ((Game[1].team_1.length != undefined && Game[1].team_2.length != undefined)){
+  //     players = Game[1].team_1.length + Game[1].team_2.length;
+  //   } else if (Game[1].team_1.length != undefined){
+  //     players = Game[1].team_1.length;
+  //   } else if (Game[1].team_2.length != undefined){
+  //     players = Game[1].team_2.length;
+  //   }
+  //   return (
+  //       <Row key={i}
+  //           data={[Game[1].name+' - '+ players+'/'+ Game[1].number_of_players +' - '+ Game[2].toFixed(2)+" Km Away",customButton('Join',Game[0],Game[1])]} 
+  //           style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
+  //           textStyle={{textAlign:"center",fontWeight:"bold"}}
+  //           flexArr={[2,1]} />
+  //   )
+  // })
