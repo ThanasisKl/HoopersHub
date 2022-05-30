@@ -29,6 +29,7 @@ export default function ShowTournamentTeamsScreen() {
     let manually = route.params.manually;
 
     const [dataFetched,setDataFetch] = useState(false);
+    const [finalTeamFlag,setFinalTeamFlag] = useState(false);
     const [loadingMessage,setLoadingMessage] = useState("Creating Teams...");
     const [finalTeam,setFinalTeam] = useState([]);
     const [tournamentsMembers,setTournamentsMembers] = useState("");
@@ -37,12 +38,13 @@ export default function ShowTournamentTeamsScreen() {
     let teamsArray = [];
     let teamMembers = [];
    
-    if (!dataFetched){
+    if (!dataFetched && !finalTeamFlag){
     let averagePlayersScores = [];
     let playersLevel = [];
     let playersHeigth = [];
     let playersWeigth = [];
     let playersScores = [];
+    console.log("---------------------Players---------------------");
     for(let i=0;i<groupList.length;i++){  // for every player get his average ratings,weight,heigth and level
         const myDoc = doc(db, "HHcollection", groupList[i]);
         getDoc(myDoc)
@@ -55,45 +57,23 @@ export default function ShowTournamentTeamsScreen() {
 
             if(i === groupList.length-1){
                 for(let j=0;j<groupList.length;j++){ // calculating score for each player
-                    let scoreSum = 0;
                     let averageObj = averagePlayersScores[j];
                     let height = playersHeigth[j];
                     let weigth = playersWeigth[j];
                     let level = playersLevel[j];
-                    //  --new code--
                     let attack = 0;
                     let defense = 0;
-                    // --end new code--
                     
                     if(averageObj === undefined || Object.keys(averageObj).length === 0){
-                        //scoreSum += fromHeigth2Stars(height) * 3.5 + fromWeigth2Stars(height,weigth) * 2 + fromLevel2Stars(level) * 4.5;
-
-                        //  --new code--
                         attack += fromStars2NewRange(35,fromHeigth2Stars(height)) + fromStars2NewRange(18,fromWeigth2Stars(height,weigth)) + fromStars2NewRange(47,fromLevel2Stars(level)) ;
                         defense += attack;
-                        // --end new code--
                     }else{
-                        // //ratings
-                        // scoreSum += averageObj.averageBlocks * 0.7 + averageObj.averageDefense * 0.8 + averageObj.averageThreepoints * 1 + averageObj.averageTwopoints * 1 + averageObj.averageRebounds * 0.7 + averageObj.averageAtheleticism * 0.8 + averageObj.averageTeam_player * 0.8 + averageObj.averageOverall_score * 0.7;
-                        
-                        // //players level (beginner,professional)
-                        // scoreSum += fromLevel2Stars(level)*1.6;
-                        // //players heigth
-                        // scoreSum += fromHeigth2Stars(height) * 1.2;
-                        // //player weigth
-                        // scoreSum += fromWeigth2Stars(height,weigth) * 0.7;
-
-                        //  --new code--
                         attack += fromStars2NewRange(15,fromHeigth2Stars(height)) + fromStars2NewRange(7,fromWeigth2Stars(height,weigth)) + fromStars2NewRange(20,fromLevel2Stars(level));
                         defense += attack;
                         attack += fromStars2NewRange(14,averageObj.averageThreepoints) + fromStars2NewRange(14,averageObj.averageTwopoints) + fromStars2NewRange(10,averageObj.averageAtheleticism) + fromStars2NewRange(10,averageObj.averageTeam_player) + fromStars2NewRange(10,averageObj.averageOverall_score);
                         defense += fromStars2NewRange(11,averageObj.averageBlocks) + fromStars2NewRange(13,averageObj.averageRebounds) + fromStars2NewRange(10,averageObj.averageAtheleticism) + fromStars2NewRange(10,averageObj.averageOverall_score) + fromStars2NewRange(14,averageObj.averageDefense);
-                        // --end new code--
                     }
-                    // console.log("score:",scoreSum,"->",groupList[j])
-                    // playersScores.push(scoreSum);
 
-                    //  --new code--
                     console.log("Attack:",attack," Defense:",defense,"->",groupList[j]);
                     let scoreObject = {
                         "name": groupList[j],
@@ -101,10 +81,8 @@ export default function ShowTournamentTeamsScreen() {
                         "defense": defense
                     };
                     playersScores.push(scoreObject);
-                    // --end new code--
                 }
 
-                //  --new code--
                 let scoresBasedOnAttack = [...playersScores];
                 scoresBasedOnAttack.sort((a, b) => {
                     return b.attack - a.attack;
@@ -131,11 +109,11 @@ export default function ShowTournamentTeamsScreen() {
 
                     for(let k=0; k<numberOfTeams;k++){
                         if(switch_tactic){
-                            player_removed = scoresBasedOnDefense.pop().name;
-                            scoresBasedOnAttack = scoresBasedOnAttack.filter(scoreObj => scoreObj.name !== player_removed);
+                            player_removed = scoresBasedOnDefense.pop();
+                            scoresBasedOnAttack = scoresBasedOnAttack.filter(scoreObj => scoreObj.name !== player_removed.name);
                         }else{
-                            player_removed = scoresBasedOnAttack.pop().name;
-                            scoresBasedOnDefense = scoresBasedOnDefense.filter(scoreObj => scoreObj.name !== player_removed);
+                            player_removed = scoresBasedOnAttack.pop();
+                            scoresBasedOnDefense = scoresBasedOnDefense.filter(scoreObj => scoreObj.name !== player_removed.name);
                         }
                         team_list.push(player_removed);
                         num_team_list.push(team_number);
@@ -148,61 +126,30 @@ export default function ShowTournamentTeamsScreen() {
                 }
 
                 let actual_team_list = [];
+                let actual_team_list2 = [];
                 for(let h=1; h<=numberOfTeams;h++){
                     for(let k=0; k<team_list.length;k++){
                         if(h === num_team_list[k]){
-                            actual_team_list.push(team_list[k])
+                            actual_team_list.push(team_list[k].name);
+                            actual_team_list2.push(team_list[k])
                         }
                     }
                 }
-                // console.log("team_list:");
-                // console.log(actual_team_list);
+
+                console.log("----------------------Teams----------------------");
+                let teamInfo;
+                for(let team_number=1;team_number<=numberOfTeams;team_number++){
+                    teamInfo = findTeam2(team_number,actual_team_list2);
+                    console.log(`Team${team_number}`);
+                    console.log(teamInfo[0]);
+                    console.log(`Attack: ${teamInfo[1]}`);
+                    console.log(`Defense: ${teamInfo[2]}`);
+                    console.log("------------------------------------");
+                }
+                
+                setFinalTeamFlag(true);
                 setFinalTeam([...actual_team_list]);
                 setDataFetch(true);
-
-                //  --end new code--
-               
-                // let scoresSum = 0;
-                // for (let score in playersScores) {
-                //     scoresSum += playersScores[score];
-                // }
-                // let averagePlayerScore = scoresSum / playersScores.length;  // calculate the average score per player
-
-                // let teamsScores = [];
-                // let start = 0;                     //bad players index
-                // let end = playersScores.length-1;  //good players index
-                // let playersScores2 = [...playersScores]
-                // playersScores2.sort();
-                // for(let k=0; k<numberOfTeams;k++){
-                //     let teamScoreSum = 0;  
-                //     teamsScores.push(playersScores2[end]);//add the best player in the team
-                //     teamScoreSum += playersScores2[end];
-                //     end--;
-                //     for(let x=0;x<membersPerTeam-1;x++){
-                //         if(teamScoreSum > (x+1) * averagePlayerScore){ //if team score is higher from the average score then take a bad player
-                //             teamsScores.push(playersScores2[start]);
-                //             teamScoreSum += playersScores2[start];
-                //             start++;
-                //         }else{                                       //else take a good payer
-                //             teamsScores.push(playersScores2[end]);  
-                //             teamScoreSum += playersScores2[end];
-                //             end--;
-                //         }
-                //     }
-                // }
-
-                // let teams = [];
-                // for(let j2 in teamsScores){
-                //     for (let j in playersScores){
-                //         if (teamsScores[j2] === playersScores[j] && !teams.includes(groupList[j])){
-                //             teams.push(groupList[j]);
-                //             break;
-                //         }
-                //     }
-                // }
-                
-                // setFinalTeam([...teams]);
-                // setDataFetch(true);
             }
         }).catch((error) => {
             Alert.alert("","An Error has occured please try again later");
@@ -304,6 +251,23 @@ export default function ShowTournamentTeamsScreen() {
             if(i % membersPerTeam === 0)team++;
         }
         return teamMember;
+    }
+
+    function findTeam2(teamNumber,teams){
+        let teamMember = [];
+        let team = 1
+        let attack = 0;
+        let defense = 0;
+        for(let i=1;i<=teams.length;i++){
+            if (team === teamNumber){
+                teamMember.push(teams[i-1].name);
+                attack += teams[i-1].attack;
+                defense += teams[i-1].defense;
+            }
+            if (teamMember.length === membersPerTeam)break;
+            if(i % membersPerTeam === 0)team++;
+        }
+        return [teamMember,attack,defense];
     }
 
     function getMembers(team){

@@ -483,8 +483,8 @@ const groupList = [
 ]
 
 //args: membersPerTeam,numberOfTeams
-const membersPerTeam = 3;
-const numberOfTeams = 10;
+const membersPerTeam = 5;
+const numberOfTeams = 6;
 findTeams();
 function findTeams(){
     let averagePlayersScores = [];
@@ -580,7 +580,7 @@ function findTeams(){
                         }
                     }
                     console.log("-- Teams --");
-
+                    // console.log(team_list)
                     let teamInfo;
                     for(let team_number=1;team_number<=numberOfTeams;team_number++){
                         teamInfo = findTeam(team_number,actual_team_list);

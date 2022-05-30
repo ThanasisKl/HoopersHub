@@ -43,8 +43,7 @@ export default function AddTournamentMembersScreen() {
     }
 
     function gotoSelectTeamsManuallyScreen(){
-        console.log(tournamentName.length)
-        if(tournamentName === "" || tournamentName.length === 0 || tournamentName.length > 15){
+        if(tournamentName === "" || tournamentName.length < 3 || tournamentName.length > 15){
             setShowWarningName(true);
         }else if(groupList.length === 0){
             setShowWarningList(true);
@@ -116,7 +115,7 @@ export default function AddTournamentMembersScreen() {
                         onChangeText={(newName) => setTournamentName(newName)}
                     />
                 </View>
-                {showWarningName && <Text style={styles.warningText}>Please put a valid tournament name</Text>}
+                {showWarningName && <Text style={styles.warningText}>Please put a valid tournament name (3-15 characters)</Text>}
                 <ScrollView>
                     {friendsList}
                     {showWarningList && <Text style={styles.warningText}>You need to add some friends first</Text>}
