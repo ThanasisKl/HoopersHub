@@ -10,7 +10,7 @@ import {
     Alert,
     Linking
 } from "react-native";
-import {doc, getDoc, setDoc} from 'firebase/firestore';
+import {doc, getDoc, setDoc,deleteDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
 import { db } from '../../Config'
@@ -70,27 +70,38 @@ export default function GameLobbyScreen() {
         const myDoc = doc(db, "Games", lobbyID);
         getDoc(myDoc)
         .then((game)=>{
-            const lobbyData = game.data();
-            const indexTeam1 = lobbyData.team_1.indexOf(username);
-            const indexTeam2 = lobbyData.team_2.indexOf(username);
-            var team_1 = lobbyData.team_1
-            var team_2 = lobbyData.team_2
-            console.log(Array.isArray(team_1))
-            console.log("indexTeam1: "+ indexTeam1+ "    indexTeam2:  "+ indexTeam2);
-            if (indexTeam1 > -1){
-                team_1.splice(indexTeam1, 1)
-            } else if (indexTeam2 > -1){
-                team_2.splice(indexTeam2, 1)
+            if(game.data().owner == username){
+                deleteDoc(myDoc)
+                .then(()=>{
+                    Alert.alert("See you again","You left the game and the game got deleted");
+                    navigation.navigate("SearchGameMain",{username});
+                })
+                .catch((error) =>{
+                    console.log(error)
+                });
+            }else{
+                const lobbyData = game.data();
+                const indexTeam1 = lobbyData.team_1.indexOf(username);
+                const indexTeam2 = lobbyData.team_2.indexOf(username);
+                var team_1 = lobbyData.team_1
+                var team_2 = lobbyData.team_2
+                console.log(Array.isArray(team_1))
+                console.log("indexTeam1: "+ indexTeam1+ "    indexTeam2:  "+ indexTeam2);
+                if (indexTeam1 > -1){
+                    team_1.splice(indexTeam1, 1)
+                } else if (indexTeam2 > -1){
+                    team_2.splice(indexTeam2, 1)
+                }
+                const new_teams = {team_1 :team_1,
+                    team_2:team_2}
+                setDoc(myDoc,new_teams,{merge: true})
+                .then(()=>{
+                    Alert.alert("See you again","You left the game");
+                    navigation.navigate("SearchGameMain",{username});
+                }).catch((error) =>{
+                    console.log(error)
+                });
             }
-            const new_teams = {team_1 :team_1,
-                team_2:team_2}
-            setDoc(myDoc,new_teams,{merge: true})
-            .then(()=>{
-                Alert.alert("See you again","You left the game");
-                navigation.navigate("SearchGameMain",{username});
-            }).catch((error) =>{
-                console.log(error)
-            });
         }).catch((error)=>{
             Alert.alert("","An Error has occured please try again later"+ error);
         }); 

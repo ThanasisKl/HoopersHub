@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
     Alert,
 } from "react-native";
-import {doc, getDoc, setDoc } from 'firebase/firestore';
+import {doc, getDoc, setDoc,getDocs,query,collection } from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 
 import { db } from '../../Config'
@@ -33,35 +33,50 @@ export default function CreateGameScreen() {
     const [selectedMinutes, setSelectedMinutes] = useState(0);
     const [warning,setWarning] = useState("");
     const [datePicked, setDatePicked] = useState(null);
+    const [ownerHasGame,setOwnerHasGame] = useState(false);
     
     const[isDatePickerModalVisible,setDatePickerModalVisible] = useState(false);
 
   
-    useEffect(() => {
-      (async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-          return;
-        }
-  
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
-      })();
-    }, []);
-  
-    let text = 'Waiting..';
-    if (errorMsg) {
-      text = errorMsg;
-    } else if (location) {
+    async function getLocation(){ 
+      let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
+          }
+    
+          let location = await Location.getCurrentPositionAsync({});
+          setLocation(location);
+    };
 
-      text = JSON.stringify(location);
-      // console.log(location)
-    }
+    // useEffect(() => , []);
+  
+    // let text = 'Waiting..';
+    // if (errorMsg) {
+    //   text = errorMsg;
+    // } else if (location) {
+    //   text = JSON.stringify(location);
+    //   // console.log(location)
+    // }
 
     function toggleDatePickerModalVisibility(){
       setDatePickerModalVisible(!isDatePickerModalVisible)
     }
+
+
+    async function checkGames(){
+        const q = query(collection(db, "Games"))
+        getDocs(q)
+        .then((querySnapshot)=>{
+            querySnapshot.forEach((doc) => {
+                if (doc.data().team_1 != undefined || doc.data().team_2 != undefined ){
+                    if (doc.data().team_1.includes(username) || doc.data().team_2.includes(username)){
+                      setOwnerHasGame(true);
+                    }
+                  }
+            })
+        })
+      }
 
     function checkInputs(){
       let today = new Date();
@@ -71,85 +86,102 @@ export default function CreateGameScreen() {
       let hour = today.getHours();
       let minute = today.getMinutes();
 
+      if(datePicked == null){
+        return "problem"
+      }else{
+        console.log("date is null: "+ (datePicked == null))
+        let year_picked = ""
+        for (var i = 0; i <= 3; i++) {
+          year_picked += datePicked.charAt(i);
+        }
+        year_picked = parseInt(year_picked);
+        let month_picked = parseInt(datePicked.charAt(5) + datePicked.charAt(6));
+        let day_picked = parseInt(datePicked.charAt(8) + datePicked.charAt(9));
+        let hour_picked = parseInt(datePicked.charAt(11) + datePicked.charAt(12));
+        let minute_picked = parseInt(datePicked.charAt(14) + datePicked.charAt(15));
+        // console.log(year_picked+"/"+month_picked+"/"+day_picked)
 
+        if(gameName == null){
+          return "game_name_problem"
+        }else if (gameName.trim().length === 0){
+          return "game_name_problem"
+        }
 
-      let year_picked = ""
-      for (var i = 0; i <= 3; i++) {
-        year_picked += datePicked.charAt(i);
-    }
-      year_picked = parseInt(year_picked);
-      let month_picked = parseInt(datePicked.charAt(5) + datePicked.charAt(6));
-      let day_picked = parseInt(datePicked.charAt(8) + datePicked.charAt(9));
-      let hour_picked = parseInt(datePicked.charAt(11) + datePicked.charAt(12));
-      let minute_picked = parseInt(datePicked.charAt(14) + datePicked.charAt(15));
-      // console.log(year_picked+"/"+month_picked+"/"+day_picked)
-
-      
-      if (month_picked > month){
-        return "no_problem"
-      } else if (month_picked == month){
-        if (day_picked > day){
+        if (month_picked > month){
           return "no_problem"
-        } else if ( day_picked == day){
-          if (hour_picked > hour){
+        } else if (month_picked == month){
+          if (day_picked > day){
             return "no_problem"
-          } else if ( hour_picked == hour){
-            if (minute_picked> minute){
+          } else if (day_picked == day){
+            if (hour_picked > hour){
               return "no_problem"
-            } else {
+            } else if ( hour_picked == hour){
+              if (minute_picked> minute){
+                return "no_problem"
+              } else {
+                return "problem"
+              } 
+            } else{
               return "problem"
             }
           }
+        } else {
+          return "problem"
         }
-      } else {
-        return "problem"
       }
-    }
+  }
 
     async function submitGame(){
       let problem = checkInputs();
-      let year_picked = ""
-      for (var i = 0; i <= 3; i++) {
-        year_picked += datePicked.charAt(i);
-      }
-      year_picked = parseInt(year_picked);
-      let month_picked = parseInt(datePicked.charAt(5) + datePicked.charAt(6));
-      let day_picked = parseInt(datePicked.charAt(8) + datePicked.charAt(9));
-      let hour_picked = parseInt(datePicked.charAt(11) + datePicked.charAt(12));
-      let minute_picked = parseInt(datePicked.charAt(14) + datePicked.charAt(15));
-      if (problem == "no_problem"){
-        const docID = uuid.v4();
-        const myDoc = doc(db, "Games", docID);
-        let time_of_game ={'hour':hour_picked,
-                          'minute':minute_picked}
-        let date_of_game = {'day':day_picked,
-                          'month': month_picked,
-                          'year':year_picked}
-        const docData = {
-          "name": gameName,
-          "owner": username,
-          "latitude": location.coords.latitude ,
-          "longitude": location.coords.longitude,
-          "number_of_players": numberOfPlayers*2,
-          "team_1":[username],
-          "team_2":[],
-          "time_of_game":time_of_game,
-          "date_of_game":date_of_game
-        }
-
-        setDoc(myDoc, docData)
-          .then(() => {
-            Alert.alert("Game Created","");
-            navigation.replace("SearchGameMain",{username});
-          })
-          .catch((error) => {
-            Alert.alert("","An Error has occured please try again later");
-          });
-
+      await checkGames();
+      if (ownerHasGame == true){
+        Alert.alert("Error","You have already made one game!");
       } else{
-        setWarning("Pick an appropriate time")
-      }
+        if(problem == "problem"){
+          Alert.alert("Error","Pick an appropriate date.");
+        }else if(problem == "no_problem"){
+          await getLocation();
+          let year_picked = ""
+          for (var i = 0; i <= 3; i++) {
+            year_picked += datePicked.charAt(i);
+          }
+          year_picked = parseInt(year_picked);
+          let month_picked = parseInt(datePicked.charAt(5) + datePicked.charAt(6));
+          let day_picked = parseInt(datePicked.charAt(8) + datePicked.charAt(9));
+          let hour_picked = parseInt(datePicked.charAt(11) + datePicked.charAt(12));
+          let minute_picked = parseInt(datePicked.charAt(14) + datePicked.charAt(15));
+          const docID = uuid.v4();
+          const myDoc = doc(db, "Games", docID);
+            let time_of_game ={'hour':hour_picked,
+                              'minute':minute_picked}
+            let date_of_game = {'day':day_picked,
+                              'month': month_picked,
+                              'year':year_picked}
+            const docData = {
+              "name": gameName,
+              "owner": username,
+              "latitude": location.coords.latitude ,
+              "longitude": location.coords.longitude,
+              "number_of_players": numberOfPlayers*2,
+              "team_1":[username],
+              "team_2":[],
+              "time_of_game":time_of_game,
+              "date_of_game":date_of_game
+            }
 
+            setDoc(myDoc, docData)
+              .then(() => {
+                Alert.alert("Game Created","");
+                navigation.replace("SearchGameMain",{username});
+              })
+              .catch((error) => {
+                Alert.alert("","An Error has occured please try again later");
+              });
+          }
+        else if(problem =="game_name_problem"){
+          Alert.alert("Error","Write a name for your game.");
+        }
+    }
     }
 
     function gotoSearchGameMainScreen(){
