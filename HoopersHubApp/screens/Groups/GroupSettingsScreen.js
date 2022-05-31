@@ -268,7 +268,7 @@ export default function GroupSettingsScreen() { //simazema kai inputs scores sta
                 });
                     
             }).catch((error)=>{
-                    Alert.alert("","An Error has occured please try again later (error code: 12)");
+                    Alert.alert("","An Error has occured please try again later");
             });
         })
         .catch((error) => {

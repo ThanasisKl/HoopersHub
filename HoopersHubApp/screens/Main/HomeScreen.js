@@ -56,7 +56,7 @@ export default function HomeScreen({route}) {
             let requests_list = user_data.friendRequests;
             navigation.navigate("FriendRequests",{username,requests_list});
         }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code: 3)");
+            Alert.alert("","An Error has occured please try again later");
         });
     }
 
@@ -73,7 +73,7 @@ export default function HomeScreen({route}) {
             const myRatings = user_data.myRatings;
             navigation.navigate("Rating",{username,friends_list,myRatings});
         }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code: 12)");
+            Alert.alert("","An Error has occured please try again later");
         });
     }
 
@@ -86,7 +86,7 @@ export default function HomeScreen({route}) {
             // const myRatings = user_data.myRatings;
             navigation.navigate("SearchGameMain",{username});
         }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code: 12)");
+            Alert.alert("","An Error has occured please try again later");
         });
     }
 
@@ -122,7 +122,7 @@ export default function HomeScreen({route}) {
                         Alert.alert("","Request Sent!");
                     })
                     .catch((error) => {
-                        Alert.alert("","An Error has occured please try again later (error code: 2)");
+                        Alert.alert("","An Error has occured please try again later");
                     })
                 }
                 

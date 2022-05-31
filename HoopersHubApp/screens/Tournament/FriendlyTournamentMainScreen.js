@@ -40,12 +40,12 @@ export default function FriendlyTournamentMainScreen() {
                             navigation.navigate("ViewTournaments",{username,tournamentNames,tournamentIDS});
                         }
                     }).catch((error)=>{
-                        Alert.alert("","An Error has occured please try again later (error code:)");
+                        Alert.alert("","An Error has occured please try again later");
                     });
                 }
             }
         }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code:)");
+            Alert.alert("","An Error has occured please try again later");
         }); 
     }
 

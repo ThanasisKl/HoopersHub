@@ -136,7 +136,7 @@ export default function Register(props) {
             navigation.replace("Login");
           })
           .catch((error) => {
-            Alert.alert("","An Error has occured please try again later (error code: 1)");
+            Alert.alert("","An Error has occured please try again later");
           });
         }
       }else{

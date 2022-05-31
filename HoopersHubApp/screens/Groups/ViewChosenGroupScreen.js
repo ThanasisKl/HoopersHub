@@ -72,7 +72,7 @@ export default function ViewChosenGroupScreen() {
             let userFriends = user.data().friends;
             navigation.navigate("GroupSettings",{username,groupLeaders,team1,team2,groupID,groupMembers,groupsNames,groupsIDs,groupInfo,userFriends});navigation.navigate("GroupSettings",{username,groupLeaders,team1,team2,groupID,groupMembers,groupsNames,groupsIDs,groupInfo,userFriends});
         }).catch((error)=>{
-            Alert.alert("","An Error has occured please try again later (error code: 2)");
+            Alert.alert("","An Error has occured please try again later");
         });
     }
 
@@ -108,7 +108,7 @@ export default function ViewChosenGroupScreen() {
             Alert.alert("","Score Added Successfully!");
         })
         .catch((error) => {
-            Alert.alert("","An Error has occured please try again later (error code: 2)");
+            Alert.alert("","An Error has occured please try again later");
         })
     }
 
