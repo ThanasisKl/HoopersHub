@@ -124,9 +124,9 @@ export default function GameLobbyScreen() {
         </View>
 
         <View>
-            <Text style={{color:colors.darkRed, margin:50, textAlign: 'center', fontSize:20, fontWeight:"bold",}}>GAME DATE: {lobbyData.time_of_game.hour}:{lobbyData.time_of_game.minute}  {lobbyData.date_of_game.day}/{lobbyData.date_of_game.month}/{lobbyData.date_of_game.year}</Text>
+            <Text style={{color:colors.darkRed, margin:10, textAlign: 'center', fontSize:20, fontWeight:"bold",}}>GAME DATE: {lobbyData.time_of_game.hour}:{lobbyData.time_of_game.minute}  {lobbyData.date_of_game.day}/{lobbyData.date_of_game.month}/{lobbyData.date_of_game.year}</Text>
+            <Text style={{color:colors.darkRed, marginBottom:30, textAlign: 'center', fontSize:20, fontWeight:"bold",}}>OWNER: {lobbyData.owner}</Text>
             <Table borderStyle={{borderWidth: 3, borderColor: colors.darkRed}}>
-
             <Row style={[styles.row ,{height: 40,  backgroundColor: '#f1f8ff'}]} data= {["TEAM 1","TEAM 2"]} textStyle={styles.text_header} />
             <Row style={styles.row}  data = {[lobbyData.team_1[0],lobbyData.team_2[0]]}  textStyle={styles.text} />
             <Row style={styles.row} data = {[lobbyData.team_1[1],lobbyData.team_2[1]]} textStyle={styles.text} />
@@ -153,15 +153,6 @@ export default function GameLobbyScreen() {
 
 const styles = StyleSheet.create({
 
-//   customBtnStyle:{
-//     width: "100%",
-//     borderRadius: 100,
-//     borderColor:colors.lightBlue,
-//     borderWidth: 50,
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-
   btnStyle:{
     width: "50%",
     height: 50,
@@ -175,16 +166,6 @@ const styles = StyleSheet.create({
     backgroundColor:colors.darkRed
 },
 
-  // buttons: {
-  //     width: "70%",
-  //     borderRadius: 7,
-  //     height: 50,
-  //     alignItems: "center",
-  //     justifyContent: "center",
-  //     marginBottom: 30,
-  //     backgroundColor: "white",
-      
-  // },
 
   btnsText:{
       fontSize:16,
@@ -192,14 +173,6 @@ const styles = StyleSheet.create({
       color:colors.selectedtextColor
   },
 
-  // btnsView:{
-  //     alignSelf: "center",
-  //     marginTop:"auto",
-  //     marginBottom:"30%",
-  //     flexDirection:"row",
-  //     flexWrap: 'wrap',
-  //     justifyContent:"center",
-  // },
 
   container: {
       flex: 1,
@@ -207,18 +180,6 @@ const styles = StyleSheet.create({
       justifyContent: "center",
     },
 
-  // finishBtn:{
-  //     width: "40%",
-  //     borderRadius: 7,
-  //     height: 50,
-  //     alignItems: "center",
-  //     justifyContent: "center",
-  //     marginTop: 20,
-  //     marginBottom:10,
-  //     backgroundColor: 'white',
-  //     borderColor:"black",
-  //     borderWidth: 2.5,
-  // },
 
   finishText:{
       fontSize:25,

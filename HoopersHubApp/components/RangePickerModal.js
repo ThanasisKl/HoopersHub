@@ -37,7 +37,7 @@ export default function RangePickerModal({toggleRangePickerModalVisibility,isRan
             transparent visible={isRangePickerModalVisible} 
             presentationStyle="overFullScreen" >
         <View style={styles.viewWrapper}> 
-           <Text style={{fontSize:30,fontWeight:"bold",color:"white"}}>{temperaryRange} Km</Text>
+           <Text style={{fontSize:30,fontWeight:"bold",color:"white"}}>Range : {temperaryRange} Km</Text>
         <Slider
             style={{width: 200, height: 40}}
             minimumValue={1}
