@@ -15,10 +15,11 @@ import { useRoute } from '@react-navigation/native';
 import { db } from '../../Config'
 import { colors } from './../colors';
 import * as Location from 'expo-location';
-import { TextInput } from 'react-native-gesture-handler';
+import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import {Picker} from '@react-native-picker/picker';
 import DatePickerModal  from '../../components/DatePickerModal';
 import uuid from 'react-native-uuid';
+import MapView from 'react-native-maps';
 
 export default function CreateGameScreen() {
 
@@ -34,6 +35,9 @@ export default function CreateGameScreen() {
     const [warning,setWarning] = useState("");
     const [datePicked, setDatePicked] = useState(null);
     const [ownerHasGame,setOwnerHasGame] = useState(false);
+    const [marker,setMarker] = useState(null)
+
+
     
     const[isDatePickerModalVisible,setDatePickerModalVisible] = useState(false);
 
@@ -132,55 +136,59 @@ export default function CreateGameScreen() {
   }
 
     async function submitGame(){
-      let problem = checkInputs();
-      await checkGames();
-      if (ownerHasGame == true){
-        Alert.alert("Error","You have already made one game!");
-      } else{
-        if(problem == "problem"){
-          Alert.alert("Error","Pick an appropriate date.");
-        }else if(problem == "no_problem"){
-          await getLocation();
-          let year_picked = ""
-          for (var i = 0; i <= 3; i++) {
-            year_picked += datePicked.charAt(i);
-          }
-          year_picked = parseInt(year_picked);
-          let month_picked = parseInt(datePicked.charAt(5) + datePicked.charAt(6));
-          let day_picked = parseInt(datePicked.charAt(8) + datePicked.charAt(9));
-          let hour_picked = parseInt(datePicked.charAt(11) + datePicked.charAt(12));
-          let minute_picked = parseInt(datePicked.charAt(14) + datePicked.charAt(15));
-          const docID = uuid.v4();
-          const myDoc = doc(db, "Games", docID);
-            let time_of_game ={'hour':hour_picked,
-                              'minute':minute_picked}
-            let date_of_game = {'day':day_picked,
-                              'month': month_picked,
-                              'year':year_picked}
-            const docData = {
-              "name": gameName,
-              "owner": username,
-              "latitude": location.coords.latitude ,
-              "longitude": location.coords.longitude,
-              "number_of_players": numberOfPlayers*2,
-              "team_1":[username],
-              "team_2":[],
-              "time_of_game":time_of_game,
-              "date_of_game":date_of_game
+      if(marker != null){
+        let problem = checkInputs();
+        await checkGames();
+        if (ownerHasGame == true){
+          Alert.alert("Error","You have already made one game!");
+        } else{
+          if(problem == "problem"){
+            Alert.alert("Error","Pick an appropriate date.");
+          }else if(problem == "no_problem"){
+            await getLocation();
+            let year_picked = ""
+            for (var i = 0; i <= 3; i++) {
+              year_picked += datePicked.charAt(i);
             }
+            year_picked = parseInt(year_picked);
+            let month_picked = parseInt(datePicked.charAt(5) + datePicked.charAt(6));
+            let day_picked = parseInt(datePicked.charAt(8) + datePicked.charAt(9));
+            let hour_picked = parseInt(datePicked.charAt(11) + datePicked.charAt(12));
+            let minute_picked = parseInt(datePicked.charAt(14) + datePicked.charAt(15));
+            const docID = uuid.v4();
+            const myDoc = doc(db, "Games", docID);
+              let time_of_game ={'hour':hour_picked,
+                                'minute':minute_picked}
+              let date_of_game = {'day':day_picked,
+                                'month': month_picked,
+                                'year':year_picked}
+              const docData = {
+                "name": gameName,
+                "owner": username,
+                "latitude": marker.latitude ,
+                "longitude": marker.longitude,
+                "number_of_players": numberOfPlayers*2,
+                "team_1":[username],
+                "team_2":[],
+                "time_of_game":time_of_game,
+                "date_of_game":date_of_game
+              }
 
-            setDoc(myDoc, docData)
-              .then(() => {
-                Alert.alert("Game Created","");
-                navigation.replace("SearchGameMain",{username});
-              })
-              .catch((error) => {
-                Alert.alert("","An Error has occured please try again later");
-              });
+              setDoc(myDoc, docData)
+                .then(() => {
+                  Alert.alert("Game Created","Congratulations you created a game!");
+                  navigation.replace("SearchGameMain",{username});
+                })
+                .catch((error) => {
+                  Alert.alert("","An Error has occured please try again later");
+                });
+            }
+          else if(problem =="game_name_problem"){
+            Alert.alert("Error","Write a name for your game.");
           }
-        else if(problem =="game_name_problem"){
-          Alert.alert("Error","Write a name for your game.");
-        }
+      }
+    } else {
+      Alert.alert("Error","Please select a location");
     }
     }
 
@@ -198,43 +206,57 @@ export default function CreateGameScreen() {
                         source={require('../../assets/back-icon.png')}
                     />
                 </TouchableOpacity>
-                <Text style={styles.pageTitle}>Create a Game</Text>
             </View>
-              <Text style={styles.textStyle}>
-                Name your Game
-              </Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setGameName}
-                  value={gameName}
-                  placeholder="Lobby Name"
-                  keyboardType="default"
-                />
+              <Text style={styles.pageTitle}>Create a Game</Text>
+              <ScrollView style={styles.pageScrollView}>
                 <Text style={styles.textStyle}>
-                    Number of players per team
+                  Name your Game:
                 </Text>
-                <Picker
-                  selectedValue={numberOfPlayers}
-                  style={styles.picker}
-                  onValueChange={(itemValue, itemIndex)=> setNumberOfPlayers(itemValue)}
-                >
-                  <Picker.Item label="1" value="1" />
-                  <Picker.Item label="2" value="2" />
-                  <Picker.Item label="3" value="3" />
-                  <Picker.Item label="4" value="4" />
-                  <Picker.Item label="5" value="5" />
-                </Picker>
-                <Text style={styles.textStyle}>Select Time and Date of the Game</Text>
-                <DatePickerModal
-                 toggleDatePickerModalVisibility={toggleDatePickerModalVisibility} 
-                 isDatePickerModalVisible={isDatePickerModalVisible} 
-                 setDatePicked= {setDatePicked}
-                 currentDate={new Date()}
-                 />
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={setGameName}
+                    value={gameName}
+                    placeholder="Lobby Name"
+                    keyboardType="default"
+                  />
+                  <Text style={styles.textStyle}>
+                      Number of players per team:
+                  </Text>
+                  <Picker
+                    selectedValue={numberOfPlayers}
+                    style={styles.picker}
+                    onValueChange={(itemValue, itemIndex)=> setNumberOfPlayers(itemValue)}
+                  >
+                    <Picker.Item label="1" value="1" />
+                    <Picker.Item label="2" value="2" />
+                    <Picker.Item label="3" value="3" />
+                    <Picker.Item label="4" value="4" />
+                    <Picker.Item label="5" value="5" />
+                  </Picker>
+                  <Text style={styles.textStyle}>Select Time and Date of the Game:</Text>
+                  <DatePickerModal
+                  toggleDatePickerModalVisibility={toggleDatePickerModalVisibility} 
+                  isDatePickerModalVisible={isDatePickerModalVisible} 
+                  setDatePicked= {setDatePicked}
+                  currentDate={new Date()}
+                  />
+                  <Text style={styles.textStyle}>Select a location for the Game:</Text>
+                  <MapView 
+                  style={styles.map} 
+                  onPress={(e) => setMarker(e.nativeEvent.coordinate)}> 
+                  { 
+                    marker ? (
+                      <MapView.Marker coordinate={marker} />
+                    ):null
+                  }
+                  </MapView>
+
+                  
             <TouchableOpacity style={styles.createBtn} onPress={submitGame}>
               <Text style={styles.btnText}>Create Game!</Text>
             </TouchableOpacity>
             <Text style={styles.warning}>{warning}</Text>
+            </ScrollView>
         </View>
       );
 
@@ -242,7 +264,7 @@ export default function CreateGameScreen() {
 }
 
 const styles = StyleSheet.create({
-    
+
   input: {
     height: 50,
     width: "75%",
@@ -254,6 +276,7 @@ const styles = StyleSheet.create({
     color:"black",
     fontSize:18,
     borderRadius:7,
+    alignSelf:'center'
   },
 
   createBtn:{
@@ -308,12 +331,22 @@ const styles = StyleSheet.create({
     marginBottom:20,
     backgroundColor:"white",
     marginTop:10,
+    alignSelf:'center'
+  },
 
+  map: {
+    width: '90%',
+    height: 300,
+    marginBottom: 40,
+    alignSelf:'center'
   },
 
   textStyle:{
+    marginTop:20,
+    marginBottom:10,
     fontSize:21,
     fontWeight:"bold",
+    alignSelf:'center'
   },
 
   pageTitle:{
@@ -321,5 +354,6 @@ const styles = StyleSheet.create({
     borderColor:colors.bgColor,
     borderBottomColor:colors.textColor,
     borderWidth: 2,
+    marginTop:70
   },
 });

@@ -27,17 +27,12 @@ export default function DatePickerModal({toggleDatePickerModalVisibility,isDateP
       <TouchableOpacity style={styles.buttons} onPress={openModal}>
         <Text style={styles.btnsText}>Choose a date!</Text>   
       </TouchableOpacity>
-      {/* <Button color= {colors.bgColor} title="Open" onPress={openModal} /> */}
       <Modal animationType="slide" 
             transparent visible={isDatePickerModalVisible} 
             presentationStyle="overFullScreen" 
         >
            <View style={styles.viewWrapper}>            
       <DatePicker
-        // modal={true}
-        // open={isDatePickerModalVisible}
-        // date={date}
-        // selectorStartingYear={currentDate.getFullYear}
         minimumDate={currentDate.getFullYear()+"-"+((currentDate.getMonth()< 10 ? '0': '')+ (currentDate.getMonth() +1))+"-"+((currentDate.getDate() < 10 ? '0': '')+currentDate.getDate())}
         options={{
           textHeaderColor: '#FFA25B',
@@ -116,11 +111,12 @@ const styles = StyleSheet.create({
   },
 
   buttons: {
-      width: "40%",
+      width: "45%",
       borderRadius: 3,
       height: 50,
       alignItems: "center",
       justifyContent: "center",
+      alignSelf:'center',
       marginTop: 20,
       marginBottom:30,
       backgroundColor: colors.textColor,
