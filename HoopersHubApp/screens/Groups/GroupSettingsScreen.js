@@ -355,7 +355,7 @@ export default function GroupSettingsScreen() { //simazema kai inputs scores sta
                     />
                 </TouchableOpacity>
                 {groupLeaders.includes(username) &&
-                <View>
+                <ScrollView>
                     <TouchableOpacity style={styles.leaveBtn} onPress={toggleScoreModalVisibility}>
                         <Text style={styles.addText}>Update Latest Score</Text>
                         <Image 
@@ -400,7 +400,7 @@ export default function GroupSettingsScreen() { //simazema kai inputs scores sta
                             <ScrollView>{notLeaderGroup}</ScrollView>
                         </View>
                     }
-                </View>}
+                </ScrollView>}
             </View>
         </View>
     );
