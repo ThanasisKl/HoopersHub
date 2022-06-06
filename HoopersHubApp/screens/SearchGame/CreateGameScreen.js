@@ -53,15 +53,6 @@ export default function CreateGameScreen() {
           setLocation(location);
     };
 
-    // useEffect(() => , []);
-  
-    // let text = 'Waiting..';
-    // if (errorMsg) {
-    //   text = errorMsg;
-    // } else if (location) {
-    //   text = JSON.stringify(location);
-    //   // console.log(location)
-    // }
 
     function toggleDatePickerModalVisibility(){
       setDatePickerModalVisible(!isDatePickerModalVisible)

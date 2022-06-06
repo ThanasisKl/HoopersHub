@@ -28,7 +28,6 @@ export default function FindGameNearbyScreen() {
   const route = useRoute();
   const navigation = useNavigation();
   const username = route.params.username;
-  // const activeGames = route.params.gamesFound.sort((a, b) => a[2] - b[2]);
   const [activeGames,setActiveGames] = useState([]);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -52,7 +51,6 @@ export default function FindGameNearbyScreen() {
       })
       .then((result)=>{
           setLocation(result)
-          // console.log("Location is : "+location +" is location null: "+ (location === null))
           retrieveGames()
       })
       .catch((error)=>{
@@ -77,27 +75,33 @@ function degrees_to_radians(degrees)
     getDoc(myDoc)
     .then((game)=>{
         const lobbyData = game.data();
+        console.log((lobbyData.team_1.length + lobbyData.team_2.length) < lobbyData.number_of_players)
         if (lobbyData.team_1.length && lobbyData.team_2.length){
-          if (lobbyData.team_1.length > lobbyData.team_2.length){
-            lobbyData.team_2.push(username);
+          if ((lobbyData.team_1.length + lobbyData.team_2.length) < lobbyData.number_of_players){
+              if (lobbyData.team_1.length > lobbyData.team_2.length){
+                lobbyData.team_2.push(username);
+              } else {
+                lobbyData.team_1.push(username);
+              }
+              // else if (lobbyData.team_1.length){
+              //   lobbyData.team_2.push(username)
+              // } 
+              // else {
+              //   lobbyData.team_1.push(username)
+              // }
+            const new_teams = {team_1 :lobbyData.team_1,
+              team_2:lobbyData.team_2}
+            setDoc(myDoc,new_teams,{merge: true})
+            .then(()=>{
+                Alert.alert("Congratulations!","Welcome to the Game");
+                navigation.navigate("GameLobby",{username,lobbyID,lobbyData});
+            }).catch((error) =>{
+                console.log(error)
+            });
           } else {
-            lobbyData.team_1.push(username);
+            Alert.alert("Sorry","Game if full you cant join..")
           }
-        } else if (lobbyData.team_1.length){
-          lobbyData.team_2.push(username)
-        } else {
-          lobbyData.team_1.push(username)
-        }
-        const new_teams = {team_1 :lobbyData.team_1,
-          team_2:lobbyData.team_2}
-        setDoc(myDoc,new_teams,{merge: true})
-        .then(()=>{
-            Alert.alert("Congratulations!","Welcome to the Game");
-            navigation.navigate("GameLobby",{username,lobbyID,lobbyData});
-        }).catch((error) =>{
-            console.log(error)
-        });
-    }).catch((error)=>{
+    }}).catch((error)=>{
         Alert.alert("","An Error has occured please try again later"+ error);
     }); 
   }
@@ -240,31 +244,11 @@ const styles = StyleSheet.create({
       backgroundColor:colors.darkRed,
   },
 
-  // buttons: {
-  //     width: "70%",
-  //     borderRadius: 7,
-  //     height: 50,
-  //     alignItems: "center",
-  //     justifyContent: "center",
-  //     marginBottom: 30,
-  //     backgroundColor: "white",
-      
-  // },
-
   btnsText:{
       fontSize:16,
       fontWeight: 'bold',
       color:colors.selectedtextColor
   },
-
-  // btnsView:{
-  //     alignSelf: "center",
-  //     marginTop:"auto",
-  //     marginBottom:"30%",
-  //     flexDirection:"row",
-  //     flexWrap: 'wrap',
-  //     justifyContent:"center",
-  // },
 
   container: {
       flex: 1,
@@ -272,18 +256,6 @@ const styles = StyleSheet.create({
       justifyContent: "center",
     },
 
-  // finishBtn:{
-  //     width: "40%",
-  //     borderRadius: 7,
-  //     height: 50,
-  //     alignItems: "center",
-  //     justifyContent: "center",
-  //     marginTop: 20,
-  //     marginBottom:10,
-  //     backgroundColor: 'white',
-  //     borderColor:"black",
-  //     borderWidth: 2.5,
-  // },
 
   finishText:{
       fontSize:25,
@@ -336,46 +308,3 @@ upperContainer:{
 });
 
 
-
-
-
-
-  // console.log("ACTIVE GAMES: ")
-  // console.log("--------------------------------")
-  // console.log(activeGames)
-
-  // let displayGames = activeGames.map((Game,i) =>{  
-  //     var players = 0;
-  //     if ((Game[1].team_1.length != undefined && Game[1].team_2.length != undefined)){
-  //       players = Game[1].team_1.length + Game[1].team_2.length;
-  //     } else if (Game[1].team_1.length != undefined){
-  //       players = Game[1].team_1.length;
-  //     } else if (Game[1].team_2.length != undefined){
-  //       players = Game[1].team_2.length;
-  //     }
-  //     return (
-  //         <Row key={i}
-  //             data={[Game[1].name+' - '+ players+'/'+ Game[1].number_of_players +' - '+ Game[2].toFixed(2)+" Km Away",customButton('Join',Game[0],Game[1])]} 
-  //             style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
-  //             textStyle={{textAlign:"center",fontWeight:"bold"}}
-  //             flexArr={[2,1]} />
-  //     )
-  //   })
-
-  // let displayGames = activeGames.map((Game,i) =>{  
-  //   var players = 0;
-  //   if ((Game[1].team_1.length != undefined && Game[1].team_2.length != undefined)){
-  //     players = Game[1].team_1.length + Game[1].team_2.length;
-  //   } else if (Game[1].team_1.length != undefined){
-  //     players = Game[1].team_1.length;
-  //   } else if (Game[1].team_2.length != undefined){
-  //     players = Game[1].team_2.length;
-  //   }
-  //   return (
-  //       <Row key={i}
-  //           data={[Game[1].name+' - '+ players+'/'+ Game[1].number_of_players +' - '+ Game[2].toFixed(2)+" Km Away",customButton('Join',Game[0],Game[1])]} 
-  //           style={[styles.row,{backgroundColor:colors.selectedtextColor}]}
-  //           textStyle={{textAlign:"center",fontWeight:"bold"}}
-  //           flexArr={[2,1]} />
-  //   )
-  // })
