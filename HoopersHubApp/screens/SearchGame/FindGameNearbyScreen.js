@@ -20,6 +20,7 @@ import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import RangePickerModal from '../../components/RangePickerModal';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 
@@ -114,8 +115,9 @@ function degrees_to_radians(degrees)
     )
   }
 
+  
   useEffect(() => {
-    let gamesShown = activeGames.map((Game,i) =>{  
+    let gamesShown = activeGames.map((Game,i) =>{ 
       var players = 0;
       if ((Game[1].team_1.length != undefined && Game[1].team_2.length != undefined)){
         players = Game[1].team_1.length + Game[1].team_2.length;
@@ -124,6 +126,7 @@ function degrees_to_radians(degrees)
       } else if (Game[1].team_2.length != undefined){
         players = Game[1].team_2.length;
       }
+      
       return (
           <Row key={i}
               data={[Game[1].name+' - '+ players+'/'+ Game[1].number_of_players +' - '+ Game[2].toFixed(2)+" Km Away",customButton('Join',Game[0],Game[1])]} 
@@ -212,9 +215,11 @@ function degrees_to_radians(degrees)
     </View>
    
     <View>
-        <Table borderStyle={{borderWidth: 3, borderColor: colors.darkRed}}>
-        {displayGames}
-        </Table>
+      <ScrollView style={styles.scrollView}>
+          <Table borderStyle={{borderWidth: 3, borderColor: colors.darkRed}}>
+          {displayGames}
+          </Table>
+      </ScrollView>
     </View>
 </View>
   );
