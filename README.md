@@ -1,30 +1,62 @@
 # HoopersHub
-## Οδηγίες για το τρέξιμο της εφαρμογής
-Για να τρέξουμε την εφαρμογή χρειάζεται να έχουμε εγκαταστήσει τα εξής:  
-1. Τον IDE Visual Studio Code στον υπολογιστή μας.
-2. Την εφαρμογή Expo Go στο κινητό (καλύτερα android) μας από το Play Store. 
-3. Eγκατεστημένο το **[Node.js](https://nodejs.org/en/download/)** στον υπολογιστή μας.
+**HoopersHub** is a mobile app created using the **Javascript React Native framework**. It consists of 28 screens and deals with **basketball**. The app can work on android as well as ios devices. The **main** screen of the application is the following:
+![Main Screen](/HoopersHubApp/README_assets/main.jpg)
 
-Βήματα για την εκτέλεση της εφαρμογής:  
-1. Ανοίγουμε τον φάκελο με τον κώδικα και μεταβαίνουμε στον φάκελο HoopersHubApp (`cd HoopersHubApp`).
-2. Τρέχουμε την εντολή `npm install` για να κατεβάσουμε όλα τα dependencies του project.
-3. Τρέχουμε την εντολή `npm install --global expo-cli` για να κατεβάσουμε το expo.
-4. Τρέχουμε την εντολή `expo start` για να ξεκινήσει το project
-5. Ανοίγουμε την εφαρμογή Expo Go από το κινητό μας, πατάμε Scan QR code και σκανάρουμε το QR που έχει εμφανιστεί στην κονσόλα. Το κινητό και ο υπολογιστής θα πρέπει να είναι συνδεδεμένα στον ίδιο δίκτυο. 
+Τhe **functions** of the application are the following:  
 
-Για την σύνδεση σε έναν λογαρισμό εφόσον σας εμφανιστεί το login page μπορείτε να χρησιμοποιήσετε το username: LeBron James και password: 1234567 . Για όλους τους χρήστες που θα δείτε στην εφαρμογή ο κωδικός είναι ο ίδιος.  
+## Login/Register
+First of all a user can create an account or log in to it. All user's data are stored to a firebase cloud database (firestore).
+![Login Screen](/HoopersHubApp/README_assets/login.jpg)  
+![Register Screen](/HoopersHubApp/README_assets/register.jpg)
 
-## Σύντομη περιγραφή της εργασίας
-Η εργασίας μας έχει ως θέμα το μπάσκετ και εκτός απο τις βασικές λειτουργιές (login,register,add friend) προσφέρει τα εξής:  
+## Training
+We display various points on the basketball court where the user **shoots and notes** how many shots he made from each point. When he has taken all the required shots he completes his training and sees how he did. The workouts are stored in the database so the user can see his history. Based on this history the app tells the user what his worst and best point is.
 
-**1. Προπόνηση χρήστη:**  
-Εμφανίζουμε διάφορα σημεία του γηπέδου του μπάσκετ στα οποία ο χρήστης εκτελεί σουτ και σημειώνει πόσα έβαλε από κάθε σημείο. Όταν εκτλέσει όλα τα απαιτούμενα σουτ ολοκληρώνει την προπόνηση του και βλέπει πως τα πήγε. Οι προπονήσεις αποθηκεύονται στην βάση δεδομένων ώστε ο χρήστης να μπορεί να βλέπει το ιστορικό του. Με βάση το ιστορικό αυτό η εφαρμογή λέει στον χρήστη ποιο είναι το χειρότερο και καλύτερο του σημείο.  
+### Training Main Screen
+![Training Screen](/HoopersHubApp/README_assets/training.jpg)
+### Result after a training
+![Training Result Screen](/HoopersHubApp/README_assets/result.jpg)
+### Training History
+![History Screen](/HoopersHubApp/README_assets/history.jpg)
+## Groups
+In this mode we add our friends from the app, divide them into teams and create a Group in order for the 2 teams to keep a **history** of their matches. In addition to the history in the groups we also provide what is the **total score** of all the matches of the 2 teams and the **percentage of wins** of each team. The leader of the group, who is originally the creator of the group, is the one who can add a new score as well as do other actions such as change a team to a member, update the latest score, add a new person and make another leader.
+### Divide Friend Into Teams
+![Divide Friend Into Teams image](/HoopersHubApp/README_assets/create_teams.jpg)
+### Groups Main Screen
+![Groups Main Screen image](/HoopersHubApp/README_assets/groups_main.jpg)
+### Leader's Settings
+![Leader's Settings image](/HoopersHubApp/README_assets/settings.jpg)
+### Adding New Score
+![Adding New Score image](/HoopersHubApp/README_assets/add_score.jpg)
+### Group Members
+![Group Members image](/HoopersHubApp/README_assets/members.jpg)
+### Groups Statistics
+![Groups Statistics image](/HoopersHubApp/README_assets/statistics.jpg)
 
-**2. Δημιουργία Group:**  
-Σε αυτήν την λειτουργία προσθέτουμε τους φίλους μας από τη εφαρμογή, τους χωρίζουμε σε ομάδες και δημιουργούμε ένα Group με σκοπό να κρατάνε οι 2 ομάδες ιστορικό των αναμετρήσεων τους. Εκτός απο το ιστορικό στα group παρέχουμε και πόσο είναι το γενικό σκορ από όλες τις αναμετρήσεις των 2 ομάδων καθώς και το ποσοστό το νικών κάθε ομάδας. Ο leader του group, που αρχικά είναι ο δημιουργός του, είναι αυτός που μπορεί να προσθέσει ένα νέο σκορ καθώς και να κάνει και άλλες ενέργειες όπως να αλλάξει ομάδα σε ένα μέλος, να κάνει update το latest score, να προσθέσει ένα νεό άτομο και να κάνει κάποιον άλλον leader.
+## Search Team Nearby
+In this mode the user has the possibility to **search for a game near his/her area** and participate in it. A user can join an available game or create his own game for other users near his location to join. To create a game the user chooses exactly the place on the map the time and date where the game will take place in order to let other users know where and when to come.
+### Game Creation
+![Game Creation image](/HoopersHubApp/README_assets/game_creation.jpg)
+### Games at a Nearby Location
+![Games at a Nearby Location image](/HoopersHubApp/README_assets/games_nearby.jpg)
+### Game Lobby
+![Game Lobby image](/HoopersHubApp/README_assets/lobby.jpg)
 
-**3. Αξιολόγηση Φίλου:**  
-Σε αυτήν την λειτουργία έχουμε την ευκαιρία να αξιολογήσουμε τους φίλους που έχουμε από την εφαρμογή από 0 εώς 5 αστέρια στις εξής κατηγορίες:
+## Create Tournament
+In this mode we add our friends, divide them into groups or as we wish or let the application do it (**matchmaking**) using the statistics from the friend ratings  and other metrics we have given from the register (weight, height and level which is amateur or professional). This function guides all teams up to the grand final. It shows for each team its members, eliminated teams and the history of the matches.
+### Options When Creating a Tournament
+![Options When Creating a Tournament image](/HoopersHubApp/README_assets/options.jpg)
+### Tournament Main Screen
+![Tournament Main Screen image](/HoopersHubApp/README_assets/tour_main.jpg)
+### Tournament History
+![Tournament History image](/HoopersHubApp/README_assets/tour_history.jpg)
+### Tournament Members
+![Tournament Members image](/HoopersHubApp/README_assets/tour_members.jpg)
+### Tournament Winner
+![Tournament Winner image](/HoopersHubApp/README_assets/winner.jpg)
+
+## Rate Friend
+In this feature we have the opportunity to **rate the friends** we have from the app from 0 to 5 stars in the following categories:
 - Blocks
 - Defense
 - 3 Points
@@ -32,11 +64,17 @@
 - Rebounds
 - Atheleticism
 - Team Player
-- Overall Score
+- Overall Score  
 
-**4. Δημιουργία Τουρνουά:**  
-Σε αυτήν την λειτουργία προσθέτουμε τους φίλους μας, τους χωρίζουμε σε ομάδες ή όπως επιθυμόυμε ή αφήνουμε την εφαρμογή να το κάνει χρησιμοποιώντας τα στατιστικά απο την αξιολόγηση φίλου και άλλες μετρικές που έχουμε δώσει από το register (βάρος, ύψος και επίπεδο που είναι η ερασιτέχνης η επαγγελματίας). Η λειτουργία αυτή καθοδηγεί όλες τις ομάδες μέχρι τον μεγάλο τελικό. Δείχνει για κάθε ομάδα τα μέλη της, τις αποκλεισμένες ομάδες και το ιστορικό των αναμετρήσεων.
+![Rating Screen](/HoopersHubApp/README_assets/rating.jpg)
 
-**5. Αναζήτηση παιχνιδιού:**   
-Σε αυτήν την λειτουργία ο χρήστης έχει την δυνατότητα να αναζητήσει κάποιο παιχνίδι κοντά στη περιοχή που βρίσκεται και να συμμετάσχει σε αυτό. Ένας χρήστης μπορεί να μπει σε ένα διαθέσιμο παιχνίδι ή να δημιουργήσει ένα δικό του παιχνίδι για να μπούν άλλοι χρήστες που βρίσκονται κοντά στην τοποθεσία του. Για την δημιουργία game o χρήστης επιλέγει ακριβώς το μέρος στο χάρτη την ώρα και την ημερομηνία όπου θα γίνει ο αγώνας προκειμένου να γνωρίζουν και οι άλλοι χρήστες που και πότε να έρθουν.
+## More info about the app
+A user can send a **friend request** to another user that uses the app. To test that our **matchmaking algorithm** works as expected we used **NBA players data** from **NBA2K20** and we sort these players into teams. 
 
+## Technologies used in this project
+- React Native
+- Javascript
+- React
+- Firebase Firestore
+- Node.js
+- Expo
